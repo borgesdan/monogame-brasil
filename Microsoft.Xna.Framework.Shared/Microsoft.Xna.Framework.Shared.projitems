@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2ed5c978-a0d1-43b4-8268-79e2bb60a4b7</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Debug\DebugRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BasicCollisionComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\EntityComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entitys\AnimatedEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entitys\Entity2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\EnableGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IUpdateDrawable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entitys\TextEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\TileAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Screen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\GamePadHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Launcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\TransformGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+  </ItemGroup>
+</Project>
