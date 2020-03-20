@@ -181,13 +181,14 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Definir a posição da entidade relativa a Viewport.</summary>   
         /// <param name="alignType">O tipo de alinhamento da tela.</param>
-        public void SetScreenPosition(AlignType alignType)
+        public void SetViewPosition(AlignType alignType)
         {
-            Entity.UpdateBounds();
+            Entity.UpdateBounds();            
 
             var view = Entity.Game.GraphicsDevice.Viewport;
             int w = view.Width;
             int h = view.Height;
+            SetPosition(view.X, view.Y);
             int ew = Width;
             int eh = Height;            
             float bx = Entity.Bounds.X;

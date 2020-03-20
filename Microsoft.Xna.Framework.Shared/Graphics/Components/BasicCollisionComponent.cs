@@ -18,7 +18,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// definindo posteriormente a ação necessária para uma ocorrência de colisão no evento
         /// OnCollision desta classe.
         /// </summary>
-        public BasicCollisionComponent() 
+        public BasicCollisionComponent()  : base()
         {
             Name = nameof(BasicCollisionComponent);
         }
@@ -28,9 +28,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// como ação necessária quando ocorrer uma colisão.
         /// </summary>
         /// <param name="collisionAction">Um método que define os mesmos parâmetros de um delegate CollisionAction.</param>
-        public BasicCollisionComponent(CollisionAction collisionAction) 
+        public BasicCollisionComponent(CollisionAction collisionAction) : this()
         {
             OnCollision = collisionAction;
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe BasicCollisionComponent como uma cópia.
+        /// </summary>
+        /// <param name="source">A origem para cópia.</param>
+        public BasicCollisionComponent(BasicCollisionComponent source): base(source)
+        {
+            OnCollision = source.OnCollision;
+            IsColliding = source.IsColliding;
         }
 
         /// <summary>Atualiza o componente.</summary>

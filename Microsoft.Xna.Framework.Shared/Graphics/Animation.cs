@@ -6,13 +6,12 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma animação de sprites.</summary>
-    public class Animation : IDisposable, IUpdateDrawable
+    public class Animation : IDisposable, IUpdateDrawable, IBoundable
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
-        protected Game game = null;        
         protected int elapsedGameTime = 0;
         protected Vector2 origin = Vector2.Zero;                
         protected bool useDestinationBounds = false;
@@ -28,6 +27,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
+        public Game Game { get; protected set; } = null;
         ///<summary>Obtém ou define se a animaçãp é desenhável ou atualizável.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup();
         /// <summary>Obtém ou define a lista de sprites.</summary>
@@ -64,9 +64,18 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a posição na tela da animação</summary>
         public Vector2 Position { get; set; } = Vector2.Zero;
         /// <summary>Obtém ou define a origem para desenho de cada sprite.</summary>
-        public Vector2 Origin { get; set; } = Vector2.Zero;
-        /// <summary>Obtém o retângulo atual da animação</summary>
-        public Rectangle Bounds { get; protected set; } = Rectangle.Empty;
+        public Vector2 Origin { get; set; } = Vector2.Zero;        
+        /// <summary>Obtém o atual frame da animação.</summary>
+        public Rectangle Frame { get; protected set; }
+        /// <summary>Obtém os limites da animação. Sua largura e altura (com escala) e sua posição.</summary>
+        public virtual Rectangle Bounds 
+        {
+            get
+            {
+                Rectangle b = new Rectangle((int)Position.X, (int)Position.Y, (int)ScaledSize.X, (int)ScaledSize.Y);
+                return b;
+            }
+        }
         /// <summary>Obtém o tamanho atual da animação</summary>
         public Point Size { get; protected set; } = Point.Zero;
         /// <summary>Obtém o tamanho da Textura em relação a escala atual.</summary>
@@ -84,7 +93,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém o Sprite atual que está sendo trabalhado.</summary>
         public Sprite CurrentSprite { get; protected set; } = null;
         /// <summary>Obtém ou define o nome da animação.</summary>
-        public string Name { get; set; } = string.Empty;          
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>Retorna o valor True se a animação chegou ao fim.</summary>
         public bool IsFinished
@@ -118,6 +127,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get
             {
+                //if (Sprites.Count == 0)
+                //    return TimeSpan.Zero;
+
                 int count = 0;
 
                 for (int i = 0; i <= Index; i++)
@@ -167,7 +179,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Evento chamado quando o valor do Index é mudado.</summary>
         public event Action<Animation> OnChangeIndex;
         /// <summary>Evento chamado quando o valor do FrameIndex é mudado.</summary>
-        public event Action<Animation> OnChangeFrameIndex;
+        public event Action<Animation> OnChangeFrameIndex;        
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -178,7 +190,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="time">O tempo de cada quadro da animação.</param>
         public Animation(Game game, int time, string name)
         {
-            this.game = game;
+            Game = game;
             Time = time;
             Name = name;
         }
@@ -188,7 +200,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public Animation(Animation source)
         {
             elapsedGameTime = source.elapsedGameTime;
-            game = source.game;
+            
+            Game = source.Game;
             Index = source.Index;
             FrameIndex = source.FrameIndex;
             Position = source.Position;
@@ -202,7 +215,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Enable = source.Enable;
             CurrentSprite = source.CurrentSprite;
             Time = source.Time;
-            Bounds = source.Bounds;
+            Frame = source.Frame;
             Name = source.Name;
             DrawPercentage = source.DrawPercentage;
         }
@@ -258,20 +271,20 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 useDestinationBounds = true;
 
-                int x = Bounds.X;
-                int y = Bounds.Y;
-                float w = Bounds.Width * DrawPercentage.X;
-                float h = Bounds.Height * DrawPercentage.Y;
+                int x = Frame.X;
+                int y = Frame.Y;
+                float w = Frame.Width * DrawPercentage.X;
+                float h = Frame.Height * DrawPercentage.Y;
 
                 destinationBounds = new Rectangle(x, y, (int)w, (int)h);
-            }                
+            }
         }
         
         protected virtual void UpdateBounds()
         {
             Rectangle currentFrame = CurrentSprite[FrameIndex].Bounds;
             Size = currentFrame.Size;
-            Bounds = currentFrame;
+            Frame = currentFrame;
         }
 
         private void UpdateOrigin()
@@ -289,7 +302,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 if (CurrentSprite == null)
                     CurrentSprite = Sprites[0];
 
-                //Não continua se o tempo for menor que zero.
+                //Não continua se o tempo igual a zero.
                 if (Time == 0)
                     return;
 
@@ -360,10 +373,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible || CurrentSprite == null)
-                return;
+            if (!Enable.IsVisible ||        //Se a animação está em modo visível
+                CurrentSprite == null)    //Se existe um sprite ativo.
+                return;            
 
-            Rectangle _bounds = Bounds;
+            Rectangle _bounds = Frame;
 
             if (useDestinationBounds)
                 _bounds = destinationBounds;
@@ -382,55 +396,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //chama OnDraw
             OnDraw?.Invoke(this, gameTime, spriteBatch);
-        }         
-
-        /// <summary>Desenha a animação no formato 'tilemap'. Ou pode setar o valor da propriedade DrawMode como TileMap e chamar o método Draw.</summary>
-        protected void DrawTileMap(GameTime gameTime, SpriteBatch spriteBatch, byte[,] map)
-        {
-            int dx = map.GetLength(0);
-            int dy = map.GetLength(1);
-
-            for (int line = 0; line < dx; line++)
-            {
-                for (int column = 0; column < dy; column++)
-                {
-                    if (map[line, column].Equals(1))
-                    {
-                        Vector2 position = Position;
-                        position.X += ScaledSize.X * column;
-                        position.Y += ScaledSize.Y * line;
-
-                        if (useDestinationBounds)
-                        {
-                            spriteBatch.Draw(
-                                texture: CurrentSprite.Texture,
-                                position: position,
-                                sourceRectangle: destinationBounds,
-                                color: Color,
-                                rotation: Rotation,
-                                origin: origin,
-                                scale: Scale,
-                                effects: SpriteEffect,
-                                layerDepth: LayerDepth
-                                );
-                        }
-                        else
-                        {
-                            spriteBatch.Draw(
-                                   texture: CurrentSprite.Texture,
-                                   position: position,
-                                   sourceRectangle: Bounds,
-                                   color: Color,
-                                   rotation: Rotation,
-                                   origin: origin + CurrentSprite.Frames[FrameIndex].OriginCorrection,
-                                   scale: Scale,
-                                   effects: SpriteEffect,
-                                   layerDepth: LayerDepth
-                                   );
-                        }                        
-                    }
-                }
-            }
         }
 
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
@@ -448,25 +413,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
             foreach(string s in sources)
             {
-                Sprite temp = new Sprite(game.Content.Load<Texture2D>(s));
+                Sprite temp = new Sprite(Game.Content.Load<Texture2D>(s), true);
                 tmpSprites.Add(temp);
             }
 
             AddSprite(tmpSprites.ToArray());
-        }
-
-        /// <summary>Adiciona objetos da classe Sprite a lista.</summary>
-        /// <param name="source">Caminho da textura na pasta Content.</param>
-        /// <param name="frames">Lista de retângulos (Frames) relativos a textura.</param>
-        public void AddSprite(string source, params SpriteFrame[] frames)
-        {   
-            Sprite tempSprite = new Sprite(game, source);
-
-            foreach (SpriteFrame sf in frames)
-                tempSprite.AddFrame(sf);
-
-            AddSprite(tempSprite);
-        }
+        }        
 
         /// <summary>Adiciona objetos da classe Sprite a lista.</summary>
         /// <param name="sprites">Lista com objetos da classe Sprite.</param>
@@ -478,7 +430,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (CurrentSprite == null)
             {
                 CurrentSprite = Sprites[0];
-                Bounds = CurrentSprite[FrameIndex].Bounds;
+                Frame = CurrentSprite[FrameIndex].Bounds;
             }
         }
 
@@ -506,7 +458,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (disposing)
             {
-                game = null;
+                Game = null;
                 Sprites.Clear();
                 Sprites = null;
                 CurrentSprite = null;

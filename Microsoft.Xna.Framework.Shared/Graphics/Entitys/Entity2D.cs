@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma entidade atualizável, com propriedades de transformação, e desenhável em tela.</summary>
-    public class Entity2D : IUpdateDrawable, IDisposable
+    public abstract class Entity2D : IUpdateDrawable, IBoundable, IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -33,12 +33,12 @@ namespace Microsoft.Xna.Framework.Graphics
         public EnableGroup Enable { get; set; } = new EnableGroup(true, true);        
         /// <summary>Obtém ou define o nome da entidade.</summary>
         public string Name { get; set; } = string.Empty;
-        /// <summary>Obtém ou define se a entidade será atualizada fora dos limites da Viewport.</summary>
-        public bool UpdateOutofView { get; set; } = true;
+        /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
+        public bool UpdateOutOfView { get; set; } = true;
         /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
         public Screen Screen { get; set; } = null;
         /// <summary>Obtém ou define a lista de componentes da entidade.</summary>
-        public List<EntityComponent> Components { get; set; } = new List<EntityComponent>();
+        public ComponentGroup Components { get; private set; } = null;
         /// <summary>
         /// Obtém ou define a porcentagem de largura e altura do desenho. De 0F a 1F.
         /// <para>
@@ -74,26 +74,27 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância de Entity2D.</summary>
         /// <param name="game">Instância atual da classe Game.</param>
         /// <param name="name">Nome da entidade.</param>
-        public Entity2D(Game game, string name)
+        protected Entity2D(Game game, string name)
         {   
             Game = game;
             Transform = new TransformGroup(this);
             Name = name;
+            Components = new ComponentGroup(this);
 
             Load();
-        }  
+        }
 
         /// <summary>Inicializa uma nova instância de Entity2D.</summary>
         /// <param name="screen">A tela em que a entidade será associada.</param>
         /// <param name="name">Nome da entidade.</param>
-        public Entity2D(Screen screen, string name) : this(screen.Game, name)
+        protected Entity2D(Screen screen, string name) : this(screen.Game, name)
         {
             screen?.Add(this);
         }
 
         /// <summary>Inicializa uma nova instância de Entity2D copiando uma outra entidade.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
-        public Entity2D(Entity2D source)
+        protected Entity2D(Entity2D source)
         {
             Origin = source.Origin;
             Bounds = source.Bounds;
@@ -102,7 +103,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Transform = source.Transform;
             Name = source.Name;
             Screen = source.Screen;
-            UpdateOutofView = source.UpdateOutofView;
+            UpdateOutOfView = source.UpdateOutOfView;
             Components = source.Components;
             DrawPercentage = source.DrawPercentage;
         }
@@ -118,24 +119,20 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;           
+            //Define a velocidade da entidade.
 
             if (Transform.Xv != 0)
                 Transform.X += Transform.Velocity.X;
-            if(Transform.Yv != 0)
-                Transform.Y += Transform.Velocity.Y;
-                        
-            foreach (var cmp in Components)
-            {
-                if(cmp.Entity == null)
-                    cmp.Entity = this;
+            if (Transform.Yv != 0)
+                Transform.Y += Transform.Velocity.Y;            
 
-                cmp.Update(gameTime);
-            }
-            
+            //Chama o evento.
             OnUpdate?.Invoke(this, gameTime);
 
+            //Atualiza os componentes.
+            Components.Update(gameTime);
+
+            //Atualiza os limites da entidade.
             UpdateBounds();
         }
 
@@ -144,101 +141,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
-            foreach (var cmp in Components)
-            {
-                if (cmp.Entity == null)
-                    cmp.Entity = this;
-
-                cmp.Draw(gameTime, spriteBatch);
-            }
-
             OnDraw?.Invoke(this, gameTime, spriteBatch);
-        }
-
-        //----- COMPONENTES -----//
-
-        /// <summary>Obtém o primeiro componente encontrado seguindo o tipo informado.</summary>
-        /// <typeparam name="T">O tipo do componente herdado de um EntityComponent.</typeparam>
-        /// <returns>Retorna uma lista com todos os componentes encontrados.</returns>
-        public List<T> GetAllComponents<T>() where T : EntityComponent
-        {
-            var t_type = typeof(T);
-            var find = Components.FindAll(x => x.GetType().Equals(t_type));
-
-            List<T> temp = new List<T>();
-
-            foreach (var f in find)
-                temp.Add((T)f);
-
-            return temp;
-        }
-
-        /// <summary>Obtém o primeiro componente encontrado seguindo o tipo informado.</summary>
-        /// <typeparam name="T">O tipo do componente herdado de um EntityComponent.</typeparam>
-        /// <returns>Retorna o primeiro componente encontrado na lista de Components.</returns>
-        public T GetComponent<T>() where T : EntityComponent
-        {
-            var t_type = typeof(T);
-            var find = Components.Find(x => x.GetType().Equals(t_type));
-
-            return (T)find;
-        }
-
-        /// <summary>
-        /// Obtém o primeiro componente encontrado seguindo o tipo informado.
-        /// </summary>
-        /// <typeparam name="T">O tipo do componente herdado de um EntityComponent.</typeparam>
-        /// <param name="internalName">O nome interno do componente. Normalmente utilizando nameof(T) onde 'T' é o tipo dele.</param>
-        /// <returns>Retorna um componente através dos parâmetros solicitados.</returns>
-        public T GetComponentByName<T>(string internalName) where T : EntityComponent
-        {
-            var find = Components.Find(x => x.Name.Equals(internalName));
-
-            if (find != null)
-                return (T)find;
-            else
-                return null;
-        }
-
-        /// <summary>Adiciona um componente na lista de Componentes.</summary>
-        /// <param name="component">Uma instância da classe EntityComponent.</param>
-        public void AddComponent(EntityComponent component)
-        {
-            Components.Add(component);
-        }
-
-        /// <summary>Remove um componente na lista de Componentes.</summary>
-        /// <typeparam name="T">O tipo do componente herdado de um EntityComponent.</typeparam>
-        public void RemoveComponent<T>() where T : EntityComponent
-        {
-            var t_type = typeof(T);
-            var find = Components.Find(x => x.GetType().Equals(t_type));
-
-            if (find != null)
-                Components.Remove(find);
-        }
-
-        /// <summary>Remove um componente na lista de Componentes.</summary>
-        /// <param name="internalName">O nome interno do componente. Normalmente utilizando nameof(T) onde 'T' é o tipo dele.</param>
-        public void RemoveComponentByName(string internalName)
-        {
-            var find = Components.Find(x => x.Name.Equals(internalName));
-
-            if (find != null)
-                Components.Remove(find);
-        }
-
-        //----- FIM COMPONENTES -----//
+            Components.Draw(gameTime, spriteBatch);            
+        }        
 
         /// <summary>Atualiza os limites da entidade.</summary>
         public virtual void UpdateBounds() { }
-
-        /// <summary>Cria uma nova instância dessa entidade como uma cópia.</summary>
-        public Entity2D Clone() => new Entity2D(this);        
-
+        
         /// <summary>Libera os recursos dessa instância.</summary>
         public void Dispose()
         {
@@ -258,7 +167,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 Game = null;
                 Screen = null;
                 Name = null;
-                Components.Clear();
+                Components.List.Clear();
                 Components = null;
             }
 

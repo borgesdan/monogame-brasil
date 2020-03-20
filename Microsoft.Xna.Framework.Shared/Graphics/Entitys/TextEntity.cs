@@ -12,7 +12,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
-        StringBuilder builder = null;
+        StringBuilder builder = new StringBuilder();
+        bool outOfView = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -88,7 +89,22 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
-                return;            
+                return;
+
+            //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
+            if (!UpdateOutOfView)
+            {
+                if (Screen != null)
+                {
+                    if (!Util.CheckFieldOfView(Screen, Bounds))
+                    {
+                        //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
+                        outOfView = true;
+
+                        return;
+                    }
+                }
+            }
 
             UpdateBounds();
 
@@ -100,7 +116,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
+            if (!Enable.IsVisible || outOfView)
                 return;
 
             if (Text != null)
@@ -145,7 +161,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (disposing)
             {
-                Font = null;
+                Font = null;                    
                 Text.Clear();
                 Text = null;
             }

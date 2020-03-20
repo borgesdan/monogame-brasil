@@ -7,13 +7,13 @@ namespace Microsoft.Xna.Framework.Input
     /// </summary>
     public class InputManager 
     {
-        /// <summary>Obtém ou define o GamePad com o PlayerIndex 1.</summary>
+        /// <summary>Obtém ou define o GamePad do Player 1.</summary>
         public GamePadHelper One { get; set; }
-        /// <summary>Obtém ou define o GamePad com o PlayerIndex 2.</summary>
+        /// <summary>Obtém ou define o GamePad do Player 2.</summary>
         public GamePadHelper Two { get; set; }
-        /// <summary>Obtém ou define o GamePad com o PlayerIndex 3.</summary>
+        /// <summary>Obtém ou define o GamePad do Player 3.</summary>
         public GamePadHelper Three { get; set; }
-        /// <summary>Obtém ou define o GamePad com o PlayerIndex 4.</summary>
+        /// <summary>Obtém ou define o GamePad do Player 4.</summary>
         public GamePadHelper Four { get; set; }
         /// <summary>Obtém ou define o gerenciamento do teclado.</summary>
         public KeyboardHelper Keyboard { get; set; }
@@ -69,30 +69,6 @@ namespace Microsoft.Xna.Framework.Input
             Four.Update(gameTime);
             Keyboard.Update(gameTime);
             Mouse.Update(gameTime);
-        }
-        
-        /// <summary>
-        /// Adiciona um mapa do teclado a um GamePadHelper.
-        /// </summary>
-        /// <param name="index">O index do GamePad.</param>
-        /// <param name="map">O mapa do teclado.</param>
-        public void AddMap(PlayerIndex index, KeyboardMap map)
-        {
-            switch (index)
-            {
-                case PlayerIndex.One:
-                    One.KeyboardMap = map.GetKeyboardMap();
-                    break;
-                case PlayerIndex.Two:
-                    Two.KeyboardMap = map.GetKeyboardMap();
-                    break;
-                case PlayerIndex.Three:
-                    Three.KeyboardMap = map.GetKeyboardMap();
-                    break;
-                case PlayerIndex.Four:
-                    Four.KeyboardMap = map.GetKeyboardMap();
-                    break;
-            }
-        }
+        }       
     }
 }

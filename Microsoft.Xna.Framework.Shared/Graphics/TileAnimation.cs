@@ -11,6 +11,26 @@ namespace Microsoft.Xna.Framework.Graphics
         public int XRepeat { get => xr; set => xr = MathHelper.Clamp(value, 0, int.MaxValue); }
         /// <summary>Obtém ou define o número de repetições no eixo Y.</summary>
         public int YRepeat { get => yr; set => yr = MathHelper.Clamp(value, 0, int.MaxValue); }
+
+        public Rectangle TotalBounds
+        {
+            get
+            {
+                Rectangle currentFrame = CurrentSprite[FrameIndex].Bounds;
+
+                int w = currentFrame.Width;
+                int h = currentFrame.Height;
+
+                if (XRepeat != 0)
+                    w = currentFrame.Width * XRepeat;
+                if (YRepeat != 0)
+                    h = currentFrame.Height * YRepeat;
+
+                currentFrame = new Rectangle(currentFrame.X, currentFrame.Y, w, h);
+
+                return currentFrame;
+            }
+        }
         
         /// <summary>Inicializa uma nova instância da classe Animation.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
@@ -25,29 +45,14 @@ namespace Microsoft.Xna.Framework.Graphics
             this.YRepeat = source.YRepeat;
         }
 
-        protected override void UpdateBounds()
-        {
-            Rectangle currentFrame = CurrentSprite[FrameIndex].Bounds;
-
-            int w = currentFrame.Width * XRepeat;
-            int h = currentFrame.Height * YRepeat;
-
-            currentFrame = new Rectangle(currentFrame.X, currentFrame.Y, w, h);
-
-            Size = currentFrame.Size;
-            Bounds = currentFrame;
-
-            //Não chama a base
-        }
-
         /// <summary>Método de desenho.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible || CurrentSprite == null)
                 return;
-
-            Rectangle _bounds = Bounds;
+            
+            Rectangle _bounds = Frame;            
 
             if (useDestinationBounds)
                 _bounds = destinationBounds;
@@ -56,7 +61,7 @@ namespace Microsoft.Xna.Framework.Graphics
             for (int x = 0; x < XRepeat; x++)
             {
                 Vector2 position = Position;
-                position.X += ScaledSize.X * x;
+                position.X += ScaledSize.X * x;      
 
                 spriteBatch.Draw(
                             texture: CurrentSprite.Texture,

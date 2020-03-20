@@ -8,6 +8,8 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Representa uma entidade com animações.</summary>
     public class AnimatedEntity : Entity2D
     {
+        private bool outOfView = false;
+
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
@@ -25,7 +27,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Inicializa uma nova instância de AnimatedEntity copiando uma outra entidade.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
-        private AnimatedEntity(AnimatedEntity source) : base(source)
+        public AnimatedEntity(AnimatedEntity source) : base(source)
         {
             Animations = source.Animations;
             ActiveAnimation = source.ActiveAnimation;
@@ -67,9 +69,28 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Atualiza a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
-        {
+        {   
+            //Se a entidade não estiver disponível ou não existir uma animação ativa, então não se prossegue com a atualização.
             if (!Enable.IsEnabled || ActiveAnimation == null)
                 return;
+
+            //Define que a entidade está dentro doslimites de desenho da tela
+            outOfView = false;
+
+            //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
+            if (!UpdateOutOfView)
+            {
+                if(Screen != null)
+                {
+                    if (!Util.CheckFieldOfView(Screen, Bounds))
+                    {
+                        //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
+                        outOfView = true;
+
+                        return;
+                    }
+                }
+            }
 
             //Coloca OldPosition e Position com os mesmos valores.
             Transform.SetPosition(Transform.Position);
@@ -85,9 +106,7 @@ namespace Microsoft.Xna.Framework.Graphics
             ActiveAnimation.DrawPercentage = DrawPercentage;
 
             //Update da animação ativa.
-            ActiveAnimation?.Update(gameTime);
-
-            UpdateBounds();
+            ActiveAnimation?.Update(gameTime);            
 
             base.Update(gameTime);
         }
@@ -97,7 +116,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible || ActiveAnimation == null)
+            //Se a entidade não é visível
+            //Se não existe uma animação ativa
+            //Ou se a entidade se encontra fora dos limites da tela, não prossegue com a execução do método.            
+            if (!Enable.IsVisible || ActiveAnimation == null || outOfView)
                 return;            
 
             ActiveAnimation?.Draw(gameTime, spriteBatch);  
@@ -184,7 +206,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public static AnimatedEntity GetRectangle(Game game, string name, Point size, Color color, Screen screen)
         {
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
-            Sprite sprite = new Sprite(texture);
+            Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
             animation.AddSprite(sprite);
 
@@ -194,11 +216,7 @@ namespace Microsoft.Xna.Framework.Graphics
             screen?.Add(animatedEntity);
 
             return animatedEntity;
-        }
-
-        /// <summary>Cria uma nova instância dessa entidade como uma cópia.</summary>
-        /// <returns>Retorna uma entidade com as mesmas características desta entidade.</returns>
-        public new AnimatedEntity Clone() => new AnimatedEntity(this);
+        }        
 
         /// <summary>Atualiza os limites da entidade.</summary>
         public override void UpdateBounds()
@@ -209,8 +227,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(ActiveAnimation != null)
             {
-                cbw = ActiveAnimation.Bounds.Width * Transform.Scale.X;
-                cbh = ActiveAnimation.Bounds.Height * Transform.Scale.Y;
+                cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
+                cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
             }
             else
             {
@@ -226,10 +244,6 @@ namespace Microsoft.Xna.Framework.Graphics
             int w = Transform.Width;
             int h = Transform.Height;
 
-            //Define o tamanho do limite.
-            //Vector2 s_oc = ActiveAnimation.CurrentSprite.OriginCorrection;
-            //Vector2 s_f_oc = ActiveAnimation.CurrentSprite.TextureFrames[ActiveAnimation.FrameIndex].OriginCorrection;
-            
             Vector2 s_f_oc;
 
             if (ActiveAnimation != null && ActiveAnimation.CurrentSprite != null)
@@ -258,7 +272,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 Animations.Clear();
                 Animations = null;
-                ActiveAnimation.Dispose();
+                ActiveAnimation = null;
             }
 
             base.Dispose(disposing);

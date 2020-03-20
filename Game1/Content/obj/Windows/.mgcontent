@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/ball_hit.wav</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/default.spritefont</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/up.wav</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

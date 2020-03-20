@@ -1,0 +1,3 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/ball_hit.wav","C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/bin/Windows/Content/ball_hit.xnb","SoundEffectProcessor","SoundEffectContent",3302,3363,0,4480334
+"C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/up.wav","C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/bin/Windows/Content/up.xnb","SoundEffectProcessor","SoundEffectContent",75896,75957,0,3200233

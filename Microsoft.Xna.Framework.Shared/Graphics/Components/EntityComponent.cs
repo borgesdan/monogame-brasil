@@ -15,6 +15,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public string Name { get; set; } = nameof(EntityComponent);
 
+        /// <summary>
+        /// Obtém ou define a disponibilidade do componente.
+        /// </summary>
+        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
+
+        protected EntityComponent() { }
+        protected EntityComponent(EntityComponent source) 
+        {
+            Entity = source.Entity;
+            Enable = source.Enable;
+            Name = source.Name;
+        }
+
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime) { }

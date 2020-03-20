@@ -79,12 +79,15 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (s.LoadState == ScreenLoadState.UnLoaded)
             {
-                taskLoading = Task.Run(s.Load);
+                var t = Task.Run(s.Load);
                 LoadingScreen = s;                
                 IsLoadingAsync = true;
                 callLoadScreen = callWhenIsFinished;
 
-                return taskLoading;
+                s.ChangeState(this, ScreenLoadState.Loading);
+
+                taskLoading = t;
+                return t;
             }
             else
             {
@@ -223,10 +226,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 Game = null;
 
                 Screens.Clear();
-                Active.Dispose();
+                Screens = null;
 
-                if (LoadingScreen != null)
-                    LoadingScreen = null;
+                Active = null;
+                
+                LoadingScreen = null;
             }                
 
             disposed = true;

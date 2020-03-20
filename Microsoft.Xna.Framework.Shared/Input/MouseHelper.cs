@@ -120,7 +120,7 @@ namespace Microsoft.Xna.Framework.Input
                 }
             }
 
-        }
+        }        
 
         /// <summary>Define o estado do mouse.</summary>
         /// <param name="state">O estado do mouse a ser definido.</param>

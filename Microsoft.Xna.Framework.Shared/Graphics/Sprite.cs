@@ -114,6 +114,19 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
+        /// Desenha o sprite na tela ou parte dele através de um index.
+        /// </summary>
+        /// <param name="spriteBatch">A instância do spriteBatch para desenho.</param>
+        /// <param name="position">A posição para desenho na tela.</param>
+        /// <param name="frameIndex">O index do frame a ser exibido. Defina 0 para exibir o primeiro frame.</param>
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, int frameIndex)
+        {
+            var frame = this[frameIndex].Bounds;
+
+            spriteBatch.Draw(Texture, position, frame, Color.White);
+        }
+
+        /// <summary>
         /// Cria um instância da classe Sprite, com uma textura retangular.
         /// </summary>
         /// <param name="game">A instância atual da classe Game.</param>
@@ -164,7 +177,6 @@ namespace Microsoft.Xna.Framework.Graphics
             if (disposing)
             {
                 Texture?.Dispose();
-                Texture = null;
 
                 Frames.Clear();
                 Frames = null;
