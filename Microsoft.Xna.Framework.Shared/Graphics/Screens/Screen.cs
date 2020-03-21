@@ -162,7 +162,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
-            staticView = new Viewport((int)Camera.Position.X, (int)Camera.Position.Y, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
+            staticView = new Viewport(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
             
             DrawableEntitys.Clear();
 
