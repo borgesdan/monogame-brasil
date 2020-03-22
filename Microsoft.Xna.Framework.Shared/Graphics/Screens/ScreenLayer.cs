@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -54,7 +53,6 @@ namespace Microsoft.Xna.Framework.Graphics
             camera = Screen.Camera;
 
             var diff = camera.Position - oldCamera.Position;
-            //var canvas = new Rectangle(View.X - Left, View.Y - Top, View.Width + Right, View.Height + Bottom);
             var c = layerCamera;
 
             if(diff.X < 0)
@@ -64,11 +62,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 if (cBounds.Left < Area.Left)
                     c.X = Area.X;
-
-                //v.X += (int)diff.X;
-
-                //if (v.Bounds.Left < canvas.Left)
-                //    v.X = canvas.X;
             }
             else if(diff.X > 0)
             {
@@ -79,24 +72,27 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     var diffR = cBounds.Right - Area.Right;
                     c.X -= diffR;
-                }                    
-
-                //v.X += (int)diff.X;
-
-                //if (v.Bounds.Right > canvas.Right)
-                //{
-                //    var diffR = v.Bounds.Right - canvas.Right;
-                //    v.X -= diffR;
-                //}
+                }   
             }
 
             if(diff.Y < 0)
             {
+                c.Move(0, diff.Y);
+                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
 
+                if (cBounds.Top < Area.Top)
+                    c.Y = Area.Y;
             }
             else if(diff.Y > 0)
             {
+                c.Move(0, diff.Y);
+                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
 
+                if (cBounds.Bottom > Area.Bottom)
+                {
+                    var diffB = cBounds.Bottom - Area.Bottom;
+                    c.X -= diffB;
+                }
             }
 
             layerCamera = c;

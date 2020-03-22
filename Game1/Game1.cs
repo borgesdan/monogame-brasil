@@ -21,7 +21,7 @@ namespace Game1
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);            
             Content.RootDirectory = "Content";            
         }
 
@@ -50,10 +50,12 @@ namespace Game1
             // TODO: use this.Content to load your game content here   
 
             screenManager = new ScreenManager(this);
-            
-            //Adicionamos as cenas ao gerenciador.
-            PongScreen pong = new PongScreen(screenManager);
 
+            //Adicionamos as cenas ao gerenciador.
+            PongScreen pong = new PongScreen(screenManager, "pong");
+            YyhManagerScreen yyhManager = new YyhManagerScreen(screenManager, nameof(yyhManager));
+
+            //Digite aqui o nome da tela que você deseja exibir.
             screenManager.Add(pong);            
         }
 

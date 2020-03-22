@@ -8,7 +8,7 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe gerenciadora as telas do jogo.</summary>
-    public class ScreenManager : IDisposable, IUpdateDrawable
+    public class ScreenManager : IManager
     {
         //---------------------------------------//
         //-----         VARIÁVEIES          -----//
@@ -158,7 +158,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Screen old = Active;
 
             Screen finder = this[name];
-            Active = finder ?? throw new ArgumentException("Não foi encontrada um mundo com esse nome", nameof(name));
+            Active = finder ?? throw new ArgumentException("Não foi encontrada uma tela com esse nome", nameof(name));
 
             if (reset)
                 old.Reset();

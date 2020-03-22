@@ -29,8 +29,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public Game Game { get; private set; } = null;
         /// <summary>Obtém ou define o nome ds tela.</summary>
         public string Name { get; set; } = string.Empty;
-        /// <summary>Obtém ou define a instância corrente do gerenciador de cenas.</summary>
+        /// <summary>Obtém ou define a instância corrente do gerenciador de telas.</summary>
         public ScreenManager Manager { get; set; } = null;
+        /// <summary>Obtém ou define a instância corrente do subgerenciador de telas.</summary>
+        public SubScreenManager SubManager { get; set; } = null;
         /// <summary>Obtém ou define a capacidade da tela de ser ativa ou desenhável.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup();        
         /// <summary>Obtém o valor True se a tela foi carregada.</summary>
@@ -71,6 +73,29 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">Nome da tela.</param>
         public Screen(Game game, string name) : this(game, name, true) { }
 
+        /// <summary>
+        /// Inicializa uma nova instância da classe Screen.
+        /// </summary>
+        /// <param name="manager">O gerenciador de telas atual.</param>
+        /// <param name="name">O nome da tela.</param>
+        /// <param name="loadScreen">True se a tela será carregada.</param>
+        public Screen(ScreenManager manager, string name, bool loadScreen) : this(manager.Game, name, loadScreen)
+        {
+            Manager = manager;
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe Screen.
+        /// </summary>
+        /// <param name="subManager">O subgerenciador de telas associado a uma tela administradora.</param>
+        /// <param name="name">O nome da tela.</param>
+        /// <param name="loadScreen">True se a tela será carregada.</param>
+        public Screen(SubScreenManager subManager, string name, bool loadScreen) : this(subManager.Game, name, loadScreen)
+        {
+            Manager = subManager.ScreenManager;
+            SubManager = subManager;
+        }
+
         /// <summary>Inicializa uma nova instância da classe Screen.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
         /// <param name="name">Nome da tela.</param>
@@ -82,24 +107,6 @@ namespace Microsoft.Xna.Framework.Graphics
             MainViewport = game.GraphicsDevice.Viewport;
 
             if(loadScreen)
-                Load();
-        }
-        
-        /// <summary>
-        /// Inicializa uma nova instância da classe Screen.
-        /// </summary>
-        /// <param name="manager">O gerenciador de telas atual.</param>
-        /// <param name="name">O nome da tela.</param>
-        /// <param name="loadScreen">True se a tela será carregada.</param>
-        public Screen(ScreenManager manager, string name, bool loadScreen)
-        {
-            Manager = manager;
-
-            Game = manager.Game;
-            Name = name;
-            MainViewport = Game.GraphicsDevice.Viewport;
-
-            if (loadScreen)
                 Load();
         }
 
@@ -124,7 +131,8 @@ namespace Microsoft.Xna.Framework.Graphics
             this.MainViewport = source.MainViewport;
             this.Name = source.Name;
             this.OnDraw = source.OnDraw;
-            this.OnUpdate = source.OnUpdate;               
+            this.OnUpdate = source.OnUpdate;
+            this.SubManager = source.SubManager;
         }
 
         //---------------------------------------//

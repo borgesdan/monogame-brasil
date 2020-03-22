@@ -35,6 +35,20 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>
+        /// Inicializa uma nova instância de InputManager como cópia de outra instância.
+        /// </summary>
+        /// <param name="source">A instância a ser copiada.</param>
+        public InputManager(InputManager source)
+        {
+            this.One = source.One;
+            this.Two = source.Two;
+            this.Three = source.Three;
+            this.Four = source.Four;
+            this.Keyboard = source.Keyboard;
+            this.Mouse = source.Mouse;
+        }
+
+        /// <summary>
         /// Obtém o GamePadHelper pelo seu index.
         /// </summary>
         /// <param name="index">O index do jogador.</param>

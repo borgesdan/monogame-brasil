@@ -4,13 +4,18 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/menu.png</File>
     <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/ball_hit.wav</File>
     <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/default.spritefont</File>
     <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/up.wav</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/logo.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/logo_bottom.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/menu_back.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/menu_bar.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/push_start.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game1/Content/yyh/thunder.wav</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

@@ -41,17 +41,20 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Game game, string name) : base(game, name) { }
+        /// /// <param name="font">Define o SpriteFont para desenho.</param>
+        public TextEntity(Game game, string name, SpriteFont font) : base(game, name) { }
 
         /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
         /// <param name="screen">A tela em que a entidade será associada.</param>
         /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Screen screen, string name) : base(screen, name) { }
+        /// <param name="font">Define o SpriteFont para desenho.</param>
+        public TextEntity(Screen screen, string name, SpriteFont font) : base(screen, name) { }
 
         /// <summary>Inicializa uma nova instância de TextEntity copiando uma outra entidade.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
         public TextEntity(TextEntity source) : base(source)
         {
+            Font = source.Font;
             Text = source.Text;
         }
 
@@ -68,21 +71,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public void SetFont(string path)
         {
             SetFont(Game.Content.Load<SpriteFont>(path));
-        }
-
-        /// <summary>Define o texto a ser exibido e a propriedade UseStringBuilder como True.</summary>
-        /// <param name="stringBuilder">O texto a ser desenhado.</param>
-        public void SetText(StringBuilder stringBuilder)
-        {
-            Text = stringBuilder;
-        }
-
-        /// <summary>Acrescenta um texto a string vigente.</summary>
-        /// <param name="text">O texto a ser acrescentado.</param>
-        public void AppendText(string text)
-        {
-            Text.Append(text);
-        }        
+        }          
 
         /// <summary>Atualiza a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>

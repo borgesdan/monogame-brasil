@@ -2,6 +2,20 @@
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+    /// <summary>Enumeração que representa o tipo de alinhamento na tela da sprite.</summary>
+    public enum AlignType : byte
+    {
+        Center = 1,
+        Left,
+        Right,
+        Top,
+        Bottom,
+        LeftTop,
+        LeftBottom,
+        RightTop,
+        RightBottom
+    }
+
     /// <summary>Classe que expõe acesso as definições de valores da entidade, como posição, velocidade, rotação, entre outros.</summary>
     public sealed class TransformGroup
     {
@@ -234,19 +248,5 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Entity.UpdateBounds();
         }        
-    }
-
-    /// <summary>Enumeração que representa o tipo de alinhamento na tela da sprite.</summary>
-    public enum AlignType : byte
-    {
-        Center = 1,
-        Left,
-        Right,
-        Top,
-        Bottom,
-        LeftTop,
-        LeftBottom,
-        RightTop,
-        RightBottom
-    }
+    }    
 }

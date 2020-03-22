@@ -21,18 +21,20 @@ namespace Game1.Screens
         TextEntity text;
 
         //Sons
+        //https://freesound.org/people/Anthousai/sounds/406277/
         SoundEffect hit;
+        //https://freesound.org/people/Breviceps/sounds/450613/
         SoundEffect goal;
 
         /// <summary>
         /// Inicializa uma nova instância da classe PongScreen.
         /// </summary>
         /// <param name="manager">O gerenciador de telas.</param>
-        public PongScreen(ScreenManager manager) : base(manager, "pong", true)
+        public PongScreen(ScreenManager manager, string name) : base(manager: manager, name: name, loadScreen: true)
         {
             //A classe Screen dispõe de 4 construtores,
             //Mas aqui sobrecaregamos somente um,
-            //Já passando para a base os parâmetros "name" e "loadScreen".
+            //Já setando loadScreen como True.
             
             //Definimos a cor de fundo.
             BackgroundColor = Color.DarkGreen;
@@ -192,7 +194,7 @@ namespace Game1.Screens
 
             //Chamamos o método da base.
             base.Load();
-        }        
+        }
 
         //Aqui iremos colocar o código para quando for necessário resetar a tela.
         public override void Reset()

@@ -45,6 +45,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\Pong\PongScreen.cs" />
+    <Compile Include="Screens\Yyh\YyhManagerScreen.cs" />
+    <Compile Include="Screens\Yyh\YyhMenuScreen.cs" />
+    <Compile Include="Screens\Yyh\YyhPressStartScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

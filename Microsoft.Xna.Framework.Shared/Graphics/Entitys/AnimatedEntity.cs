@@ -19,7 +19,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a animação ativa.</summary>
         public Animation ActiveAnimation { get; private set; } = null;
         /// <summary>Obtém o nome da animação ativa.</summary>
-        public string ActiveName { get => ActiveAnimation.Name; }
+        public string ActiveName { get => ActiveAnimation.Name; }        
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//

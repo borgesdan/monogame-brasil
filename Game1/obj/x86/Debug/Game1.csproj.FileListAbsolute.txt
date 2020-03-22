@@ -23,3 +23,10 @@ C:\Users\Borges\source\repos\MonoGameDevelop\Game1\obj\x86\Debug\Game1.pdb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\default.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\ball_hit.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\up.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\logo.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\logo_bottom.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\menu.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\menu_back.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\menu_bar.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\push_start.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game1\bin\Windows\x86\Debug\Content\yyh\thunder.xnb
