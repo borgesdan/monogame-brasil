@@ -103,6 +103,8 @@ Entre outras funcionalidades.
 
 ## Versão
 
+Nome da versão: Alho-poró.
+
 O projeto Monogame Brasil está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
 
 ## Autor
