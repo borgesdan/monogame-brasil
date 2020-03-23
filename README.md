@@ -1,4 +1,4 @@
-# MonoGame Brasil
+# MonoGame.Caffe
 
 Conjunto simpes de classes para auxiliar no desenvolvimento de jogos 2D como a biblioteca C# MonoGame.
 
@@ -105,7 +105,7 @@ Entre outras funcionalidades.
 
 Nome da versão: Alho-poró.
 
-O projeto Monogame Brasil está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
+O projeto Monogame.Caffe está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
 
 ## Autor
 

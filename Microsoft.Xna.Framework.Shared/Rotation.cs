@@ -51,6 +51,8 @@ namespace Microsoft.Xna.Framework
             Point p3 = GetRotation(new Point(rectangle.Right, rectangle.Bottom), origin, degreesInRadians);
             //Bottom-Left
             Point p4 = GetRotation(new Point(rectangle.Left, rectangle.Bottom), origin, degreesInRadians);
+            //Center
+            Point p5 = GetRotation(new Point(rectangle.Width / 2, rectangle.Height / 2), origin, degreesInRadians);
 
             return new RotatedRectangle(p1, p2, p3, p4);
         }

@@ -11,13 +11,15 @@ namespace Microsoft.Xna.Framework
     public struct RotatedRectangle : IEquatable<RotatedRectangle>
     {
         /// <summary>Obtém o valor da coordenada Top-Left rotacionado.</summary>
-        public readonly Point Point1;
+        public readonly Point P1;
         /// <summary>Obtém o valor da coordenada Top-right rotacionado.</summary>
-        public readonly Point Point2;
+        public readonly Point P2;
         /// <summary>Obtém o valor da coordenada Bottom-Right rotacionado.</summary>
-        public readonly Point Point3;
+        public readonly Point P3;
         /// <summary>Obtém o valor da coordenada Bottom-Left rotacionado.</summary>
-        public readonly Point Point4;
+        public readonly Point P4;
+        /// <summary>Obtém o valor do centro do retângulo rotacionado.</summary>
+        public readonly Point Center;
 
         /// <summary>
         /// Inicializa uma nova instância de RotatedRectangle com suas posições rotacionadas.
@@ -26,12 +28,35 @@ namespace Microsoft.Xna.Framework
         /// <param name="p2">O valor da coordenada Top-right.</param>
         /// <param name="p3">O valor da coordenada Bottom-Right.</param>
         /// <param name="p4">O valor da coordenada Bottom-Left.</param>
-        public RotatedRectangle(Point p1, Point p2, Point p3, Point p4)
+        /// <param name="center">O valor do centor do retângulo.</param>
+        public RotatedRectangle(Point p1, Point p2, Point p3, Point p4, Point center)
         {
-            Point1 = p1;
-            Point2 = p2;
-            Point3 = p3;
-            Point4 = p4;
+            P1 = p1;
+            P2 = p2;
+            P3 = p3;
+            P4 = p4;
+            Center = center;
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de RotatedRectangle com suas posições rotacionadas.
+        /// </summary>
+        /// <param name="rectangle">O retângulo.</param>
+        /// <param name="origin">A origem da rotação.</param>
+        /// <param name="degrees">O grau da rotação em radianos.</param>
+        public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees) : this(Rotation.GetRotation(rectangle, origin, degrees)) { }
+
+        /// <summary>
+        /// Inicializa uma nova instância de RotatedRectangle como cópia de outro RotatedRectangle.
+        /// </summary>
+        /// <param name="source">O retângulo para cópia.</param>
+        public RotatedRectangle(RotatedRectangle source)
+        {
+            P1 = source.P1;
+            P2 = source.P2;
+            P3 = source.P3;
+            P4 = source.P4;
+            Center = source.Center;
         }
 
         public override bool Equals(object obj)
@@ -41,19 +66,20 @@ namespace Microsoft.Xna.Framework
 
         public bool Equals(RotatedRectangle other)
         {
-            return Point1.Equals(other.Point1) &&
-                   Point2.Equals(other.Point2) &&
-                   Point3.Equals(other.Point3) &&
-                   Point4.Equals(other.Point4);
+            return P1.Equals(other.P1) &&
+                   P2.Equals(other.P2) &&
+                   P3.Equals(other.P3) &&
+                   P4.Equals(other.P4) &&
+                   Center.Equals(other.Center);
         }
 
         public override int GetHashCode()
         {
             var hashCode = 1635792830;
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Point1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Point2);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Point3);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(Point4);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P1);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P2);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P3);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P4);
             return hashCode;
         }
 

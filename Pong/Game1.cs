@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
