@@ -57,21 +57,19 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
             
             //Busca todas as entidades vísiveis da tela.
-            foreach(var other in screen.DrawableEntitys)
+            foreach(var other in screen.DrawableEntities)
             {
                 // Prossegue se a entidade atual é diferente da entidade da lista.
                 if (!Entity.Equals(other))
                 {
                     //Checa a colisão
-                    var result = Collision.CheckResult(Entity, other);
-                    var bvalue = result.Item1;
-                    var intersection = result.Item2;
+                    var result = Collision.EntityCollision(Entity, other);
 
-                    if(bvalue)
+                    if(result.HasCollided)
                     {
                         IsColliding = true;
                         //O que fazer sobre a colisão será definido pelo usuário.
-                        OnCollision?.Invoke(Entity, gameTime, intersection, other);
+                        OnCollision?.Invoke(Entity, gameTime, result, other);
                     }
                 }
             }

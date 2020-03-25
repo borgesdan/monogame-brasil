@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/up.wav</SourceFile>
-  <SourceTime>2020-03-20T10:41:45.5959501-03:00</SourceTime>
+  <SourceTime>2020-03-23T18:58:04-03:00</SourceTime>
   <DestFile>C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/bin/Windows/Content/up.xnb</DestFile>
-  <DestTime>2020-03-23T13:54:48.0226542-03:00</DestTime>
+  <DestTime>2020-03-24T20:47:41.6471245-03:00</DestTime>
   <Importer>WavImporter</Importer>
   <ImporterTime>2018-12-08T13:35:54-03:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

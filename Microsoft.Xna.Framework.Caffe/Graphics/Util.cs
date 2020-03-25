@@ -64,7 +64,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
     /// <param name="intersection">A área de intersecção entre as duas entidades.</param>
     /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
-    public delegate void CollisionAction(Entity2D source, GameTime gameTime, Rectangle intersection, Entity2D collidedEntity);
+    public delegate void CollisionAction(Entity2D source, GameTime gameTime, CollisionResult result, Entity2D collidedEntity);
 
     /// <summary>
     /// Encapsula um metodo que tem os seguintes parâmetros definidos e que expõe o resultado final de uma ação.

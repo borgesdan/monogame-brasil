@@ -1,1 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/ball_hit.wav","C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/bin/Windows/Content/ball_hit.xnb","SoundEffectProcessor","SoundEffectContent",3302,3363,4,240322
+"C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/default.spritefont","C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/bin/Windows/Content/default.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0,9140689
+"C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/up.wav","C:/Users/Borges/source/repos/MonoGameDevelop/Pong/Content/bin/Windows/Content/up.xnb","SoundEffectProcessor","SoundEffectContent",75896,75957,0,3150238

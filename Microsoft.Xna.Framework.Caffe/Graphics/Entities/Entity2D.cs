@@ -27,6 +27,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public float LayerDepth { get; set; } = 0;
         /// <summary>Obtém os limites da entidade.</summary>
         public Rectangle Bounds { get; protected set; } = Rectangle.Empty;
+        /// <summary>Obtém os limites rotacionados da entidade.</summary>
+        public Polygon BoundsR { get; protected set; } = new Polygon();
         /// <summary>Obtém a instância atual da classe Game.</summary>
         public Game Game { get; set; } = null;
         /// <summary>Obtém ou define a visibilidade da entidade.</summary>
@@ -106,6 +108,7 @@ namespace Microsoft.Xna.Framework.Graphics
             UpdateOutOfView = source.UpdateOutOfView;
             Components = source.Components;
             DrawPercentage = source.DrawPercentage;
+            BoundsR = source.BoundsR;
         }
 
         //---------------------------------------//

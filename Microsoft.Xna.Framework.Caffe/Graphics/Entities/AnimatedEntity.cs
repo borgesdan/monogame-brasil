@@ -258,7 +258,22 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x + (Origin.X + s_f_oc.X));
             int recY = (int)(y - (Origin.Y + s_f_oc.Y));
 
-            Bounds = new Rectangle(recX, recY, w, h);            
+            Bounds = new Rectangle(recX, recY, w, h);  
+            
+            //Calcula o BoundsR.
+            var r = Rotation.GetRotation(ActiveAnimation.Frame, Origin, Transform.Rotation);
+
+            BoundsR.Points.Clear();
+            BoundsR.Points.Add(r.P1.ToVector2());
+            BoundsR.Points.Add(r.P2.ToVector2());
+            BoundsR.Points.Add(r.P3.ToVector2());
+            BoundsR.Points.Add(r.P4.ToVector2());
+
+            var xb = Transform.X - Origin.X;
+            var yb = Transform.Y - Origin.Y;
+
+            BoundsR.Offset(new Vector2(xb, yb));
+            BoundsR.BuildEdges();            
 
             base.UpdateBounds();
         }

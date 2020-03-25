@@ -42,13 +42,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a Viewport da tela.</summary>
         public Viewport MainViewport { get; set; }
         /// <summary>Obtém ou define a lista de entidades disponíveis na tela.</summary>
-        public List<Entity2D> Entitys { get; set; } = new List<Entity2D>();
-        /// <summary>Obtém ou define a lista de entidades que serão desenhadas atrás de DrawableEntitys e que não serão afetadas pela câmera e nem pela MainView.</summary>
-        public List<Entity2D> BackStaticEntitys { get; set; } = new List<Entity2D>();
-        /// <summary>Obtém ou define a lista de entidades que serão desenhadas a frente de DrawableEntitys e que não serão afetadas pela câmera e nem pela MainView.</summary>
-        public List<Entity2D> FrontStaticEntitys { get; set; } = new List<Entity2D>();
+        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
+        /// <summary>Obtém ou define a lista de entidades que serão desenhadas atrás de DrawableEntities e que não serão afetadas pela câmera e nem pela MainView.</summary>
+        public List<Entity2D> BackStaticEntities { get; set; } = new List<Entity2D>();
+        /// <summary>Obtém ou define a lista de entidades que serão desenhadas a frente de DrawableEntities e que não serão afetadas pela câmera e nem pela MainView.</summary>
+        public List<Entity2D> FrontStaticEntities { get; set; } = new List<Entity2D>();
         /// <summary>Obtém a lista de entidades que serão desenhadas.</summary>
-        public List<Entity2D> DrawableEntitys { get; private set; } = new List<Entity2D>();
+        public List<Entity2D> DrawableEntities { get; private set; } = new List<Entity2D>();
         /// <summary>Obtém ou define a lista de camadas traseiras.</summary>
         public List<ScreenLayer<Animation>> BackLayers { get; set; } = new List<ScreenLayer<Animation>>();
         /// <summary>Obtém ou define a lista de camadas frontais.</summary>
@@ -116,15 +116,15 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A tela a ser copiada.</param>
         public Screen(Screen source)
         {
-            this.BackStaticEntitys = source.BackStaticEntitys;
+            this.BackStaticEntities = source.BackStaticEntities;
             this.BackgroundColor = source.BackgroundColor;
             this.BackLayers = source.BackLayers;
             this.Camera = source.Camera;
-            this.DrawableEntitys = source.DrawableEntitys;
+            this.DrawableEntities = source.DrawableEntities;
             this.Enable = source.Enable;
-            this.Entitys = source.Entitys;
+            this.Entities = source.Entities;
             this.FrontLayers = source.FrontLayers;
-            this.FrontStaticEntitys = source.FrontStaticEntitys;
+            this.FrontStaticEntities = source.FrontStaticEntities;
             this.Game = source.Game;
             this.LoadState = source.LoadState;
             this.Manager = source.Manager;
@@ -172,18 +172,18 @@ namespace Microsoft.Xna.Framework.Graphics
 
             staticView = new Viewport(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
             
-            DrawableEntitys.Clear();
+            DrawableEntities.Clear();
 
             //Atualiza as entidades.
-            UpdateEntitys(gameTime, MainViewport);            
+            UpdateEntities(gameTime, MainViewport);            
 
             //Chama OnEndUpdate
             OnUpdate?.Invoke(this, gameTime);
         }
 
-        private void UpdateEntitys(GameTime gameTime, Viewport viewport)
+        private void UpdateEntities(GameTime gameTime, Viewport viewport)
         {
-            foreach (var e in Entitys)
+            foreach (var e in Entities)
             {
                 e.Screen = this;
 
@@ -191,15 +191,15 @@ namespace Microsoft.Xna.Framework.Graphics
                 if (Util.CheckFieldOfView(Game, Camera, viewport, e.Bounds))
                 {
                     //Adiciona-a a lista de entidades desenháveis.
-                    DrawableEntitys.Add(e);
+                    DrawableEntities.Add(e);
                 }
             }
 
             //Atualiza todas as entidades.
-            Entitys.ForEach(e => e.Update(gameTime));
+            Entities.ForEach(e => e.Update(gameTime));
 
-            BackStaticEntitys.ForEach(e => e.Update(gameTime));
-            FrontStaticEntitys.ForEach(e => e.Update(gameTime));
+            BackStaticEntities.ForEach(e => e.Update(gameTime));
+            FrontStaticEntities.ForEach(e => e.Update(gameTime));
         }
 
         /// <summary>Desenha a tela.</summary>
@@ -218,7 +218,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //Desenha as entidades não afetadas pela câmera.
             spriteBatch.Begin();
-            BackStaticEntitys.ForEach(e => e.Draw(gameTime, spriteBatch));
+            BackStaticEntities.ForEach(e => e.Draw(gameTime, spriteBatch));
             spriteBatch.End();
 
             //Define a view principal.
@@ -227,7 +227,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //Inicia o spritebatch com a câmera.
             spriteBatch.Begin(transformMatrix: Camera.GetTransform());            
             //Desenhas a entidades e chama o evento.
-            DrawableEntitys.ForEach(e => e.Draw(gameTime, spriteBatch));            
+            DrawableEntities.ForEach(e => e.Draw(gameTime, spriteBatch));            
             OnDraw?.Invoke(this, gameTime, spriteBatch);  
             spriteBatch.End();
 
@@ -236,7 +236,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //Desenhas as entidades não afetadas pela câmera [Frente].
             spriteBatch.Begin();
-            FrontStaticEntitys.ForEach(e => e.Draw(gameTime, spriteBatch));
+            FrontStaticEntities.ForEach(e => e.Draw(gameTime, spriteBatch));
             spriteBatch.End();
 
             //Desenha as camadas frontais.
@@ -247,12 +247,12 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Adiciona entidades a cena.</summary>
-        /// <param name="entitys">Lista de entidades a ser adicionada.</param>
-        public void Add(params Entity2D[] entitys)
+        /// <param name="entities">Lista de entidades a ser adicionada.</param>
+        public void Add(params Entity2D[] entities)
         {
-            foreach(var e in entitys)
+            foreach(var e in entities)
             {
-                Entitys.Add(e);
+                Entities.Add(e);
             }
         }
 
@@ -284,11 +284,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 Game = null;
                 Manager = null;
 
-                Entitys.Clear();
-                Entitys = null;                
+                Entities.Clear();
+                Entities = null;                
 
-                DrawableEntitys.Clear();
-                DrawableEntitys = null;
+                DrawableEntities.Clear();
+                DrawableEntities = null;
 
                 Name = null;
                 LoadState = ScreenLoadState.UnLoaded;
