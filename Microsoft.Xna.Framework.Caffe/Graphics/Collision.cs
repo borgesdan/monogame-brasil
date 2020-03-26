@@ -12,29 +12,81 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="other">A segunda entidade.</param>
         public static CollisionResult EntityCollision(Entity2D entity, Entity2D other)
         {
-            //O resultado da colisão
-            CollisionResult result = new CollisionResult(false, CollisionType.None, Rectangle.Empty, new PolygonCollisionResult());
+            entity.UpdateBounds();
+            other.UpdateBounds();
 
-            //Se alguma das entidades estão rotacionada, então a colisão tem que ser por polígono.
-            if (entity.Transform.Rotation != 0 && other.Transform.Rotation != 0)
+            CollisionResult result = new CollisionResult();
+            result.Type = CollisionType.None;
+            result.HasCollided = false;
+
+            //Se as entidades não estão rotacionadas, então fazemos o cálculo simples de intersecção.
+            if(entity.Transform.Rotation == 0 && other.Transform.Rotation == 0)
             {
-                //Calcula a colisão por polígono
-                var r = PolygonCollision(entity.BoundsR, other.BoundsR, entity.Transform.Velocity);
-                //Adiciona o resultado.
-                result = new CollisionResult(r.Intersect, CollisionType.Polygon, Rectangle.Empty, r);
+                //Verifica se  há colisão.
+                if (BoundsCollision(entity.Bounds, other.Bounds))
+                {
+                    //Cria o resultado da colisão entre retângulos.
+                    RectangleCollisionResult rcr = new RectangleCollisionResult();
+                    rcr.Intersection = Rectangle.Intersect(entity.Bounds, other.Bounds);
+
+                    //O vetor de subtração a ser completado e adicionado.
+                    Vector2 sub = Vector2.Zero;
+
+                    var eb = entity.Bounds;
+                    var ob = other.Bounds;
+
+                    //Lógica de colisão entre retângulos
+
+                    //Se na intersecção entre os retângulos
+                    //A altura é maior que a largura da intersecção,
+                    //Então significa que foi uma colisão lateral.
+                    if(rcr.Intersection.Height > rcr.Intersection.Width)
+                    {
+                        //Verificamos o limite.
+                        //Se a ponta direita é maior que a ponta esquerda do outro retângulo
+                        //e essa ponta está dentro do outro retângulo.
+                        //Então encontramos o valor de subtração.
+                        //A lógica serve para o restante.
+                        if (eb.Right > ob.Left && eb.Right < ob.Right)
+                        {
+                            sub.X -= eb.Right - ob.Left;
+                        }
+                        else if(eb.Left < ob.Right && eb.Left > ob.Left)
+                        {
+                            sub.X -= eb.Left - ob.Right;
+                        }
+                    }
+                    //O contrário é uma colisão vertical.
+                    if (rcr.Intersection.Width > rcr.Intersection.Height)
+                    {
+                        if (eb.Bottom > ob.Top && eb.Bottom < ob.Bottom)
+                        {
+                            sub.Y -= eb.Bottom - ob.Top;
+                        }
+                        else if(eb.Top < ob.Bottom && eb.Top > ob.Top)
+                        {
+                            sub.Y -= eb.Top - ob.Bottom;
+                        }
+                    }
+
+                    rcr.Subtract = sub;
+
+                    result.HasCollided = true;
+                    result.Type = CollisionType.Rectangle;
+                    result.RectangleResult = rcr;
+                }       
             }
-            //se todas as as entidades estão sem rotação, então pode-se calcular a colisão pela intersecção do retângulo.
+            //se as entidades estão rotacionadas.
             else
             {
-                var b = entity.Bounds;
-                var ob = other.Bounds;
-
-                //Se houve a intersecção
-                if (b.Intersects(ob))
+                PolygonCollisionResult pcr = PolygonCollision(entity.BoundsR, entity.BoundsR, entity.Transform.Velocity);
+                
+                if(pcr.Intersect)
                 {
-                    Rectangle intersect = Rectangle.Intersect(entity.Bounds, other.Bounds);
-                    result = new CollisionResult(true, CollisionType.Rectangle, intersect, new PolygonCollisionResult());
-                } 
+                    result.HasCollided = true;
+                    result.Type = CollisionType.Polygon;
+                    result.PolygonResult = pcr;
+                }
             }
 
             return result;
@@ -51,23 +103,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 return true;
             else
                 return false;
-        }
-
-        /// <summary>
-        /// Verifica se os limites do retângulo 1 está intersectando os limites da retângulo 2 retornando um.
-        /// </summary>
-        /// <param name="bounds">O primeiro retângulo.</param>
-        /// <param name="otherBounds">O segundo retângulo</param>
-        public static CollisionResult CollisionResult(Rectangle bounds, Rectangle otherBounds)
-        {
-            bool result = BoundsCollision(bounds, otherBounds);
-            Rectangle rec = Rectangle.Empty;
-
-            if (result)
-                rec = Rectangle.Intersect(bounds, otherBounds);
-
-            return new CollisionResult(true, CollisionType.Rectangle, rec, new PolygonCollisionResult());
-        }        
+        }         
 
         /// <summary>
         /// Verifica se um polígono colidiu com outro.
@@ -157,7 +193,7 @@ namespace Microsoft.Xna.Framework.Graphics
             // The minimum translation vector can be used to push the polygons appart.
             // First moves the polygons by their velocity
             // then move polygonA by MinimumTranslationVector.
-            if (result.WillIntersect) result.MinimumTranslationVector = translationAxis * minIntervalDistance;
+            if (result.WillIntersect) result.Subtract = translationAxis * minIntervalDistance;
 
             return result;
         }

@@ -6,11 +6,23 @@ using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Representa um polígono.
+    /// </summary>
     public class Polygon
     {
+        /// <summary>
+        /// Obtém ou define os pontos do polígono.
+        /// </summary>
         public List<Vector2> Points { get; set; } = new List<Vector2>();
-        public List<Vector2> Edges { get; set; } = new List<Vector2>();
+        /// <summary>
+        /// Obtém ou define as bordas do polígono.
+        /// </summary>
+        public List<Vector2> Edges { get; private set; } = new List<Vector2>();
 
+        /// <summary>
+        /// Obtém o centro do polígono.
+        /// </summary>
         public Vector2 Center 
         {
             get 
@@ -27,10 +39,17 @@ namespace Microsoft.Xna.Framework
             }
         }
 
+        /// <summary>
+        /// Inicializa uma nova instância de Polygon.
+        /// </summary>
         public Polygon()
         {
         }
 
+        /// <summary>
+        /// Inicializa uma nova instância de Polygon.
+        /// </summary>
+        /// <param name="points">Define os pontos do polígono.</param>
         public Polygon(params Vector2[] points)
         {
             foreach(var p in points)
@@ -41,6 +60,9 @@ namespace Microsoft.Xna.Framework
             BuildEdges();
         }
 
+        /// <summary>
+        /// Verifica e Calcula as bordas.
+        /// </summary>
         public void BuildEdges()
         {
             Vector2 p1;
@@ -61,11 +83,20 @@ namespace Microsoft.Xna.Framework
             }            
         }
 
+        /// <summary>
+        /// Aplica o deslocamento das posições dos pontos do polígono.
+        /// </summary>
+        /// <param name="vector">O valor no eixo X e Y.</param>
         public void Offset(Vector2 vector)
         {
             Offset(vector.X, vector.Y);            
         }
 
+        /// <summary>
+        /// Aplica o deslocamento das posições dos pontos do polígono.
+        /// </summary>
+        /// <param name="x">O valor no eixo X.</param>
+        /// <param name="y">O valor no eixo Y.</param>
         public void Offset(float x, float y)
         {
             for (int i = 0; i < Points.Count; i++)

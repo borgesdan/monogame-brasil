@@ -138,6 +138,22 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Bounds = new Rectangle(recX, recY, w, h);
 
+            //Calcula o BoundsR.
+            Rectangle frame = new Rectangle(0, 0, Transform.Width, Transform.Height);
+            var r = Rotation.GetRotation(frame, Origin, Transform.Rotation);
+
+            BoundsR.Points.Clear();
+            BoundsR.Points.Add(r.P1.ToVector2());
+            BoundsR.Points.Add(r.P2.ToVector2());
+            BoundsR.Points.Add(r.P3.ToVector2());
+            BoundsR.Points.Add(r.P4.ToVector2());
+
+            var xb = Transform.X - Origin.X;
+            var yb = Transform.Y - Origin.Y;
+
+            BoundsR.Offset(new Vector2(xb, yb));
+            BoundsR.BuildEdges();
+
             base.UpdateBounds();
         }
 

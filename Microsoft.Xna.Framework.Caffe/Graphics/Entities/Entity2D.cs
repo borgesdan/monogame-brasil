@@ -127,7 +127,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (Transform.Xv != 0)
                 Transform.X += Transform.Velocity.X;
             if (Transform.Yv != 0)
-                Transform.Y += Transform.Velocity.Y;            
+                Transform.Y += Transform.Velocity.Y;
 
             //Chama o evento.
             OnUpdate?.Invoke(this, gameTime);

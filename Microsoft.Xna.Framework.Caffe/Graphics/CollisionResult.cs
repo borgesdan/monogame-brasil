@@ -24,6 +24,119 @@ namespace Microsoft.Xna.Framework.Graphics
     }
 
     /// <summary>
+    /// Estrutura que guarda o resultado de uma colisão entre retângulos não rotacionados.
+    /// </summary>
+    public struct RectangleCollisionResult : IEquatable<RectangleCollisionResult>
+    {
+        /// <summary>
+        /// Obtém a intersecção da colisão entre retângulos.
+        /// </summary>
+        public Rectangle Intersection;
+
+        /// <summary>
+        /// Obtém o quanto é necessário para voltar a posição antes da colisão.
+        /// </summary>
+        public Vector2 Subtract;
+
+        /// <summary>
+        /// Cria uma nova instância de RectangleCollisionResult.
+        /// </summary>
+        /// <param name="intersection">A intersecção da colisão entre retângulos.</param>
+        /// <param name="distance">O quanto um retângulo intersectou o outro.</param>
+        public RectangleCollisionResult(Rectangle intersection, Vector2 distance)
+        {
+            Intersection = intersection;
+            Subtract = distance;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is RectangleCollisionResult result && Equals(result);
+        }
+
+        public bool Equals(RectangleCollisionResult other)
+        {
+            return Intersection.Equals(other.Intersection) &&
+                   Subtract.Equals(other.Subtract);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1513100886;
+            hashCode = hashCode * -1521134295 + EqualityComparer<Rectangle>.Default.GetHashCode(Intersection);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Vector2>.Default.GetHashCode(Subtract);
+            return hashCode;
+        }
+
+        public static bool operator ==(RectangleCollisionResult left, RectangleCollisionResult right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(RectangleCollisionResult left, RectangleCollisionResult right)
+        {
+            return !(left == right);
+        }
+    }
+
+    /// <summary>
+    /// Estrutura que guarda os resultados de uma colisão de polígonos.
+    /// </summary>
+    public struct PolygonCollisionResult : IEquatable<PolygonCollisionResult>
+    {
+        /// <summary>Obtém o valor True caso o polígono esteja previsto a colidir baseado em sua velocidade.</summary>
+        public bool WillIntersect;
+        /// <summary>Obtém o valor True caso o polígono esteja intersectando outro polígono (Colidiu).</summary>
+        public bool Intersect;
+        /// <summary>Obtém o quanto é necessário para voltar a posição antes da colisão.</summary>
+        public Vector2 Subtract; //MinimumTranslationVector
+
+        /// <summary>
+        /// Cria uma nova instância de PolygonCollisionResult.
+        /// </summary>
+        /// <param name="willIntersect">Define se o polígono está previsto a colidir baseado em sua velocidade.</param>
+        /// <param name="intersect">Define se o polígono estpa intersectando outro polígono (Colidiu).</param>
+        /// <param name="distance">Define o quanto o polígono adentrou na colisão no eixo X e Y.</param>
+        public PolygonCollisionResult(bool willIntersect, bool intersect, Vector2 distance)
+        {
+            WillIntersect = willIntersect;
+            Intersect = intersect;
+            Subtract = distance;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PolygonCollisionResult result && Equals(result);
+        }
+
+        public bool Equals(PolygonCollisionResult other)
+        {
+            return WillIntersect == other.WillIntersect &&
+                   Intersect == other.Intersect &&
+                   Subtract.Equals(other.Subtract);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -2017691047;
+            hashCode = hashCode * -1521134295 + WillIntersect.GetHashCode();
+            hashCode = hashCode * -1521134295 + Intersect.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Vector2>.Default.GetHashCode(Subtract);
+            return hashCode;
+        }
+
+        public static bool operator ==(PolygonCollisionResult left, PolygonCollisionResult right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PolygonCollisionResult left, PolygonCollisionResult right)
+        {
+            return !(left == right);
+        }
+    }
+
+    /// <summary>
     /// Estrutura que guarda o resultado de uma colisão.
     /// </summary>
     public struct CollisionResult : IEquatable<CollisionResult>
@@ -31,19 +144,21 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém True caso houve uma colisão.
         /// </summary>
-        public readonly bool HasCollided;
+        public bool HasCollided;
         /// <summary>
         /// O tipo da colisão (Retângulo ou polígonos (retângulo rotacionado)).
         /// </summary>
-        public CollisionType Type;        
+        public CollisionType Type;
+
         /// <summary>
-        /// Obtém a intersecção da colisão entre retângulos.
+        /// Obtém o resultado da colisão entre dois retângulos não rotacionados.
         /// </summary>
-        public readonly Rectangle Intersection;
+        public RectangleCollisionResult RectangleResult;
+
         /// <summary>
         /// Obtém o resultado de uma colisão entre polígonos (caso os retângulos estejam rotacionados).
         /// </summary>
-        public readonly PolygonCollisionResult PolygonResult;
+        public PolygonCollisionResult PolygonResult;
 
         /// <summary>
         /// Cria uma nova instância de CollisionResult.
@@ -52,11 +167,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="type">True caso a colisão foi entre retângulos não rotacionados.</param>
         /// <param name="intersection">A intersecção da colisão entre retângulos não rotacionados.</param>
         /// <param name="polyResult">O resultado de uma colisão entre polígonos (caso os retângulos estejam rotacionados).</param>
-        public CollisionResult(bool result, CollisionType type, Rectangle intersection, PolygonCollisionResult polyResult)
+        public CollisionResult(bool result, CollisionType type, RectangleCollisionResult rectangleResult, PolygonCollisionResult polyResult)
         {
             HasCollided = result;
             Type = type;
-            Intersection = intersection;
+            RectangleResult = rectangleResult;
             PolygonResult = polyResult;
         }
 
@@ -69,16 +184,16 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             return HasCollided == other.HasCollided &&
                    Type == other.Type &&
-                   Intersection.Equals(other.Intersection) &&
+                   RectangleResult.Equals(other.RectangleResult) &&
                    PolygonResult.Equals(other.PolygonResult);
         }
 
         public override int GetHashCode()
         {
-            var hashCode = -1257791954;
+            var hashCode = -926503291;
             hashCode = hashCode * -1521134295 + HasCollided.GetHashCode();
             hashCode = hashCode * -1521134295 + Type.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Rectangle>.Default.GetHashCode(Intersection);
+            hashCode = hashCode * -1521134295 + EqualityComparer<RectangleCollisionResult>.Default.GetHashCode(RectangleResult);
             hashCode = hashCode * -1521134295 + EqualityComparer<PolygonCollisionResult>.Default.GetHashCode(PolygonResult);
             return hashCode;
         }

@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Debug\DebugPolygon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Debug\DebugRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\CollisionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BasicCollisionComponent.cs" />
@@ -43,7 +42,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\TransformGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PolygonResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
   </ItemGroup>

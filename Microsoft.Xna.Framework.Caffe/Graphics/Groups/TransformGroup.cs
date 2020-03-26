@@ -174,7 +174,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Incrementa a posição da entidade.
         /// </summary>
         /// <param name="amount">A quantidade de posições a ser incrementada.</param>
-        public void IncreasePosition(Vector2 amount) => Position += amount;
+        public void Move(Vector2 amount)
+        {
+            if(amount.X != 0)
+                X += amount.X;
+            if(amount.Y != 0)
+                Y += amount.Y;
+        } 
 
         /// <summary>Definir a velocidade</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>

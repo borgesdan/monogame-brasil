@@ -5,22 +5,22 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe", "Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game1", "Game1\Game1.csproj", "{D5C10E7C-43D3-43D1-AC55-23125990592A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game2", "Game2\Game2.csproj", "{B88E6E69-70E1-40C6-BB0D-185E4CE86673}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
-		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{d5c10e7c-43d3-43d1-ac55-23125990592a}*SharedItemsImports = 4
+		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{b88e6e69-70e1-40c6-bb0d-185e4ce86673}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D5C10E7C-43D3-43D1-AC55-23125990592A}.Debug|x86.ActiveCfg = Debug|x86
-		{D5C10E7C-43D3-43D1-AC55-23125990592A}.Debug|x86.Build.0 = Debug|x86
-		{D5C10E7C-43D3-43D1-AC55-23125990592A}.Release|x86.ActiveCfg = Release|x86
-		{D5C10E7C-43D3-43D1-AC55-23125990592A}.Release|x86.Build.0 = Release|x86
+		{B88E6E69-70E1-40C6-BB0D-185E4CE86673}.Debug|x86.ActiveCfg = Debug|x86
+		{B88E6E69-70E1-40C6-BB0D-185E4CE86673}.Debug|x86.Build.0 = Debug|x86
+		{B88E6E69-70E1-40C6-BB0D-185E4CE86673}.Release|x86.ActiveCfg = Release|x86
+		{B88E6E69-70E1-40C6-BB0D-185E4CE86673}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

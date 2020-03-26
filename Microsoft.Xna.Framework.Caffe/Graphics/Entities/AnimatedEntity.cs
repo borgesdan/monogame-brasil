@@ -194,7 +194,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor do retângulo</param>
         /// <returns>Retorna uma entidade com uma animação com um sprite retangular.</returns>
-        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color) => GetRectangle(game, name, size, color, null);
+        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color) => CreateRectangle(game, name, size, color, null);
 
         /// <summary>Cria uma nova entidade definida como um retângulo.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
@@ -203,7 +203,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="color">A cor do retângulo</param>
         /// <param name="screen">A tela em que a entidade será associada.</param>
         /// <returns>Retorna uma entidade com uma animação com um sprite retangular.</returns>
-        public static AnimatedEntity GetRectangle(Game game, string name, Point size, Color color, Screen screen)
+        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color, Screen screen)
         {
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
@@ -255,7 +255,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 s_f_oc = Vector2.Zero;
             }            
 
-            int recX = (int)(x + (Origin.X + s_f_oc.X));
+            int recX = (int)(x - (Origin.X + s_f_oc.X));
             int recY = (int)(y - (Origin.Y + s_f_oc.Y));
 
             Bounds = new Rectangle(recX, recY, w, h);  
@@ -269,10 +269,10 @@ namespace Microsoft.Xna.Framework.Graphics
             BoundsR.Points.Add(r.P3.ToVector2());
             BoundsR.Points.Add(r.P4.ToVector2());
 
-            var xb = Transform.X - Origin.X;
-            var yb = Transform.Y - Origin.Y;
+            //var xb = Transform.X - (Origin.X + s_f_oc.X);
+            //var yb = Transform.Y - (Origin.Y + s_f_oc.Y);
 
-            BoundsR.Offset(new Vector2(xb, yb));
+            BoundsR.Offset(new Vector2(Bounds.X, Bounds.Y));
             BoundsR.BuildEdges();            
 
             base.UpdateBounds();
