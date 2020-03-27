@@ -20,6 +20,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
 
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
+
         protected EntityComponent() { }
         protected EntityComponent(EntityComponent source) 
         {
@@ -27,6 +31,10 @@ namespace Microsoft.Xna.Framework.Graphics
             Enable = source.Enable;
             Name = source.Name;
         }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>

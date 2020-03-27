@@ -48,8 +48,10 @@ namespace Game2
             manager = new ScreenManager(this);
 
             Screen1 screen1 = new Screen1(manager, nameof(screen1));
+            Screen2 screen2 = new Screen2(manager, nameof(screen2));
             
             manager.Add(screen1);
+            manager.Add(screen2);
         }
 
         /// <summary>

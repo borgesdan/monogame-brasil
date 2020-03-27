@@ -10,6 +10,10 @@ namespace Microsoft.Xna.Framework
     /// </summary>
     public struct RotatedRectangle : IEquatable<RotatedRectangle>
     {
+        //---------------------------------------//
+        //-----         VARIÁVEIS           -----//
+        //---------------------------------------//
+
         /// <summary>Obtém o valor da coordenada Top-Left rotacionado.</summary>
         public readonly Point P1;
         /// <summary>Obtém o valor da coordenada Top-right rotacionado.</summary>
@@ -20,6 +24,10 @@ namespace Microsoft.Xna.Framework
         public readonly Point P4;
         /// <summary>Obtém o valor do centro do retângulo rotacionado.</summary>
         public readonly Point Center;
+
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
 
         /// <summary>
         /// Inicializa uma nova instância de RotatedRectangle com suas posições rotacionadas.
@@ -45,6 +53,10 @@ namespace Microsoft.Xna.Framework
         /// <param name="origin">A origem da rotação.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees) : this(Rotation.GetRotation(rectangle, origin, degrees)) { }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>
         /// Inicializa uma nova instância de RotatedRectangle como cópia de outro RotatedRectangle.

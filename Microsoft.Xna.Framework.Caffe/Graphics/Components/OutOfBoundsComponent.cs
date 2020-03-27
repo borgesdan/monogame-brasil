@@ -16,6 +16,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// o valor no vetor será a diferença em que a entidade se encontra fora dos limites.</summary>
         public ResultAction<Vector2> OnOutOfBounds;
 
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
+
         /// <summary>
         /// Inicializa uma nova instância da classe OutOfBoundsComponent.
         /// </summary>
@@ -36,8 +40,8 @@ namespace Microsoft.Xna.Framework.Graphics
             Name = nameof(OutOfBoundsComponent);
             Bounds = bounds;
             OnOutOfBounds += action;
-        }    
-        
+        }           
+
         /// <summary>
         /// Inicializa uma nova instância da classe OutOfBoundsComponent como uma cópia.
         /// </summary>
@@ -47,6 +51,10 @@ namespace Microsoft.Xna.Framework.Graphics
             Bounds = source.Bounds;
             OnOutOfBounds = source.OnOutOfBounds;
         }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>

@@ -1,6 +1,7 @@
-﻿//Código base disponível em:
-//https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
-//Autor: Laurent Cozic
+﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+// Código base disponível em:
+// https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
+// Autor: Laurent Cozic
 
 using System.Collections.Generic;
 
@@ -11,6 +12,10 @@ namespace Microsoft.Xna.Framework
     /// </summary>
     public class Polygon
     {
+        //---------------------------------------//
+        //-----         PROPRIEDADES        -----//
+        //---------------------------------------//
+
         /// <summary>
         /// Obtém ou define os pontos do polígono.
         /// </summary>
@@ -39,6 +44,10 @@ namespace Microsoft.Xna.Framework
             }
         }
 
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
+
         /// <summary>
         /// Inicializa uma nova instância de Polygon.
         /// </summary>
@@ -59,6 +68,10 @@ namespace Microsoft.Xna.Framework
 
             BuildEdges();
         }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>
         /// Verifica e Calcula as bordas.

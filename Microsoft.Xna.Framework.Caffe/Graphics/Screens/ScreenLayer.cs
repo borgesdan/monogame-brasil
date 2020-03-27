@@ -8,10 +8,18 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <typeparam name="T"></typeparam>
     public class ScreenLayer<T> where T : IUpdateDrawable, IBoundable
     {
+        //---------------------------------------//
+        //-----         VARIÁVEIS           -----//
+        //---------------------------------------//
+
         private Camera layerCamera = Camera.Create();
         private Camera oldCamera = Camera.Create();
         private Camera camera = Camera.Create();    
         private int top, left, right, bottom = 0;
+
+        //---------------------------------------//
+        //-----         PROPRIEDADES        -----//
+        //---------------------------------------//
 
         /// <summary>Obtém ou define as animações a serem exibidas na camada.</summary>
         public List<T> Actors { get; set; } = new List<T>();
@@ -35,6 +43,10 @@ namespace Microsoft.Xna.Framework.Graphics
             get => new Rectangle(View.X - Left, View.Y - Top, View.Width + Right, View.Height + Bottom);
         }
 
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
+
         /// <summary>
         /// Inicializa uma nova instância da classe ScreenLayer.
         /// </summary>
@@ -44,6 +56,10 @@ namespace Microsoft.Xna.Framework.Graphics
             Screen = screen;
             View = screen.Game.GraphicsDevice.Viewport;
         }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>Atualiza a tela.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>

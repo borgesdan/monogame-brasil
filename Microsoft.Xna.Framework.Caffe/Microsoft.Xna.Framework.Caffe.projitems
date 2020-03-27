@@ -28,7 +28,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\TileAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />

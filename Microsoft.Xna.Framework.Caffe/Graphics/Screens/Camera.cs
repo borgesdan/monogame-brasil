@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -10,6 +12,10 @@ namespace Microsoft.Xna.Framework.Graphics
     {        
         /// <summary>Obtém ou define a posição da câmera.</summary>
         public Vector2 Position;
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         /// <summary>Obtém ou define a posição no eixo X da câmera.</summary>
         public float X 
@@ -23,17 +29,24 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get => Position.Y;
             set => Position = new Vector2(Position.X, value);
-        }           
+        }
 
-        private Camera(Matrix matrix, Vector2 position, Vector2 zoom)
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
+
+        private Camera(Vector2 position, Vector2 zoom)
         {            
             Position = position;
-        }        
+        }
 
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
         /// <summary>Cria uma nova instância da estrutura Camera.</summary>
         public static Camera Create()
         {
-            return new Camera(Matrix.Identity, Vector2.Zero, Vector2.One);
+            return new Camera(Vector2.Zero, Vector2.One);
         }        
 
         /// <summary>Movimenta a câmera no sentido específicado.</summary>

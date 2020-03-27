@@ -79,7 +79,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //se as entidades estão rotacionadas.
             else
             {
-                PolygonCollisionResult pcr = PolygonCollision(entity.BoundsR, entity.BoundsR, entity.Transform.Velocity);
+                PolygonCollisionResult pcr = PolygonCollision(entity.BoundsR, other.BoundsR, entity.Transform.Velocity);
                 
                 if(pcr.Intersect)
                 {

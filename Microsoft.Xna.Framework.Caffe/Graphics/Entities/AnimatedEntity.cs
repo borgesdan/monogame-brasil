@@ -269,10 +269,8 @@ namespace Microsoft.Xna.Framework.Graphics
             BoundsR.Points.Add(r.P3.ToVector2());
             BoundsR.Points.Add(r.P4.ToVector2());
 
-            //var xb = Transform.X - (Origin.X + s_f_oc.X);
-            //var yb = Transform.Y - (Origin.Y + s_f_oc.Y);
-
-            BoundsR.Offset(new Vector2(Bounds.X, Bounds.Y));
+            //BoundsR.Offset(new Vector2(Bounds.X, Bounds.Y));
+            BoundsR.Offset(new Vector2(Transform.Position.X - Origin.X, Transform.Position.Y - Origin.Y));
             BoundsR.BuildEdges();            
 
             base.UpdateBounds();

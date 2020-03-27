@@ -1,6 +1,7 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -22,6 +23,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         Polygon
     }
+
+    //---------------------------------------//
+    //-----         RETÂNGULO           -----//
+    //---------------------------------------//
 
     /// <summary>
     /// Estrutura que guarda o resultado de uma colisão entre retângulos não rotacionados.
@@ -79,6 +84,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }
     }
 
+    //---------------------------------------//
+    //-----         POLÍGONO            -----//
+    //---------------------------------------//
+
     /// <summary>
     /// Estrutura que guarda os resultados de uma colisão de polígonos.
     /// </summary>
@@ -135,6 +144,10 @@ namespace Microsoft.Xna.Framework.Graphics
             return !(left == right);
         }
     }
+
+    //---------------------------------------//
+    //-----         COLISÃO           -----//
+    //---------------------------------------//
 
     /// <summary>
     /// Estrutura que guarda o resultado de uma colisão.

@@ -162,7 +162,19 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (reset)
                 old.Reset();
-        }        
+        }      
+        
+        public void Next(bool reset)
+        {
+            int index = Screens.FindIndex(x => x.Equals(Active));
+
+            if(index >= Screens.Count - 1)
+                index = 0;
+            else
+                index++;
+
+            Change(Screens[index].Name, reset);
+        }
 
         /// <summary>Retorna uma tela definida pelo nome.</summary>
         /// <param name="name">O nome da tela.</param>

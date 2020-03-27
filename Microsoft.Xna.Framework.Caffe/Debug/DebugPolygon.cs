@@ -8,11 +8,10 @@ namespace Microsoft.Xna.Framework
     public class DebugPolygon
     {
         GraphicsDevice graphics;
-        BasicEffect basicEffect;
         Color color;
         VertexPositionColor[] vertices = null;
 
-        public BasicEffect Effect { get => basicEffect; }        
+        public BasicEffect Effect { get; private set; }        
 
         public DebugPolygon(GraphicsDevice graphicsDevice, Polygon poly, Color clr)
         {
@@ -49,14 +48,14 @@ namespace Microsoft.Xna.Framework
 
         void InitializeBasicEffect()
         {
-            basicEffect = new BasicEffect(graphics);
-            basicEffect.VertexColorEnabled = true;
-            basicEffect.World = Matrix.CreateOrthographicOffCenter(0, graphics.Viewport.Width, graphics.Viewport.Height, 0, 0, 1);
+            Effect = new BasicEffect(graphics);
+            Effect.VertexColorEnabled = true;
+            Effect.World = Matrix.CreateOrthographicOffCenter(0, graphics.Viewport.Width, graphics.Viewport.Height, 0, 0, 1);
         }
 
         public void Draw()
         {
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 graphics.DrawUserPrimitives(PrimitiveType.LineStrip, vertices, 0, vertices.Length - 1);

@@ -208,11 +208,13 @@ namespace Microsoft.Xna.Framework.Graphics
             var view = Entity.Game.GraphicsDevice.Viewport;
             int w = view.Width;
             int h = view.Height;
+
             SetPosition(view.X, view.Y);
+
             int ew = Width;
-            int eh = Height;            
-            float bx = Entity.Bounds.X;
-            float by = Entity.Bounds.Y;
+            int eh = Height;
+            //float bx = Entity.Bounds.X;
+            //float by = Entity.Bounds.Y;
             Vector2 tempPosition = Vector2.Zero;
 
             switch (alignType)
@@ -246,8 +248,8 @@ namespace Microsoft.Xna.Framework.Graphics
                     break;
             }
 
-            tempPosition.X += bx;
-            tempPosition.Y -= by;
+            tempPosition.X += Entity.Origin.X;
+            tempPosition.Y += Entity.Origin.Y;
 
             _oldPosition = tempPosition;
             _position = tempPosition;
