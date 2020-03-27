@@ -15,7 +15,8 @@ namespace Game2.Screens
         }
 
         public override void Load()
-        {   entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue);
+        {   
+            entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue);
             entity.Origin = new Vector2(entity.Transform.Width / 2, entity.Transform.Height / 2);
             entity.Transform.SetViewPosition(AlignType.Center);            
             entity.OnUpdate += Entity_OnUpdate;

@@ -67,21 +67,49 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Vector2 result = Vector2.Zero;
 
-            if (ebounds.Left < Bounds.Left)
+            //Cálculo do retângulo com e sem rotação.
+            if(Entity.Transform.Rotation == 0)
             {
-                result.X = ebounds.Left - Bounds.Left;
+                if (ebounds.Left < Bounds.Left)
+                {
+                    result.X -= ebounds.Left - Bounds.Left;
+                }
+                else if (ebounds.Right > Bounds.Right)
+                {
+                    result.X -= ebounds.Right - Bounds.Right;
+                }
+                if (ebounds.Top < Bounds.Top)
+                {
+                    result.Y -= ebounds.Top - Bounds.Top;
+                }
+                else if (ebounds.Bottom > Bounds.Bottom)
+                {
+                    result.Y -= ebounds.Bottom - Bounds.Bottom;
+                }
             }
-            else if(ebounds.Right > Bounds.Right)
+            else
             {
-                result.X = ebounds.Right - Bounds.Right;
-            }
-            else if(ebounds.Top < Bounds.Top)
-            {
-                result.Y = ebounds.Top - Bounds.Top;
-            }
-            else if(ebounds.Bottom > Bounds.Bottom)
-            {
-                result.Y = ebounds.Bottom - Bounds.Bottom;
+                var boundsR = Entity.BoundsR;
+
+                foreach(var p in boundsR.Points)
+                {
+                    if(p.X < Bounds.Left)
+                    {
+                        result.X -= p.X - Bounds.Left;
+                    }
+                    else if(p.X > Bounds.Right)
+                    {
+                        result.X -= p.X - Bounds.Right;
+                    }
+                    if (p.Y < Bounds.Top)
+                    {
+                        result.Y -= p.Y - Bounds.Top;
+                    }
+                    else if (p.Y > Bounds.Bottom)
+                    {
+                        result.Y -= p.Y - Bounds.Bottom;
+                    }
+                }
             }
 
             OnOutOfBounds?.Invoke(Entity, gameTime, result);
