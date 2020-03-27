@@ -51,6 +51,23 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             return CheckFieldOfView(screen.Game, screen.Camera, screen.MainViewport, bounds);
         }
+
+        public static void CreateBoundsR(Entity2D e, Vector2 totalOrigin, Rectangle bounds)
+        {
+            var transform = e.Transform;
+            var boundsR = e.BoundsR;            
+
+            var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.Size), totalOrigin, transform.Rotation);
+
+            boundsR.Points.Clear();
+            boundsR.Points.Add(r.P1.ToVector2());
+            boundsR.Points.Add(r.P2.ToVector2());
+            boundsR.Points.Add(r.P3.ToVector2());
+            boundsR.Points.Add(r.P4.ToVector2());
+
+            boundsR.Offset(bounds.Location.ToVector2());
+            boundsR.BuildEdges();
+        }
     }    
 
     //---------------------------------------//

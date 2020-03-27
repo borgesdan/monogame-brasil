@@ -47,11 +47,13 @@ namespace Game2.Screens
 
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de colisao.");
+            txtEntity.Text.Append("Teste de colisão.");
             txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione as setas do teclado para movimentacao e A e S para rotacao.");
+            txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione Space para mudar de tela.");
+            txtEntity.Text.Append("\n");
+            txtEntity.Text.Append("Q e W para escala.");
 
             AnimatedEntity shadow = AnimatedEntity.CreateRectangle(Game, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50));
             shadow.Transform.SetViewPosition(AlignType.Center);
@@ -101,6 +103,25 @@ namespace Game2.Screens
             {
                 //A rotação tem que ser em radianos.
                 source.Transform.Rotation -= MathHelper.ToRadians(2);
+            }
+            //Escala
+            if (input.Keyboard.IsDown(Keys.Q))
+            {
+                source.Transform.Scale += new Vector2(0.2f, 0.2F);
+
+                if (source.Transform.Scale.X > 2F)
+                {
+                    source.Transform.Scale = new Vector2(2, 2);
+                }
+            }
+            if (input.Keyboard.IsDown(Keys.W))
+            {
+                source.Transform.Scale += new Vector2(-0.2f, -0.2F);
+
+                if (source.Transform.Scale.X < 0)
+                {
+                    source.Transform.Scale = new Vector2(0.1F, 0.1F);
+                }
             }
         }
 

@@ -47,21 +47,21 @@ namespace Game2.Screens
             //Entidade para exibição de um texto.
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de saida de tela");
+            txtEntity.Text.Append("Teste de limites de tela");
             txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione as setas do teclado para movimentacao e A e S para rotacao.");
+            txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
+            txtEntity.Text.Append("\n");
+            txtEntity.Text.Append("Q e W para escala.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione Space para mudar de tela.");
-
+            
             base.Load();
         }
 
         private void Entity_OnUpdate(Entity2D source, GameTime gameTime)
         {
-            //Código para movimento e rotação da entidade.
-
             var input = Manager.Input;
-            
+
             if (input.Keyboard.IsDown(Keys.A))
             {
                 //A rotação tem que ser em radianos.
@@ -72,7 +72,26 @@ namespace Game2.Screens
                 //A rotação tem que ser em radianos.
                 source.Transform.Rotation -= MathHelper.ToRadians(2);
             }
-        }
+            //Eescala.
+            if (input.Keyboard.IsDown(Keys.Q))
+            {
+                source.Transform.Scale += new Vector2(0.2f, 0.2F);
+
+                if (source.Transform.Scale.X > 2F)
+                {
+                    source.Transform.Scale = new Vector2(2, 2);
+                }
+            }
+            if (input.Keyboard.IsDown(Keys.W))
+            {
+                source.Transform.Scale += new Vector2(-0.2f, -0.2F);
+
+                if (source.Transform.Scale.X < 0)
+                {
+                    source.Transform.Scale = new Vector2(0.1F, 0.1F);
+                }
+            }
+        }       
 
         //Sobrecarga do método Update da tela.
         public override void Update(GameTime gameTime)

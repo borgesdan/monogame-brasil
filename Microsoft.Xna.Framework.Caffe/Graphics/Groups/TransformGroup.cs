@@ -211,10 +211,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             SetPosition(view.X, view.Y);
 
-            int ew = Width;
-            int eh = Height;
-            //float bx = Entity.Bounds.X;
-            //float by = Entity.Bounds.Y;
+            float ew = ScaledSize.X;
+            float eh = ScaledSize.Y;
             Vector2 tempPosition = Vector2.Zero;
 
             switch (alignType)

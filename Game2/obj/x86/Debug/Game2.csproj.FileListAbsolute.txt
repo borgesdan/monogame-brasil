@@ -21,3 +21,4 @@ C:\Users\Borges\source\repos\MonoGameDevelop\Game2\obj\x86\Debug\Game2.csproj.Co
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\obj\x86\Debug\Game2.exe
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\obj\x86\Debug\Game2.pdb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\default.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\mario.xnb

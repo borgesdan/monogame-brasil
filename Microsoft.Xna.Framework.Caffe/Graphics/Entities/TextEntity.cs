@@ -133,23 +133,16 @@ namespace Microsoft.Xna.Framework.Graphics
             int w = Transform.Width;
             int h = Transform.Height;
 
-            int recX = (int)(x - Origin.X);
-            int recY = (int)(y - Origin.Y);
+            var totalOrigin = Origin * Transform.Scale;
+
+            int recX = (int)(x - totalOrigin.X);
+            int recY = (int)(y - totalOrigin.Y);
 
             Bounds = new Rectangle(recX, recY, w, h);
 
-            //Calcula o BoundsR.
-            Rectangle frame = new Rectangle(0, 0, Transform.Width, Transform.Height);
-            var r = Rotation.GetRotation(frame, Origin, Transform.Rotation);
+            //Calcula o BoundsR. 
 
-            BoundsR.Points.Clear();
-            BoundsR.Points.Add(r.P1.ToVector2());
-            BoundsR.Points.Add(r.P2.ToVector2());
-            BoundsR.Points.Add(r.P3.ToVector2());
-            BoundsR.Points.Add(r.P4.ToVector2());
-
-            BoundsR.Offset(new Vector2(Transform.Position.X - Origin.X, Transform.Position.Y - Origin.Y));
-            BoundsR.BuildEdges();
+            Util.CreateBoundsR(this, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }

@@ -40,9 +40,9 @@ namespace Game2.Screens
             //Entidade para exibição de um texto.
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de movimentacao.");
+            txtEntity.Text.Append("Teste de movimentação.");
             txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione as setas do teclado para movimentacao e A e S para rotacao.");
+            txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione Space para mudar de tela.");
 

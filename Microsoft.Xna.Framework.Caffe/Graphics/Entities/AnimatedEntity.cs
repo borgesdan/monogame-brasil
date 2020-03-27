@@ -129,7 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma nova animação à entidade.</summary>
         /// <param name="newAnimation">Um instância da classe Animation.</param>
-        public void Add(Animation newAnimation)
+        public void AddAnimation(Animation newAnimation)
         {
             Animations.Add(newAnimation);            
 
@@ -143,11 +143,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma lista de animações à entidade.</summary>
         /// <param name="animations">Uma lista de animações.</param>
-        public void Add(params Animation[] animations)
+        public void AddAnimation(params Animation[] animations)
         {
             foreach(var a in animations)
             {
-                Add(a);
+                AddAnimation(a);
             }
         }
 
@@ -211,7 +211,7 @@ namespace Microsoft.Xna.Framework.Graphics
             animation.AddSprite(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
-            animatedEntity.Add(animation);
+            animatedEntity.AddAnimation(animation);
 
             screen?.Add(animatedEntity);
 
@@ -238,7 +238,7 @@ namespace Microsoft.Xna.Framework.Graphics
             
             Transform.Size = new Point((int)cbw, (int)cbh);
 
-            //O tamanho da da entidade e sua posição.
+            //O tamanho da entidade e sua posição.
             int x = (int)Transform.X;
             int y = (int)Transform.Y;
             int w = Transform.Width;
@@ -253,25 +253,16 @@ namespace Microsoft.Xna.Framework.Graphics
             else
             {
                 s_f_oc = Vector2.Zero;
-            }            
+            }
 
-            int recX = (int)(x - (Origin.X + s_f_oc.X));
-            int recY = (int)(y - (Origin.Y + s_f_oc.Y));
+            var totalOrigin = ((Origin + s_f_oc) * Transform.Scale);
 
-            Bounds = new Rectangle(recX, recY, w, h);  
-            
-            //Calcula o BoundsR.
-            var r = Rotation.GetRotation(ActiveAnimation.Frame, Origin, Transform.Rotation);
+            int recX = (int)(x - totalOrigin.X);
+            int recY = (int)(y - totalOrigin.Y);
 
-            BoundsR.Points.Clear();
-            BoundsR.Points.Add(r.P1.ToVector2());
-            BoundsR.Points.Add(r.P2.ToVector2());
-            BoundsR.Points.Add(r.P3.ToVector2());
-            BoundsR.Points.Add(r.P4.ToVector2());
+            Bounds = new Rectangle(recX, recY, w, h);                  
 
-            //BoundsR.Offset(new Vector2(Bounds.X, Bounds.Y));
-            BoundsR.Offset(new Vector2(Transform.Position.X - Origin.X, Transform.Position.Y - Origin.Y));
-            BoundsR.BuildEdges();            
+            Util.CreateBoundsR(this, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/default.spritefont</SourceFile>
-  <SourceTime>2018-12-08T13:35:46-03:00</SourceTime>
+  <SourceTime>2020-03-27T16:51:20.909726-03:00</SourceTime>
   <DestFile>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/default.xnb</DestFile>
-  <DestTime>2020-03-27T12:52:09.3203331-03:00</DestTime>
+  <DestTime>2020-03-27T16:51:26.6627229-03:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2018-12-08T13:35:54-03:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
