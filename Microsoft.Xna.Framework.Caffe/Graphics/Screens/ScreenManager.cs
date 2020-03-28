@@ -186,6 +186,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Back(bool reset)
         {
+            //Voltar a tela.
             int index = Screens.FindIndex(x => x.Equals(Active));
 
             if (index <= 0)
