@@ -162,8 +162,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (reset)
                 old.Reset();
-        }      
-        
+        }
+
+        /// <summary>
+        /// Troca para a próxima tela da lista.
+        /// </summary>
+        /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Next(bool reset)
         {
             int index = Screens.FindIndex(x => x.Equals(Active));
@@ -172,6 +176,22 @@ namespace Microsoft.Xna.Framework.Graphics
                 index = 0;
             else
                 index++;
+
+            Change(Screens[index].Name, reset);
+        }
+
+        /// <summary>
+        /// Troca para a tela anterior da lista de telas.
+        /// </summary>
+        /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
+        public void Back(bool reset)
+        {
+            int index = Screens.FindIndex(x => x.Equals(Active));
+
+            if (index <= 0)
+                index = Screens.Count - 1;
+            else
+                index--;
 
             Change(Screens[index].Name, reset);
         }
