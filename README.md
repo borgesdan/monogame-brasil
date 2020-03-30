@@ -104,6 +104,7 @@ Entre outras funcionalidades.
 ## Versão
 
 Versão 1.0 (Conillon) (29/03/2020)
+
 Versão 0.5 (Alho-Poró)
 
 O projeto Monogame.Caffe está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
