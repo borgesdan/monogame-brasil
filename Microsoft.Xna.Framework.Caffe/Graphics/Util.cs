@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -49,9 +51,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <returns>Retorna true se a entidade se encontra no espaço de desenho da janela de jogo.</returns>
         public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
         {
-            return CheckFieldOfView(screen.Game, screen.Camera, screen.MainViewport, bounds);
+            return CheckFieldOfView(screen.Game, screen.Camera, screen.Viewport, bounds);
         }
 
+        /// <summary>
+        /// Calcula o BoundsR no UpdateBounds na classe Entity.
+        /// </summary>
         public static void CreateBoundsR(Entity2D e, Vector2 totalOrigin, Rectangle bounds)
         {
             var transform = e.Transform;

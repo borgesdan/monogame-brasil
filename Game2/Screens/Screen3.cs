@@ -17,18 +17,18 @@ namespace Game2.Screens
         //Método para carregamento da tela.
         public override void Load()
         {
-            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(Game, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50), this);
+            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(this, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50));
             shadow.Transform.SetViewPosition(AlignType.Center);
 
             //Criação de uma entidade nomeada fora da tela.
-            entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue, this);
+            entity = AnimatedEntity.CreateRectangle(this, nameof(entity), new Point(100, 100), Color.DarkBlue);
             entity.Origin = new Vector2(entity.Transform.Width / 2, entity.Transform.Height / 2);
             entity.Transform.SetViewPosition(AlignType.Center);
             //Atualiza a entidade utilizando o evento OnUpdate
             entity.OnUpdate += Entity_OnUpdate;
 
             //Criamos um componente para verificar se a entidade saiu dos limites da tela.
-            OutOfBoundsComponent outOfBoundsComponent = new OutOfBoundsComponent(this.MainViewport.Bounds);
+            OutOfBoundsComponent outOfBoundsComponent = new OutOfBoundsComponent(this.Viewport.Bounds);
             outOfBoundsComponent.OnOutOfBounds += (Entity2D source, GameTime gameTime, Vector2 result) =>
             {
                 //Movemos então a entidade na direção contrária.
@@ -47,14 +47,12 @@ namespace Game2.Screens
             //Entidade para exibição de um texto.
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de limites de tela");
+            txtEntity.Text.Append("3: Teste de limites de tela");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Q e W para escala.");
-            txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione Space para mudar de tela.");
-            
+
             base.Load();
         }
 
@@ -102,6 +100,12 @@ namespace Game2.Screens
             if (input.Keyboard.IsPress(Keys.Space))
             {
                 Manager.Next(true);
+
+                //Poderia usar também o método Change() informando o nome da tela.
+            }
+            if (input.Keyboard.IsPress(Keys.Back))
+            {
+                Manager.Back(true);
 
                 //Poderia usar também o método Change() informando o nome da tela.
             }

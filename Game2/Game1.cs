@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Game2.Screens;
@@ -51,11 +55,15 @@ namespace Game2
             Screen2 screen2 = new Screen2(manager, nameof(screen2));
             Screen3 screen3 = new Screen3(manager, nameof(screen3));
             Screen4 screen4 = new Screen4(manager, nameof(screen4));
+            Screen5 screen5 = new Screen5(manager, nameof(screen5));
+            Screen6 screen6 = new Screen6(manager, nameof(screen6));
 
             manager.Add(screen1);
             manager.Add(screen2);
             manager.Add(screen3);
             manager.Add(screen4);
+            manager.Add(screen5);
+            manager.Add(screen6);            
         }
 
         /// <summary>
@@ -89,7 +97,8 @@ namespace Game2
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(manager.Active.BackgroundColor);
 
             // TODO: Add your drawing code here
             manager.Draw(gameTime, spriteBatch);

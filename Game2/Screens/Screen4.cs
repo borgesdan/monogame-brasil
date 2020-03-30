@@ -16,8 +16,10 @@ namespace Game2.Screens
 
         public override void Load()
         {
+            //Criamos a entidade com um construtor.
             entity = new AnimatedEntity(this, "mario");
 
+            //Criamos uma animação para ser adicionada na entidade.
             Animation mario_idle = new Animation(Game, 0, nameof(mario_idle));
             mario_idle.AddSprite("mario");
 
@@ -29,11 +31,9 @@ namespace Game2.Screens
             
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de animação estática.");
+            txtEntity.Text.Append("4: Teste de animação estática.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as teclas Q e W para escala.");
-            txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione Space para mudar de tela.");
 
             base.Load();
         }
@@ -76,6 +76,12 @@ namespace Game2.Screens
 
                 //Poderia usar também o método Change() informando o nome da tela.
             }
+            if (input.Keyboard.IsPress(Keys.Back))
+            {
+                Manager.Back(true);
+
+                //Poderia usar também o método Change() informando o nome da tela.
+            }
 
             base.Update(gameTime);
         }
@@ -83,7 +89,7 @@ namespace Game2.Screens
         //Sobrecarga do método Reset
         public override void Reset()
         {
-            //Informos aqui o que acontece quando a tela for resetada.            
+            //Informamos aqui o que acontece quando a tela for resetada.            
             entity.Transform.Scale = new Vector2(0.5F, 0.5F);
 
             base.Reset();

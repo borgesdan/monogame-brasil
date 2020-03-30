@@ -1,8 +1,10 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe que agrupa propriedades para visibilidade e permissão da entidade.</summary>
+    /// <summary>Classe que agrupa propriedades para disponibilidade da entidade.</summary>
     public class EnableGroup
     {
         /// <summary>Obtém ou define se a entidade está ativa.</summary>
@@ -22,14 +24,14 @@ namespace Microsoft.Xna.Framework.Graphics
             IsVisible = visible;
         }        
 
-        /// <summary>Definir as propriedades Enabled e Visible como true.</summary>
+        /// <summary>Define as propriedades Enabled e Visible como true.</summary>
         public void Show()
         {
             IsEnabled = true;
             IsVisible = true;
         }
 
-        /// <summary>Definir as propriedades Enabled e Visible como false.</summary>
+        /// <summary>Define as propriedades Enabled e Visible como false.</summary>
         public void Hide()
         {
             IsEnabled = false;

@@ -5,8 +5,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Classe que representa uma camada de exibição de uma tela.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ScreenLayer<T> where T : IUpdateDrawable, IBoundable
+    public class ScreenLayer
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -22,7 +21,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Obtém ou define as animações a serem exibidas na camada.</summary>
-        public List<T> Actors { get; set; } = new List<T>();
+        public List<Animation> Actors { get; set; } = new List<Animation>();
         /// <summary>Obtém a tela em que essa camada está associada.</summary>
         public Screen Screen { get; }
         /// <summary>Obtém ou define o Viewport de desenho da camada.</summary>
@@ -55,6 +54,25 @@ namespace Microsoft.Xna.Framework.Graphics
         {            
             Screen = screen;
             View = screen.Game.GraphicsDevice.Viewport;
+        }
+
+        public ScreenLayer(ScreenLayer source)
+        {
+            this.Screen = source.Screen;
+
+            foreach (var a in source.Actors)
+            {
+                this.Actors.Add(new Animation(Screen.Game, a));
+            }
+
+            this.Bottom = source.Bottom;
+            this.camera = source.camera;
+            this.layerCamera = source.layerCamera;
+            this.Left = source.Left;
+            this.oldCamera = source.oldCamera;
+            this.Right = source.Right;
+            this.Top = source.Top;
+            this.View = source.View;
         }
 
         //---------------------------------------//

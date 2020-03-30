@@ -1,9 +1,13 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
+using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que implementa a funcionalidade de uma colisão simples entre retângulos com outras entidades da tela. 
+    /// Componente que implementa a funcionalidade de uma colisão simples entre da tela. 
     /// </summary>
     class BasicCollisionComponent : EntityComponent
     {   
@@ -13,10 +17,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém True se a entidade está colidindo.</summary>
         public bool IsColliding { get; private set; } = false;
 
+        //-----------------------------------------//
+        //-----         CONSTRUTOR            -----//
+        //-----------------------------------------//
+
         /// <summary>
-        /// Inicializa uma nova instância de BasicCollisionComponent, 
-        /// definindo posteriormente a ação necessária para uma ocorrência de colisão no evento
-        /// OnCollision desta classe.
+        /// Inicializa uma nova instância de BasicCollisionComponent
         /// </summary>
         public BasicCollisionComponent()  : base()
         {
@@ -24,23 +30,41 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Inicializa uma nova instância de BasicCollisionComponent informando um método
-        /// como ação necessária quando ocorrer uma colisão.
+        /// Inicializa uma nova instância de BasicCollisionComponent.
         /// </summary>
         /// <param name="collisionAction">Um método que define os mesmos parâmetros de um delegate CollisionAction.</param>
         public BasicCollisionComponent(CollisionAction collisionAction) : this()
         {
-            OnCollision = collisionAction;
+            OnCollision = collisionAction;            
         }
 
         /// <summary>
-        /// Inicializa uma nova instância da classe BasicCollisionComponent como uma cópia.
+        /// Inicializa uma nova instância da classe BasicCollisionComponent como uma cópia de outro BasicCollisionComponent.
         /// </summary>
+        /// <param name="destination">A entidade a ser associada esse componente.</param>
         /// <param name="source">A origem para cópia.</param>
-        public BasicCollisionComponent(BasicCollisionComponent source): base(source)
+        public BasicCollisionComponent(Entity2D destination, BasicCollisionComponent source): base(destination, source)
         {
             OnCollision = source.OnCollision;
             IsColliding = source.IsColliding;
+        }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
+
+        /// <summary>
+        /// Cria uma nova instância de BasicCollisionComponent quando não é=for possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">O objeto BasicCollisionComponent a ser copiado</param>
+        /// <param name="destination">A entidade a ser associada a esse componente.</param>
+        public override T Clone<T>(T source, Entity2D destination)
+        {
+            if (source is BasicCollisionComponent)
+                return (T)Activator.CreateInstance(typeof(BasicCollisionComponent), destination, source);
+            else
+                throw new InvalidCastException();
         }
 
         /// <summary>Atualiza o componente.</summary>
@@ -79,7 +103,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposed)
+                return;
+
+            if (disposing)
             {
                 OnCollision = null;
             }

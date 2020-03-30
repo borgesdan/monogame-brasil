@@ -47,11 +47,9 @@ namespace Game2.Screens
 
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de colisão.");
+            txtEntity.Text.Append("2: Teste de colisão.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
-            txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione Space para mudar de tela.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Q e W para escala.");
 
@@ -134,6 +132,12 @@ namespace Game2.Screens
             if (input.Keyboard.IsPress(Keys.Space))
             {
                 Manager.Next(true);
+
+                //Poderia usar também o método Change() informando o nome da tela.
+            }
+            if (input.Keyboard.IsPress(Keys.Back))
+            {
+                Manager.Back(true);
 
                 //Poderia usar também o método Change() informando o nome da tela.
             }

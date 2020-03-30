@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
 using System.Collections.Generic;
@@ -25,35 +27,38 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância de AnimatedEntity copiando uma outra entidade.</summary>
+        /// <summary>Inicializa uma nova instância de AnimatedEntity como cópia de outro AnimatedEntity.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
         public AnimatedEntity(AnimatedEntity source) : base(source)
         {
-            Animations = source.Animations;
-            ActiveAnimation = source.ActiveAnimation;
+            //Cópia das animações.
+            source.Animations.ForEach(a => this.Animations.Add(new Animation(Game, a)));
+            //Busca do index da animação ativa.
+            int index = source.Animations.FindIndex(a => a.Equals(source.ActiveAnimation));
+
+            ActiveAnimation = Animations[index];
         }
 
-        /// <summary>Inicializa uma nova instância AnimatedEntity.</summary>
+        /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
         public AnimatedEntity(Game game, string name) : base(game, name)
         {
         }
 
-        /// <summary>Inicializa uma nova instância AnimatedEntity.</summary>
+        /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
         /// <param name="screen">A tela que a entidade será associada.</param>
         /// <param name="name">O nome da entidade</param>
         public AnimatedEntity(Screen screen, string name) : base(screen, name) 
         {
-        }
+        }        
 
         //---------------------------------------//
         //-----         INDEXADOR           -----//
         //---------------------------------------//
-        
+
         /// <summary>Obtém uma animação através do seu nome.</summary>
         /// <param name="name">O nome da animação.</param>
-        /// <returns>Retorna a primeira animação encontrada com esse nome.</returns>
         public Animation this[string name]
         {
             get
@@ -66,6 +71,19 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         MÉTODOS             -----//
         //---------------------------------------//        
 
+        /// <summary>
+        /// Cria uma nova instância de AnimatedEntity quando não for possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">A entidade a ser copiada.</param>
+        public override T Clone<T>(T source)
+        {
+            if (source is AnimatedEntity)
+                return (T)Activator.CreateInstance(typeof(AnimatedEntity), source);
+            else
+                throw new InvalidCastException();
+        }
+
         /// <summary>Atualiza a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
@@ -74,7 +92,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled || ActiveAnimation == null)
                 return;
 
-            //Define que a entidade está dentro doslimites de desenho da tela
+            //Define que a entidade está dentro dos limites de desenho da tela
             outOfView = false;
 
             //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
@@ -128,10 +146,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }        
 
         /// <summary>Adiciona uma nova animação à entidade.</summary>
-        /// <param name="newAnimation">Um instância da classe Animation.</param>
-        public void AddAnimation(Animation newAnimation)
+        /// <param name="animation">Um instância da classe Animation.</param>
+        public void AddAnimation(Animation animation)
         {
-            Animations.Add(newAnimation);            
+            Animations.Add(animation);            
 
             if(Animations.Count == 1)
             {
@@ -143,7 +161,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma lista de animações à entidade.</summary>
         /// <param name="animations">Uma lista de animações.</param>
-        public void AddAnimation(params Animation[] animations)
+        public void AddAnimations(params Animation[] animations)
         {
             foreach(var a in animations)
             {
@@ -155,8 +173,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">Nome da próxima animação. A animação atual será resetada.</param>
         public void Change(string name) => Change(name, true);
 
-        /// <summary>Change the current animation</summary>
-        /// <param name="name">Nome da animação.</param>
+        /// <summary>Troca a animação ativa.</summary>
+        /// <param name="name">Nome da próxima animação.</param>
         /// <param name="resetAnimation">True se a animação atual será resetada.</param>
         public void Change(string name, bool resetAnimation)
         {
@@ -172,38 +190,35 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Encontra uma animação pelo seu nome.</summary>
         /// <param name="name">O nome da animação a ser encontrada.</param>
-        /// <returns>Retorna a primeira animação encontrada a partir do nome ou null se não existir.</returns>
         public Animation Find(string name)
         {
             Animation a = Animations.Find(x => x.Name.Equals(name));
             return a;
         }
 
-        /// <summary>Encontra todas as animações que contenham esse nome.</summary>
+        /// <summary>Encontra todas as animações que contenham o nome especificado.</summary>
         /// <param name="name">O nome a ser pesquisado.</param>
-        /// <returns>Retorna uma lista de animações ou null se não for encontrada nenhuma.</returns>
         public List<Animation> FindAll(string name)
         {
             var anms = Animations.FindAll(x => x.Name.Contains(name));
             return anms;
         }
 
-        /// <summary>Cria uma nova entidade definida como um retângulo.</summary>
+        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor do retângulo</param>
-        /// <returns>Retorna uma entidade com uma animação com um sprite retangular.</returns>
         public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color) => CreateRectangle(game, name, size, color, null);
 
-        /// <summary>Cria uma nova entidade definida como um retângulo.</summary>
-        /// <param name="game">A instância atual da classe Game.</param>
+        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo.</summary>
+        /// <param name="game">A tela em que a entidade será associada.</param>
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor do retângulo</param>
-        /// <param name="screen">A tela em que a entidade será associada.</param>
-        /// <returns>Retorna uma entidade com uma animação com um sprite retangular.</returns>
-        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color, Screen screen)
+        public static AnimatedEntity CreateRectangle(Screen screen, string name, Point size, Color color) => CreateRectangle(screen.Game, name, size, color, screen);
+        
+        private static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color, Screen screen)
         {
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
@@ -223,17 +238,14 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             //Atualiza o tamanho da entidade.
 
-            float cbw, cbh;
+            //o tamanho do frame.
+            float cbw = 0;
+            float cbh = 0;
 
             if(ActiveAnimation != null)
             {
                 cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
                 cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
-            }
-            else
-            {
-                cbw = 0;
-                cbh = 0;
             }
             
             Transform.Size = new Point((int)cbw, (int)cbh);
@@ -244,6 +256,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int w = Transform.Width;
             int h = Transform.Height;
 
+            //A origem do frame.
             Vector2 s_f_oc;
 
             if (ActiveAnimation != null && ActiveAnimation.CurrentSprite != null)
@@ -255,13 +268,15 @@ namespace Microsoft.Xna.Framework.Graphics
                 s_f_oc = Vector2.Zero;
             }
 
+            //A soma de todas as origens.
             var totalOrigin = ((Origin + s_f_oc) * Transform.Scale);
 
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
 
             Bounds = new Rectangle(recX, recY, w, h);                  
-
+            
+            //Criação do polígono (BoundsR).
             Util.CreateBoundsR(this, totalOrigin, Bounds);
 
             base.UpdateBounds();

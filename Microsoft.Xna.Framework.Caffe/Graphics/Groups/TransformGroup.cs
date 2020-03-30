@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -16,7 +18,7 @@ namespace Microsoft.Xna.Framework.Graphics
         RightBottom
     }
 
-    /// <summary>Classe que expõe acesso as definições de valores da entidade, como posição, velocidade, rotação, entre outros.</summary>
+    /// <summary>Expõe acesso as transformações da entidade, como posição, velocidade, rotação, entre outros.</summary>
     public sealed class TransformGroup
     {
         //---------------------------------------//
@@ -26,6 +28,9 @@ namespace Microsoft.Xna.Framework.Graphics
         Vector2 _oldPosition = Vector2.Zero;
         Vector2 _position = Vector2.Zero;
         Vector2 _scale = Vector2.One;
+
+        //Só usada no construtor de cópia.
+        bool inCopy = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -46,6 +51,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 _oldPosition = _position;
                 _position = value;
 
+                if (inCopy)
+                    return;
+
                 Entity.UpdateBounds();
             }
         }
@@ -62,6 +70,9 @@ namespace Microsoft.Xna.Framework.Graphics
             set
             {
                 _scale = value;
+
+                if (inCopy)
+                    return;
 
                 Entity.UpdateBounds();
             }
@@ -88,6 +99,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 _oldPosition.X = _position.X;
                 _position.X = value;
 
+                if (inCopy)
+                    return;
+
                 Entity.UpdateBounds();
             }
         }
@@ -99,6 +113,9 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _oldPosition.Y = _position.Y;
                 _position.Y = value;
+
+                if (inCopy)
+                    return;
 
                 Entity.UpdateBounds();
             }
@@ -130,45 +147,77 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Inicializa uma nova instância de TransformGroup.</summary>
-        /// <param name="entity">A entidade a ser atrelada este grupo.</param>
+        /// <param name="entity">A entidade a ser associada a este grupo.</param>
         public TransformGroup(Entity2D entity)
         {
             Entity = entity ?? throw new System.ArgumentNullException(nameof(entity));
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância como cópia de outra instância de TransformGroup.
+        /// </summary>
+        /// <param name="destination">A entidade a ser associada a este grupo.</param>
+        /// <param name="source">O TransformGroup a ser copiado.</param>
+        public TransformGroup(Entity2D destination, TransformGroup source)
+        {
+            inCopy = true;
+
+            this.Entity = destination;
+            this.Size = source.Size;
+            this.Color = source.Color;
+            this.Entity = destination;            
+            this.Rotation = source.Rotation;
+            this.Scale = source.Scale;            
+            this.SpriteEffect = source.SpriteEffect;
+            this.Velocity = source.Velocity;
+            this.Position = source.Position;
+
+            inCopy = false;
         }
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
-        /// <summary>Interter a velocidade atual.</summary>
+        /// <summary>Interte a velocidade nos eixos X e Y.</summary>
         public Vector2 InvertVelocity()
         {
             InvertVelocityX();
             InvertVelocityY();
             return Velocity;
         }
-        /// <summary>Inverter a velocidade no eixo X.</summary>
-        /// <returns>Retorna a velocidade com o valor invertido.</returns>
+        /// <summary>Inverte a velocidade no eixo X.</summary>
         public Vector2 InvertVelocityX() 
         {
             Xv *= -1;
             return Velocity;
         }
-        /// <summary>Inverter a velocidade no eixo Y.</summary>
-        /// <returns>Retorna a velocidade com o valor invertido.</returns>
+        /// <summary>Inverte a velocidade no eixo Y.</summary>
         public Vector2 InvertVelocityY() 
         { 
             Yv *= -1;
             return Velocity;
         }
 
-        /// <summary>Definir a posição</summary>
+        /// <summary>Define a posição</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
-        public void SetPosition(Vector2 position) => Position = position;
-        /// <summary>Definir a posição</summary>
+        public void SetPosition(Vector2 position) => SetPosition(position.X, position.Y);
+
+        /// <summary>Define a posição</summary>
         /// <param name="x">A posição no eixo X.</param>
         /// <param name="y">A posição no eixo Y.</param>
-        public void SetPosition(float x, float y) => Position = new Vector2(x, y);
+        public void SetPosition(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
+        /// Incrementa a posição da entidade.
+        /// </summary>
+        /// <param name="x">Incremento no eixo X.</param>
+        /// <param name="y">Incremento no eixo Y.</param>
+        public void Move(float x, float y) => Move(new Vector2(x, y));
 
         /// <summary>
         /// Incrementa a posição da entidade.
@@ -182,24 +231,33 @@ namespace Microsoft.Xna.Framework.Graphics
                 Y += amount.Y;
         } 
 
-        /// <summary>Definir a velocidade</summary>
+        /// <summary>Define a velocidade.</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>
         public void SetVelocity(Vector2 velocity) => Velocity = velocity;
-        /// <summary>Definir a velocidade.</summary>
+
+        /// <summary>Define a velocidade.</summary>
         /// <param name="x">A velocidade no eixo X.</param>
         /// <param name="y">A velocidade no eixo Y.</param>
         public void SetVelocity(float x, float y) => Velocity = new Vector2(x, y);
 
-        /// <summary>Definir a escala.</summary>
-        /// <param name="x">A escala no eixo X. [Padrão x = 1; Duplicar x = 2;]</param>
-        /// <param name="y">A escala no eixo Y. [Padrão y = 1] Duplicar y = 2;]</param>
+        /// <summary>Define a escala.</summary>
+        /// <param name="x">A escala no eixo X.</param>
+        /// <param name="y">A escala no eixo Y.</param>
         public void SetScale(float x, float y) => Scale = new Vector2(x, y);
 
-        /// <summary>Definir a escala</summary>
-        /// <param name="velocity">A escala no eixo X e Y. [Padrão x e y = 1; Duplicar x e y = 2]</param>
+        /// <summary>Define a escala</summary>
+        /// <param name="velocity">A escala no eixo X e Y.</param>
         public void SetScale(Vector2 scale) => Scale = scale;
 
-        /// <summary>Definir a posição da entidade relativa a Viewport.</summary>   
+        /// <summary>Define a rotação em graus.</summary>
+        /// <param name="degrees">O grau da rotação</param>
+        public void SetRotationD(float degrees) => Rotation = MathHelper.ToRadians(degrees);
+
+        /// <summary>Define a rotação em radianos.</summary>
+        /// <param name="degrees">O grau da rotação</param>
+        public void SetRotationR(float radians) => Rotation = radians;
+
+        /// <summary>Define a posição da entidade relativa a Viewport.</summary>   
         /// <param name="alignType">O tipo de alinhamento da tela.</param>
         public void SetViewPosition(AlignType alignType)
         {

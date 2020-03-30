@@ -1,4 +1,8 @@
-﻿#region Using Statements
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
+#region Using Statements
 using System;
 
 using Microsoft.Xna.Framework;

@@ -1,9 +1,13 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
+using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Interface para implementação de um gerenciador de telas.
+    /// Representa um gerenciador de telas.
     /// </summary>
     public interface IManager : IDisposable, IUpdateDrawable
     {
@@ -29,5 +33,9 @@ namespace Microsoft.Xna.Framework.Graphics
         void Remove(string name);
         /// <summary>Troca a tela ativa.</summary>
         void Change(string name, bool reset);
+        /// <summary>Avança uma tela.</summary>        
+        void Next(bool reset);
+        /// <summary>Volta para a tela anterior.</summary>
+        void Back(bool reset);
     }
 }

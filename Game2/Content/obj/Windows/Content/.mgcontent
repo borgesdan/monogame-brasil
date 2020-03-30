@@ -6,8 +6,12 @@
   <SourceFiles>
     <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/default.spritefont</File>
     <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/mario.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/strider_idle.png</File>
+    <File>C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/Yoshi.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>

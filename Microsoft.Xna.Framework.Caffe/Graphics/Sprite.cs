@@ -1,11 +1,13 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe que serve como contêiner para uma textura e seus frames.</summary>
+    /// <summary>Classe que guarda uma textura e seus frames.</summary>
     public class Sprite : IDisposable
     {
         //---------------------------------------//
@@ -21,7 +23,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Texture2D Texture { get; private set; } = null;
 
         /// <summary>Obtém ou define a lista de frames da textura.</summary>
-        public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();        
+        public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();      
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -53,20 +55,20 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 SpriteFrame defaultFrame = new SpriteFrame(texture.Bounds);
                 Frames.Add(defaultFrame);
-            }
+            }            
         }
 
         /// <summary>
         /// Inicializa uma nova instância da classe Sprite como cópida de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public Sprite(Sprite source)
+        public Sprite(Game game, Sprite source)
         {
             if(source == null)
                 throw new ArgumentNullException(nameof(source));
 
             this.Frames = source.Frames;
-            this.Texture = source.Texture;
+            this.Texture = game.Content.Load<Texture2D>(source.Texture.Name);
         }
 
         //---------------------------------------//
@@ -102,15 +104,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="w">Largura referente a textura.</param>
         /// <param name="h">Altura referente a textura.</param>
         /// </param>
-        public void AddFrame(int x, int y, int w, int h) => AddFrame(new SpriteFrame(x, y, w, h));        
+        public void AddFrame(int x, int y, int w, int h) => AddFrame(new SpriteFrame(x, y, w, h));
+
 
         /// <summary>
         /// Adiciona retângulos que representam partes (recortes) em uma folha de sprite (sprite sheet), se a textura é deste tipo.        
         /// </summary>
-        /// <param name="frame">Um objeto da classe SpriteFrame.</param>
-        public void AddFrame(SpriteFrame frame)
+        /// <param name="frames">Frames a serem adicionados.</param>
+        public void AddFrame(params SpriteFrame[] frames)
         {
-            Frames.Add(frame);
+            foreach(var f in frames)
+            {
+                Frames.Add(f);
+            }            
         }
 
         /// <summary>

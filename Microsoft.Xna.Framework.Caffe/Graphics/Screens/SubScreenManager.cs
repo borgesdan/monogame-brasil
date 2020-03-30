@@ -1,11 +1,14 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework.Input;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe gerenciadora as telas do jogo dentro de outra telas.</summary>
+    /// <summary>Gerencia telas que se encontram dentro de uma tela principal.</summary>
     public class SubScreenManager : IManager
     {
         //---------------------------------------//
@@ -96,6 +99,39 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (reset)
                 old.Reset();
+        }
+
+        /// <summary>
+        /// Troca para a próxima tela da lista.
+        /// </summary>
+        /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
+        public void Next(bool reset)
+        {
+            int index = SubScreens.FindIndex(x => x.Equals(Active));
+
+            if (index >= SubScreens.Count - 1)
+                index = 0;
+            else
+                index++;
+
+            Change(SubScreens[index].Name, reset);
+        }
+
+        /// <summary>
+        /// Troca para a tela anterior da lista de telas.
+        /// </summary>
+        /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
+        public void Back(bool reset)
+        {
+            //Voltar a tela.
+            int index = SubScreens.FindIndex(x => x.Equals(Active));
+
+            if (index <= 0)
+                index = SubScreens.Count - 1;
+            else
+                index--;
+
+            Change(SubScreens[index].Name, reset);
         }
 
         /// <summary>Atualiza o gerenciador de telas.</summary>

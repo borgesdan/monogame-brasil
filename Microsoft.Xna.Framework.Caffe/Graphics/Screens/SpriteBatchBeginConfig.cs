@@ -1,4 +1,7 @@
-﻿
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
@@ -7,11 +10,33 @@ namespace Microsoft.Xna.Framework.Graphics
     public class SpriteBatchBeginConfig
     {
         public SpriteSortMode SortMode { get; set; } = SpriteSortMode.Deferred;
-        public BlendState BlendState { get; set; } = null;
-        public SamplerState SamplerState { get; set; } = null;
-        public DepthStencilState DepthStencilState { get; set; } = null;
-        public RasterizerState RasterizerState { get; set; } = null;
-        public Effect Effect { get; set; } = null;
+        public BlendState Blend { get; set; } = null;
+        public SamplerState Sampler { get; set; } = null;
+        public DepthStencilState DepthStencil { get; set; } = null;
+        public RasterizerState Rasterizer { get; set; } = null;
+        public Effect Effects { get; set; } = null;
         public Matrix? TransformMatrix { get; set; } = null;
+
+        /// <summary>
+        /// Inicializa uma nova instância de SpriteBatchBeginConfig.
+        /// </summary>
+        public SpriteBatchBeginConfig()
+        {
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de SpriteBatchBeginConfig como cópia de outro SpriteBatchBeginConfig.
+        /// </summary>
+        /// <param name="source">A instância a ser copiada.</param>
+        public SpriteBatchBeginConfig(SpriteBatchBeginConfig source)
+        {            
+            this.SortMode = source.SortMode;
+            this.Blend = source.Blend;
+            this.Sampler = source.Sampler;
+            this.DepthStencil = source.DepthStencil;
+            this.Rasterizer = source.Rasterizer;
+            this.Effects = source.Effects;
+            this.TransformMatrix = source.TransformMatrix;
+        }
     }
 }

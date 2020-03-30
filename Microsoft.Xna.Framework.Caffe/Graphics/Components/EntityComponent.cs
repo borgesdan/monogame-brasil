@@ -1,4 +1,7 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -6,12 +9,12 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Classe base para um componente de entidade.</summary>
     public abstract class EntityComponent : IUpdateDrawable, IDisposable
     {
-        private bool disposed = false;
+        protected bool disposed = false;
 
         /// <summary>Obtém ou define a entidade de origem.</summary>
         public Entity2D Entity { get; set; } = null;
         /// <summary>
-        /// Obtém ou define o nome do componente. Por padrão é definido pelo nome do componente, exemplo: OtherComponent.Name = nameof(OtherComponent).        
+        /// Obtém ou define o nome do componente. Por padrão é definido como nameof(EntityComponent).        
         /// </summary>
         public string Name { get; set; } = nameof(EntityComponent);
 
@@ -25,12 +28,20 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         protected EntityComponent() { }
-        protected EntityComponent(EntityComponent source) 
+        protected EntityComponent(Entity2D destination, EntityComponent source) 
         {
-            Entity = source.Entity;
-            Enable = source.Enable;
+            this.Entity = destination;
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             Name = source.Name;
         }
+
+        /// <summary>
+        /// Cria uma nova instância de EntityComponent quando não é possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">O objeto EntityComponent a ser copiado.</param>
+        /// <param name="destination">A entidade a ser associada a esse componente.</param>
+        public abstract T Clone<T>(T source, Entity2D destination) where T : EntityComponent;
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
@@ -40,7 +51,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime) { }
 
-        /// <summary>Desenha o componente se necessário.</summary>
+        /// <summary>Desenha o componente, se necessário.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) { }

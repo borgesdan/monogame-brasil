@@ -1,10 +1,12 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe estática que expõe métodos para verificação de colisão entre duas entidades.</summary>
+    /// <summary>Expõe métodos para verificação de colisão entre duas entidades.</summary>
     public static class Collision
     {
         /// <summary>Verifica se os limites da entidade 1 está intersectando os limites da entidade 2.</summary>

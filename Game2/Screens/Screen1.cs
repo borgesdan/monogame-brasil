@@ -19,12 +19,12 @@ namespace Game2.Screens
         public override void Load()
         {
             //Criação de uma entidade dentro da dela.
-            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(Game, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50), this);
+            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(this, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50));
             //Alinha a entidade ao centro da tela.
             shadow.Transform.SetViewPosition(AlignType.Center);
 
             //Criação de uma entidade nomeada fora da tela.
-            entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue, this);
+            entity = AnimatedEntity.CreateRectangle(this, nameof(entity), new Point(100, 100), Color.DarkBlue);
 
             //OBS.: A entidade poderia ser iniciada como:
             //entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue);
@@ -40,11 +40,11 @@ namespace Game2.Screens
             //Entidade para exibição de um texto.
             txtEntity = new TextEntity(this, nameof(txtEntity));
             txtEntity.SetFont("default");
-            txtEntity.Text.Append("Teste de movimentação.");
+            txtEntity.Text.Append("1: Teste de movimentação.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione Space para mudar de tela.");
+            txtEntity.Text.Append("Pressione Space ou Backspace para mudar de tela.");
 
             base.Load();
         }
@@ -92,6 +92,12 @@ namespace Game2.Screens
             if (input.Keyboard.IsPress(Keys.Space))
             {
                 Manager.Next(true);
+
+                //Poderia usar também o método Change() informando o nome da tela.
+            }
+            if (input.Keyboard.IsPress(Keys.Back))
+            {
+                Manager.Back(true);
 
                 //Poderia usar também o método Change() informando o nome da tela.
             }

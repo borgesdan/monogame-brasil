@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 namespace Microsoft.Xna.Framework.Input
 {
@@ -40,6 +42,8 @@ namespace Microsoft.Xna.Framework.Input
         /// <param name="source">A instância a ser copiada.</param>
         public InputManager(InputManager source)
         {
+            //resolver a clonagem
+
             this.One = source.One;
             this.Two = source.Two;
             this.Three = source.Three;

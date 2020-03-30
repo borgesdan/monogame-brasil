@@ -98,12 +98,13 @@ Entre outras funcionalidades.
 
 ## Construído com:
 
-* [Visual Studio 2019](https://visualstudio.microsoft.com/pt-br/) - O IDE utilizado
+* [Visual Studio 2019](https://visualstudio.microsoft.com/pt-br/) - IDE
 * [MonoGame](http://www.monogame.net/) - O framework base.
 
 ## Versão
 
-Nome da versão: Alho-poró.
+Versão 1.0 (Conillon) (29/03/2020)
+Versão 0.5 (Alho-Poró)
 
 O projeto Monogame.Caffe está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
 

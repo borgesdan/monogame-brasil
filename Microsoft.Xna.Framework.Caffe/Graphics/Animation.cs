@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System.Collections.Generic;
 using System;
@@ -32,7 +34,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public EnableGroup Enable { get; set; } = new EnableGroup();
         /// <summary>Obtém ou define a lista de sprites.</summary>
         public List<Sprite> Sprites { get; set; } = new List<Sprite>();
-        /// <summary>Obtém ou define o tempo de exibição de cada sprite (se inidividuais) ou de cada retângulo (se uma folha de sprites)</summary>
+        /// <summary>Obtém ou define o tempo de exibição de cada frame do sprite.</summary>
         public int Time 
         {
             get => time;
@@ -127,9 +129,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get
             {
-                //if (Sprites.Count == 0)
-                //    return TimeSpan.Zero;
-
                 int count = 0;
 
                 for (int i = 0; i <= Index; i++)
@@ -149,11 +148,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
         
         /// <summary>
-        /// Obtém ou define a porcentagem de largura e altura do desenho. De 0f a 1f.
-        /// <para>
-        /// O valor 1f em X e Y representa 100% do desenho.
-        /// </para>
-        /// </summary>
+        /// Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).
         public Vector2 DrawPercentage 
         {
             get => drawPercentage;
@@ -195,25 +190,30 @@ namespace Microsoft.Xna.Framework.Graphics
             Name = name;
         }
 
-        /// <summary>Inicializa uma nova instância da classe Animation utilizando uma cópia profunda de uma animação como origem.</summary>
+        /// <summary>Inicializa uma nova instância da classe Animation como cópia de outro Animation.</summary>
         /// <param name="source">A animação a ser copiada.</param>
-        public Animation(Animation source)
+        public Animation(Game game, Animation source)
         {
-            elapsedGameTime = source.elapsedGameTime;
-            
+            elapsedGameTime = source.elapsedGameTime;            
             Game = source.Game;
             Index = source.Index;
             FrameIndex = source.FrameIndex;
             Position = source.Position;
             Origin = source.Origin;
-            Sprites = source.Sprites;            
+
+            Sprites = new List<Sprite>();            
+            source.Sprites.ForEach(s => Sprites.Add(new Sprite(game, s)));
+            
             Rotation = source.Rotation;
             Scale = source.Scale;
             Color = source.Color;
             LayerDepth = source.LayerDepth;
             SpriteEffect = source.SpriteEffect;
-            Enable = source.Enable;
-            CurrentSprite = source.CurrentSprite;
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
+
+            int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);
+            CurrentSprite = Sprites[cs_index];
+
             Time = source.Time;
             Frame = source.Frame;
             Name = source.Name;
@@ -230,14 +230,11 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get
             {
-                try
-                {
-                    return Sprites[index];
-                }
-                catch (IndexOutOfRangeException ex)
-                {
-                    throw new IndexOutOfRangeException(ex.Message);
-                }
+                return Sprites[index];
+            }
+            set
+            {
+                Sprites[index] = value;
             }
         }
 
@@ -420,8 +417,8 @@ namespace Microsoft.Xna.Framework.Graphics
             AddSprite(tmpSprites.ToArray());
         }        
 
-        /// <summary>Adiciona objetos da classe Sprite a lista.</summary>
-        /// <param name="sprites">Lista com objetos da classe Sprite.</param>
+        /// <summary>Adiciona sprites a animação.</summary>
+        /// <param name="sprites">Os sprites a serem adicionados.</param>
         public void AddSprite(params Sprite[] sprites)
         {
             if (sprites != null)
@@ -432,12 +429,6 @@ namespace Microsoft.Xna.Framework.Graphics
                 CurrentSprite = Sprites[0];
                 Frame = CurrentSprite[FrameIndex].Bounds;
             }
-        }
-
-        //A ser chamado em uma classe derivada quando necessário.
-        protected void InvokeOnDraw(Animation animation, GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            OnDraw?.Invoke(animation, gameTime, spriteBatch);
         }
 
         //---------------------------------------//

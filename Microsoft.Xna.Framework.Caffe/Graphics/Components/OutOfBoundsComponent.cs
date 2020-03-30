@@ -1,19 +1,21 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que calcula se os limites da entidade se encontram dentro do limite informado.
+    /// Componente que calcula se os limites da entidade se encontram dentro ou fora dos limites informados.
     /// </summary>
     public class OutOfBoundsComponent : EntityComponent
     {
-        /// <summary>Os limites da entidade em que a entidade pode se encontrar dentro.</summary>
+        /// <summary>Os limites a serem usados para cálculo.</summary>
         public Rectangle Bounds { get; set; }
+
         /// <summary>Encapsula um metodo com os parâmetros definidos e que expõe um resultado final no formato Vector2.
-        /// Em que o vetor com valor 0 significa que a entidade se encontra dentro dos limites informado, caso isso não ocorra,
-        /// o valor no vetor será a diferença em que a entidade se encontra fora dos limites.</summary>
+        /// Em que o valor do vetor será a diferença em que a entidade se encontra fora dos limites.</summary>
         public ResultAction<Vector2> OnOutOfBounds;
 
         //---------------------------------------//
@@ -23,7 +25,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância da classe OutOfBoundsComponent.
         /// </summary>
-        /// <param name="bounds">Os limites em que a entidade se encontra dentro.</param>
+        /// <param name="bounds">Os limites a serem usados para cálculo.</param>
         public OutOfBoundsComponent(Rectangle bounds) : base()
         {
             Name = nameof(OutOfBoundsComponent);
@@ -33,7 +35,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância da classe OutOfBoundsComponent.
         /// </summary>
-        /// <param name="bounds">Os limites em que a entidade se encontra dentro.</param>
+        /// <param name="bounds">Os limites a serem usados para cálculo.</param>
         /// <param name="action">Encapsula um metodo com os parâmetros definidos</param>
         public OutOfBoundsComponent(Rectangle bounds, ResultAction<Vector2> action) : base()
         {
@@ -45,8 +47,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância da classe OutOfBoundsComponent como uma cópia.
         /// </summary>
+        /// <param name="destination">A entidade a ser associada a esse componente.</param>
         /// <param name="source">A origem para cópia.</param>
-        public OutOfBoundsComponent(OutOfBoundsComponent source) : base(source)
+        public OutOfBoundsComponent(Entity2D destination, OutOfBoundsComponent source) : base(destination, source)
         {
             Bounds = source.Bounds;
             OnOutOfBounds = source.OnOutOfBounds;
@@ -55,6 +58,20 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
+
+        /// <summary>
+        /// Cria uma nova instância de BasicCollisionComponent quando não é possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">O objeto BasicCollisionComponent a ser copiado</param>
+        /// <param name="destination">A entidade a ser associada a esse componente.</param>
+        public override T Clone<T>(T source, Entity2D destination)
+        {
+            if (source is OutOfBoundsComponent)
+                return (T)Activator.CreateInstance(typeof(OutOfBoundsComponent), destination, source);
+            else
+                throw new InvalidCastException();
+        }
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
@@ -119,6 +136,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         protected override void Dispose(bool disposing)
         {
+            if (disposed)
+                return;
+
             if (disposing)
             {
                 OnOutOfBounds = null;

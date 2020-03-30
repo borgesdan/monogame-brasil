@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -7,7 +9,7 @@ using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe gerenciadora as telas do jogo.</summary>
+    /// <summary>Gerenciamento das telas do jogo.</summary>
     public class ScreenManager : IManager
     {
         //---------------------------------------//
@@ -65,12 +67,11 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>
-        /// Carrega uma tela em uma thread separada e troca a tela atual para essa quando o carregamento estiver terminado.
+        /// Carrega uma tela em uma thread separada e troca a tela atual para esta quando o carregamento estiver terminado.
         /// </summary>
         /// <param name="name">O nome da tela a ser carregada</param>
-        /// <param name="callWhenIsFinished">True, se a tela deverá ser chamada quando o carregamento estiver terminado.</param>
-        /// <returns>Retorna um objeto Task se a execução for bem sucedida, se não, retorna null.</returns>        
-        public Task LoadAsyc(string name, bool callWhenIsFinished)
+        /// <param name="call">True, se a tela deverá ser chamada quando o carregamento estiver terminado.</param>
+        public Task LoadAsyc(string name, bool call)
         {
             if (taskLoading != null)
                 throw new InvalidOperationException("Já existe uma tarefa de carregamento de tela em andamento.");
@@ -82,7 +83,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 var t = Task.Run(s.Load);
                 LoadingScreen = s;                
                 IsLoadingAsync = true;
-                callLoadScreen = callWhenIsFinished;
+                callLoadScreen = call;
 
                 s.ChangeState(this, ScreenLoadState.Loading);
 
@@ -146,11 +147,11 @@ namespace Microsoft.Xna.Framework.Graphics
             Screens.Remove(finder);
         }
 
-        /// <summary>Ativa uma nova tela para ser atualização e desenho preservando o estado atual da atual tela ativa.</summary>
+        /// <summary>Troca para a tela selecionada e preserva o estado da anterior.</summary>
         /// <param name="name">O nome da tela que será ativada.</param>
         public void Change(string name) => Change(name, false);
 
-        /// <summary>Ativa uma nova tela para ser atualização e desenho</summary>
+        /// <summary>Troca para a tela selecionada e preserva o estado da anterior.</summary>
         /// <param name="name">O nome da tela que será ativada.</param>
         /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Change(string name, bool reset)
@@ -165,7 +166,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Troca para a próxima tela da lista.
+        /// Troca para próxima tela da lista.
         /// </summary>
         /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Next(bool reset)
@@ -181,7 +182,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Troca para a tela anterior da lista de telas.
+        /// Troca para a tela anterior da lista.
         /// </summary>
         /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Back(bool reset)
@@ -197,7 +198,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Change(Screens[index].Name, reset);
         }
 
-        /// <summary>Retorna uma tela definida pelo nome.</summary>
+        /// <summary>Busca e retorna uma tela definida pelo nome.</summary>
         /// <param name="name">O nome da tela.</param>
         public Screen Find(string name)
         {

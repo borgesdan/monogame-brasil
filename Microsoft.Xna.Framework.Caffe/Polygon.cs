@@ -1,4 +1,7 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
+
 // Código base disponível em:
 // https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
 // Autor: Laurent Cozic
@@ -53,6 +56,15 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public Polygon()
         {
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de Polygon como cópia de outro Polygon.
+        /// </summary>
+        public Polygon(Polygon source)
+        {
+            Points = source.Points;
+            Edges = source.Edges;
         }
 
         /// <summary>

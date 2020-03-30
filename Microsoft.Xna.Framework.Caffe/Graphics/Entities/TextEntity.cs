@@ -1,6 +1,9 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -19,10 +22,10 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
-        /// <summary>Obtém um objeto SpriteFont a ser utilizado.</summary>
+        /// <summary>Obtém ou define a instância de SpriteFont a ser utilizada.</summary>
         public SpriteFont Font { get; set; } = null;
         
-        /// <summary>Obtém ou define o texto a ser exibido atráves de um objeto StringBuilder.</summary>
+        /// <summary>Obtém ou define o texto a ser exibido atráves de uma instância da classe StringBuilder.</summary>
         public StringBuilder Text
         {
             get => builder;
@@ -48,24 +51,52 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">O nome da entidade.</param>
         public TextEntity(Screen screen, string name) : base(screen, name) { }        
 
-        /// <summary>Inicializa uma nova instância de TextEntity copiando uma outra entidade.</summary>
+        /// <summary>Inicializa uma nova instância de TextEntity como cópia de outro TextEntity.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
         public TextEntity(TextEntity source) : base(source)
         {
-            Font = source.Font;
+            var glyphs = source.Font.Glyphs;
+            List<Rectangle> gs = new List<Rectangle>();
+            List<Rectangle> cs = new List<Rectangle>();
+            List<Vector3> ks = new List<Vector3>();
+            List<char> chars = new List<char>();
+            foreach (var g in glyphs)
+            {
+                chars.Add(g.Character);
+                gs.Add(g.BoundsInTexture);
+                cs.Add(g.Cropping);
+                ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
+            }
+
+            SpriteFont font = new SpriteFont(source.Font.Texture, gs, cs, chars, source.Font.LineSpacing, source.Font.Spacing, ks, source.Font.DefaultCharacter);
+            
+            Font = font;
             Text = source.Text;
+        }
+
+        /// <summary>
+        /// Cria uma nova instância de TextEntity quando não for possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">A entidade a ser copiada.</param>
+        public override T Clone<T>(T source)
+        {
+            if (source is TextEntity)
+                return (T)Activator.CreateInstance(typeof(TextEntity), source);
+            else
+                throw new InvalidCastException();
         }
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
-        /// <summary>Adicionar um objeto SpriteFont à entidade.</summary>
+        /// <summary>Adiciona um objeto SpriteFont à entidade.</summary>
         /// <param name="font">A fonte a ser utilizada no desenho.</param>
         public void SetFont(SpriteFont font) => Font = font;
 
-        /// <summary>Use para definir o caminho do arquivo SpriteFont e adicionar à entidade.</summary>
-        /// <param name="path">O caminho da fonte da pasta Content.</param>
+        /// <summary>Define o caminho do arquivo SpriteFont e adiciona à entidade.</summary>
+        /// <param name="path">O caminho da fonte na pasta Content.</param>
         public void SetFont(string path)
         {
             SetFont(Game.Content.Load<SpriteFont>(path));
@@ -112,7 +143,7 @@ namespace Microsoft.Xna.Framework.Graphics
             base.Draw(gameTime, spriteBatch);
         }
 
-        /// <summary>Atualizar os limites da entidade.</summary>
+        /// <summary>Atualiza os limites da entidade.</summary>
         public override void UpdateBounds()
         {
             Vector2 measure;
@@ -141,7 +172,6 @@ namespace Microsoft.Xna.Framework.Graphics
             Bounds = new Rectangle(recX, recY, w, h);
 
             //Calcula o BoundsR. 
-
             Util.CreateBoundsR(this, totalOrigin, Bounds);
 
             base.UpdateBounds();

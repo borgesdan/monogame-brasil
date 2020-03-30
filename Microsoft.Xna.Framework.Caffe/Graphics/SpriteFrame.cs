@@ -1,4 +1,6 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
 using System.Collections.Generic;
@@ -9,15 +11,15 @@ namespace Microsoft.Xna.Framework.Graphics
     public struct SpriteFrame : IEquatable<SpriteFrame>
     {
         /// <summary>A posição no eixo Y na Textura.</v>
-        public readonly int X;
+        public int X;
         /// <summary>A posição no eixo X na Textura.</summary>
-        public readonly int Y;
+        public int Y;
         /// <summary>A largura do frame.</summary>
-        public readonly int Width;
+        public int Width;
         /// <summary>A altura do frame.</summary>
-        public readonly int Height;
+        public int Height;
         /// <summary>Necessário para um alinhamento caso nem todos os frames de uma animação são iguais.</summary>
-        public readonly Vector2 OriginCorrection;
+        public Vector2 OriginCorrection;
 
         /// <summary>Obtém um retângulo com a posição e tamanho do frame dentro do SpriteSheet.</summary>
         public Rectangle Bounds

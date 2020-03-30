@@ -1,7 +1,8 @@
-﻿// Danilo Borges Santos, 2020. Contato: danilo.bsto@gmail.com
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -31,7 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Polygon BoundsR { get; protected set; } = new Polygon();
         /// <summary>Obtém a instância atual da classe Game.</summary>
         public Game Game { get; set; } = null;
-        /// <summary>Obtém ou define a visibilidade da entidade.</summary>
+        /// <summary>Obtém ou define a disponibilidade da entidade.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup(true, true);        
         /// <summary>Obtém ou define o nome da entidade.</summary>
         public string Name { get; set; } = string.Empty;
@@ -41,13 +42,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Screen Screen { get; set; } = null;
         /// <summary>Obtém ou define a lista de componentes da entidade.</summary>
         public ComponentGroup Components { get; private set; } = null;
-        /// <summary>
-        /// Obtém ou define a porcentagem de largura e altura do desenho. De 0F a 1F.
-        /// <para>
-        /// O valor 1F em X e Y representa 100% do desenho. A aplicação desta propriedade
-        /// depende da entidade, de sua implementação e da capacidade em ser desenhada.
-        /// </para>
-        /// </summary>
+        /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
         public Vector2 DrawPercentage
         {
             get => percentage;
@@ -82,8 +77,6 @@ namespace Microsoft.Xna.Framework.Graphics
             Transform = new TransformGroup(this);
             Name = name;
             Components = new ComponentGroup(this);
-
-            Load();
         }
 
         /// <summary>Inicializa uma nova instância de Entity2D.</summary>
@@ -94,36 +87,39 @@ namespace Microsoft.Xna.Framework.Graphics
             screen?.Add(this);
         }
 
-        /// <summary>Inicializa uma nova instância de Entity2D copiando uma outra entidade.</summary>
+        /// <summary>Inicializa uma nova instância de Entity2D como cópia de outro Entity2D.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
         protected Entity2D(Entity2D source)
         {
             Origin = source.Origin;
             Bounds = source.Bounds;
-            Enable = source.Enable;
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             Game = source.Game;
-            Transform = source.Transform;
+            Transform = new TransformGroup(this, source.Transform);
             Name = source.Name;
             Screen = source.Screen;
             UpdateOutOfView = source.UpdateOutOfView;
-            Components = source.Components;
+            Components = new ComponentGroup(this, source.Components);
             DrawPercentage = source.DrawPercentage;
-            BoundsR = source.BoundsR;
+            BoundsR = new Polygon(source.BoundsR);            
         }
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
-        /// <summary>Carregar essa entidade com seus valores definidos.</summary>
-        public virtual void Load() { }
+        /// <summary>
+        /// Cria uma nova instância da entidade quando não for possível utilizar o construtor de cópia.
+        /// </summary>
+        /// <typeparam name="T">O tipo a ser informado.</typeparam>
+        /// <param name="source">A entidade a ser copiada.</param>
+        public abstract T Clone<T>(T source) where T : Entity2D;        
 
         /// <summary>Atualiza a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime)
         {
             //Define a velocidade da entidade.
-
             if (Transform.Xv != 0)
                 Transform.X += Transform.Velocity.X;
             if (Transform.Yv != 0)
