@@ -2,10 +2,12 @@
 // Email: danilo.bsto@gmail.com
 // Versão: Conillon [1.0]
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe que agrupa propriedades para disponibilidade da entidade.</summary>
-    public struct EnableGroup
+    public struct EnableGroup : IEquatable<EnableGroup>
     {
         /// <summary>Obtém ou define se a entidade está ativa.</summary>
         public bool IsEnabled;
@@ -19,6 +21,35 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             IsEnabled = enabled;
             IsVisible = visible;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is EnableGroup group && Equals(group);
+        }
+
+        public bool Equals(EnableGroup other)
+        {
+            return IsEnabled == other.IsEnabled &&
+                   IsVisible == other.IsVisible;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -567787825;
+            hashCode = hashCode * -1521134295 + IsEnabled.GetHashCode();
+            hashCode = hashCode * -1521134295 + IsVisible.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(EnableGroup left, EnableGroup right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(EnableGroup left, EnableGroup right)
+        {
+            return !(left == right);
         }
     }
 }

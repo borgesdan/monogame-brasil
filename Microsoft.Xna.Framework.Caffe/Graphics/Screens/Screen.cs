@@ -336,11 +336,12 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
-        public void ChangeState(ScreenManager manager, ScreenLoadState state)
+        internal void CallLoad(ScreenManager manager)
         {
             if(manager != null)
             {
-                LoadState = state;
+                this.LoadState = ScreenLoadState.Loaded;
+                Load();
             }
         }
 

@@ -85,7 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 IsLoadingAsync = true;
                 callLoadScreen = call;
 
-                s.ChangeState(this, ScreenLoadState.Loading);
+                s.CallLoad(this);
 
                 taskLoading = t;
                 return t;

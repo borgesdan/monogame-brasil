@@ -38,7 +38,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Launcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\TransformGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />

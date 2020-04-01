@@ -2,12 +2,14 @@
 // Email: danilo.bsto@gmail.com
 // Versão: Conillon [1.0]
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Classe que representa uma camada de exibição de uma tela.
     /// </summary>
-    public class ScreenLayer
+    public class ScreenLayer : IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -173,6 +175,28 @@ namespace Microsoft.Xna.Framework.Graphics
             Animation.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+        }
+
+        private bool disposed = false;
+        
+        /// <summary>Libera os recursos dessa instância.</summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                Animation = null;
+            }
+
+            disposed = true;
         }
     }
 }

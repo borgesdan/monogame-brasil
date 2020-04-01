@@ -30,7 +30,7 @@ namespace Microsoft.Xna.Framework.Graphics
         protected EntityComponent() { }
         protected EntityComponent(Entity2D destination, EntityComponent source) 
         {
-            this.Entity = destination;
+            Entity = destination;
             Enable = source.Enable;
             Name = source.Name;
         }
