@@ -31,7 +31,7 @@ namespace Microsoft.Xna.Framework.Graphics
         protected EntityComponent(Entity2D destination, EntityComponent source) 
         {
             this.Entity = destination;
-            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
+            Enable = source.Enable;
             Name = source.Name;
         }
 

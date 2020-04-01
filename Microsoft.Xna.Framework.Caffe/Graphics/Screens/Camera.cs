@@ -72,7 +72,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Matrix GetTransform()
         {
             Matrix m = new Matrix();
-            m += Matrix.CreateTranslation(Position.X, Position.Y, 0);
+            m += Matrix.CreateTranslation(-Position.X, -Position.Y, 0);
             return m;
         }
 

@@ -44,7 +44,7 @@ namespace Game2.Screens
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
-            txtEntity.Text.Append("Pressione Space ou Backspace para mudar de tela.");
+            txtEntity.Text.Append("Pressione Space ou Backspace para mudar de tela.");            
 
             base.Load();
         }
@@ -74,12 +74,12 @@ namespace Game2.Screens
             if (input.Keyboard.IsDown(Keys.A))
             {
                 //A rotação tem que ser em radianos.
-                source.Transform.Rotation += MathHelper.ToRadians(2);
+                source.Transform.RotateD(2);
             }
             if (input.Keyboard.IsDown(Keys.S))
             {
                 //A rotação tem que ser em radianos.
-                source.Transform.Rotation -= MathHelper.ToRadians(2);
+                source.Transform.RotateD(-2);
             }
         }
 

@@ -4,20 +4,6 @@
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Enumeração que representa o tipo de alinhamento na tela da sprite.</summary>
-    public enum AlignType : byte
-    {
-        Center = 1,
-        Left,
-        Right,
-        Top,
-        Bottom,
-        LeftTop,
-        LeftBottom,
-        RightTop,
-        RightBottom
-    }
-
     /// <summary>Expõe acesso as transformações da entidade, como posição, velocidade, rotação, entre outros.</summary>
     public sealed class TransformGroup
     {
@@ -179,6 +165,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
+        //Velocidade
+
         /// <summary>Interte a velocidade nos eixos X e Y.</summary>
         public Vector2 InvertVelocity()
         {
@@ -198,6 +186,17 @@ namespace Microsoft.Xna.Framework.Graphics
             Yv *= -1;
             return Velocity;
         }
+
+        /// <summary>Define a velocidade.</summary>
+        /// <param name="velocity">A velocidade no eixo X e Y.</param>
+        public void SetVelocity(Vector2 velocity) => Velocity = velocity;
+
+        /// <summary>Define a velocidade.</summary>
+        /// <param name="x">A velocidade no eixo X.</param>
+        /// <param name="y">A velocidade no eixo Y.</param>
+        public void SetVelocity(float x, float y) => Velocity = new Vector2(x, y);
+
+        //Posição
 
         /// <summary>Define a posição</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
@@ -229,16 +228,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 X += amount.X;
             if(amount.Y != 0)
                 Y += amount.Y;
-        } 
-
-        /// <summary>Define a velocidade.</summary>
-        /// <param name="velocity">A velocidade no eixo X e Y.</param>
-        public void SetVelocity(Vector2 velocity) => Velocity = velocity;
-
-        /// <summary>Define a velocidade.</summary>
-        /// <param name="x">A velocidade no eixo X.</param>
-        /// <param name="y">A velocidade no eixo Y.</param>
-        public void SetVelocity(float x, float y) => Velocity = new Vector2(x, y);
+        }
+        
+        //Escala
 
         /// <summary>Define a escala.</summary>
         /// <param name="x">A escala no eixo X.</param>
@@ -248,6 +240,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Define a escala</summary>
         /// <param name="velocity">A escala no eixo X e Y.</param>
         public void SetScale(Vector2 scale) => Scale = scale;
+        
+        //Rotação
 
         /// <summary>Define a rotação em graus.</summary>
         /// <param name="degrees">O grau da rotação</param>
@@ -257,6 +251,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="degrees">O grau da rotação</param>
         public void SetRotationR(float radians) => Rotation = radians;
 
+        /// <summary>Incrementa a rotação em graus.</summary>
+        /// <param name="degrees">O grau da rotação</param>
+        public void RotateD(float degrees) => Rotation += MathHelper.ToRadians(degrees);
+
+        /// <summary>Incremente a rotação em radianos.</summary>
+        /// <param name="degrees">O grau da rotação</param>
+        public void RotateR(float radians) => Rotation += radians;
+
         /// <summary>Define a posição da entidade relativa a Viewport.</summary>   
         /// <param name="alignType">O tipo de alinhamento da tela.</param>
         public void SetViewPosition(AlignType alignType)
@@ -264,45 +266,9 @@ namespace Microsoft.Xna.Framework.Graphics
             Entity.UpdateBounds();            
 
             var view = Entity.Game.GraphicsDevice.Viewport;
-            int w = view.Width;
-            int h = view.Height;
-
             SetPosition(view.X, view.Y);
 
-            float ew = ScaledSize.X;
-            float eh = ScaledSize.Y;
-            Vector2 tempPosition = Vector2.Zero;
-
-            switch (alignType)
-            {
-                case AlignType.Center:
-                    tempPosition = new Vector2(w / 2 - ew / 2, h / 2 - eh / 2);
-                    break;
-                case AlignType.Left:
-                    tempPosition = new Vector2(0, h / 2 - eh / 2);
-                    break;
-                case AlignType.Right:
-                    tempPosition = new Vector2(w - ew, h / 2 - eh / 2);
-                    break;
-                case AlignType.Bottom:
-                    tempPosition = new Vector2(w / 2 - ew / 2, h - eh);
-                    break;
-                case AlignType.Top:
-                    tempPosition = new Vector2(w / 2 - ew / 2, 0);
-                    break;
-                case AlignType.LeftBottom:
-                    tempPosition = new Vector2(0, h - eh);
-                    break;
-                case AlignType.LeftTop:
-                    tempPosition = new Vector2(0, 0);
-                    break;
-                case AlignType.RightBottom:
-                    tempPosition = new Vector2(w - ew, h - eh);
-                    break;
-                case AlignType.RightTop:
-                    tempPosition = new Vector2(w - ew, 0);
-                    break;
-            }
+            Vector2 tempPosition = Util.AlignActor(view.Bounds, ScaledSize, alignType);            
 
             tempPosition.X += Entity.Origin.X;
             tempPosition.Y += Entity.Origin.Y;

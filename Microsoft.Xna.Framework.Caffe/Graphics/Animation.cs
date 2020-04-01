@@ -31,7 +31,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public Game Game { get; protected set; } = null;
         ///<summary>Obtém ou define se a animaçãp é desenhável ou atualizável.</summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup();
+        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
         /// <summary>Obtém ou define a lista de sprites.</summary>
         public List<Sprite> Sprites { get; set; } = new List<Sprite>();
         /// <summary>Obtém ou define o tempo de exibição de cada frame do sprite.</summary>
@@ -209,7 +209,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Color = source.Color;
             LayerDepth = source.LayerDepth;
             SpriteEffect = source.SpriteEffect;
-            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
+            Enable = source.Enable;
 
             int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);
             CurrentSprite = Sprites[cs_index];
@@ -277,9 +277,16 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
         
-        protected virtual void UpdateBounds()
+        /// <summary>
+        /// Atualiza os limites da animação.
+        /// </summary>
+        public virtual void UpdateBounds()
         {
-            Rectangle currentFrame = CurrentSprite[FrameIndex].Bounds;
+            Rectangle currentFrame = Rectangle.Empty;
+
+            if (CurrentSprite != null)
+                currentFrame = CurrentSprite[FrameIndex].Bounds;                
+
             Size = currentFrame.Size;
             Frame = currentFrame;
         }

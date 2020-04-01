@@ -66,7 +66,7 @@ namespace Game2.Screens
             blocoEsq.Transform.Rotation = MathHelper.ToRadians(35);
 
             //Aqui adicionamos as entidades manualmente na tela.
-            base.Add(shadow, entity, txtEntity, blocoDir, blocoEsq);
+            base.AddEntity(shadow, entity, txtEntity, blocoDir, blocoEsq);
             base.Load();
         }
 

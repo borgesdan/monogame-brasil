@@ -228,7 +228,7 @@ namespace Microsoft.Xna.Framework.Graphics
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);
 
-            screen?.Add(animatedEntity);
+            screen?.AddEntity(animatedEntity);
 
             return animatedEntity;
         }        

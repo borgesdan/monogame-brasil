@@ -14,7 +14,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         protected bool disposed = false;
-        private Vector2 percentage = Vector2.One;
+        private Vector2 percentage = Vector2.One;        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -33,7 +33,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a instância atual da classe Game.</summary>
         public Game Game { get; set; } = null;
         /// <summary>Obtém ou define a disponibilidade da entidade.</summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);        
+        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
         /// <summary>Obtém ou define o nome da entidade.</summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
@@ -84,7 +84,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">Nome da entidade.</param>
         protected Entity2D(Screen screen, string name) : this(screen.Game, name)
         {
-            screen?.Add(this);
+            screen?.AddEntity(this);
         }
 
         /// <summary>Inicializa uma nova instância de Entity2D como cópia de outro Entity2D.</summary>
@@ -93,7 +93,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Origin = source.Origin;
             Bounds = source.Bounds;
-            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
+            Enable = new EnableGroup(true, true);
             Game = source.Game;
             Transform = new TransformGroup(this, source.Transform);
             Name = source.Name;
@@ -162,7 +162,6 @@ namespace Microsoft.Xna.Framework.Graphics
             if(disposing)
             {
                 Transform = null;
-                Enable = null;
                 Game = null;
                 Screen = null;
                 Name = null;

@@ -35,9 +35,8 @@ namespace Microsoft.Xna.Framework.Graphics
             var h = game.Window.ClientBounds.Height;
 
             Viewport visible_view = new Viewport((int)x, (int)y, w, h);
-            Rectangle intersection = Rectangle.Intersect(visible_view.Bounds, viewport.Bounds);
 
-            if (intersection.Intersects(bounds))
+            if (visible_view.Bounds.Intersects(bounds))
                 return true;
             else
                 return false;
@@ -72,6 +71,52 @@ namespace Microsoft.Xna.Framework.Graphics
 
             boundsR.Offset(bounds.Location.ToVector2());
             boundsR.BuildEdges();
+        }
+        /// <summary>Define a posição do ator relativa a um retângulo.</summary>   
+        /// <param name="view">O retângulo para alinhamento.</param>
+        /// <param name="actorScaledSize">O tamanho total do ator.</param>
+        /// <param name="align">O tipo de alinhamento da tela.</param>
+        public static Vector2 AlignActor(Rectangle rectangle, Vector2 actorScaledSize, AlignType align)
+        {
+            int w = rectangle.Width;
+            int h = rectangle.Height;
+
+            float ew = actorScaledSize.X;
+            float eh = actorScaledSize.Y;
+            Vector2 tempPosition = Vector2.Zero;
+
+            switch (align)
+            {
+                case AlignType.Center:
+                    tempPosition = new Vector2(w / 2 - ew / 2, h / 2 - eh / 2);
+                    break;
+                case AlignType.Left:
+                    tempPosition = new Vector2(0, h / 2 - eh / 2);
+                    break;
+                case AlignType.Right:
+                    tempPosition = new Vector2(w - ew, h / 2 - eh / 2);
+                    break;
+                case AlignType.Bottom:
+                    tempPosition = new Vector2(w / 2 - ew / 2, h - eh);
+                    break;
+                case AlignType.Top:
+                    tempPosition = new Vector2(w / 2 - ew / 2, 0);
+                    break;
+                case AlignType.LeftBottom:
+                    tempPosition = new Vector2(0, h - eh);
+                    break;
+                case AlignType.LeftTop:
+                    tempPosition = new Vector2(0, 0);
+                    break;
+                case AlignType.RightBottom:
+                    tempPosition = new Vector2(w - ew, h - eh);
+                    break;
+                case AlignType.RightTop:
+                    tempPosition = new Vector2(w - ew, 0);
+                    break;
+            }
+
+            return tempPosition;
         }
     }    
 

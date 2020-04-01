@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020. 
+// Email: danilo.bsto@gmail.com
+// Versão: Conillon [1.0]
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -12,20 +14,22 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         private Camera layerCamera = Camera.Create();
-        private Camera oldCamera = Camera.Create();
-        private Camera camera = Camera.Create();    
+        private Vector2 oldPosition = Vector2.Zero;
+        private Vector2 position = Vector2.Zero;  
         private int top, left, right, bottom = 0;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
-        /// <summary>Obtém ou define as animações a serem exibidas na camada.</summary>
-        public List<Animation> Actors { get; set; } = new List<Animation>();
+        /// <summary>Obtém a animação a ser exibida na camada.</summary>
+        public Animation Animation { get; private set; } = null;
         /// <summary>Obtém a tela em que essa camada está associada.</summary>
         public Screen Screen { get; }
         /// <summary>Obtém ou define o Viewport de desenho da camada.</summary>
-        public Viewport View { get; set; } = new Viewport(); 
+        public Viewport View { get; set; } = new Viewport();
+        /// <summary>Obtém ou define o valor do efeito parallax. 1f = 100%.</summary>
+        public float Parallax { get; set; } = 1f;
 
         /// <summary>Obtém ou define o limite de rolagem da tela para cima.</summary>
         public int Top { get => top; set => top = MathHelper.Clamp(value, 0, int.MaxValue); }
@@ -59,17 +63,12 @@ namespace Microsoft.Xna.Framework.Graphics
         public ScreenLayer(ScreenLayer source)
         {
             this.Screen = source.Screen;
-
-            foreach (var a in source.Actors)
-            {
-                this.Actors.Add(new Animation(Screen.Game, a));
-            }
-
+            this.Animation = new Animation(Screen.Game, source.Animation);
             this.Bottom = source.Bottom;
-            this.camera = source.camera;
+            this.position = source.position;
             this.layerCamera = source.layerCamera;
             this.Left = source.Left;
-            this.oldCamera = source.oldCamera;
+            this.oldPosition = source.oldPosition;
             this.Right = source.Right;
             this.Top = source.Top;
             this.View = source.View;
@@ -83,55 +82,83 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public void Update(GameTime gameTime)
         {
-            oldCamera = camera;
-            camera = Screen.Camera;
+            oldPosition = position;
+            position = Screen.Camera.Position;
 
-            var diff = camera.Position - oldCamera.Position;
+            var diff = position - oldPosition;
             var c = layerCamera;
+            Rectangle cBounds = new Rectangle(0, 0, Screen.Game.Window.ClientBounds.Width, Screen.Game.Window.ClientBounds.Height);
 
-            if(diff.X < 0)
+            if (diff.X != 0)
             {
-                c.Move(diff.X, 0);
-                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
+                c.Move(diff.X * Parallax, 0);
+                cBounds.X = (int)c.X;
 
-                if (cBounds.Left < Area.Left)
-                    c.X = Area.X;
+                if (cBounds.Left < Area.Left || cBounds.Right > Area.Right)
+                    c.X -= diff.X * Parallax;
             }
-            else if(diff.X > 0)
+            if (diff.Y != 0)
             {
-                c.Move(diff.X, 0);
-                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
+                c.Move(0, diff.Y * Parallax);
+                cBounds.Y = (int)c.Y;
 
-                if (cBounds.Right > Area.Right)
-                {
-                    var diffR = cBounds.Right - Area.Right;
-                    c.X -= diffR;
-                }   
-            }
-
-            if(diff.Y < 0)
-            {
-                c.Move(0, diff.Y);
-                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
-
-                if (cBounds.Top < Area.Top)
-                    c.Y = Area.Y;
-            }
-            else if(diff.Y > 0)
-            {
-                c.Move(0, diff.Y);
-                Rectangle cBounds = new Rectangle(c.Position.ToPoint(), Screen.Game.Window.ClientBounds.Size);
-
-                if (cBounds.Bottom > Area.Bottom)
-                {
-                    var diffB = cBounds.Bottom - Area.Bottom;
-                    c.X -= diffB;
-                }
+                if (cBounds.Top < Area.Top || cBounds.Bottom > Area.Bottom)
+                    c.Y -= diff.Y * Parallax;
             }
 
             layerCamera = c;
 
-            Actors.ForEach(a => a.Update(gameTime));
+            Animation.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Adiciona uma animação ao layer.
+        /// </summary>
+        /// <param name="animation">A animação a ser adicionada.</param>
+        public void AddAnimation(Animation animation)
+        {
+            Animation = animation;
+            animation.UpdateBounds();
+            SetSize(animation.ScaledSize.ToPoint());
+        }
+
+        /// <summary>
+        /// Define o tamanho da Viewport da camada.
+        /// </summary>
+        /// <param name="size">O tamanho da viewport.</param>
+        public void SetSize(Point size)
+        {
+            var v = View;
+            v.Width = size.X;
+            v.Height = size.Y;
+
+            View = v;
+        }
+
+        /// <summary>
+        /// Aumenta ou diminui o tamanho da Viewport da camada.
+        /// </summary>
+        /// <param name="amount">O montante a ser adicionado ou subtraido do tamanho da viewport</param>
+        public void FixSize(Point amount)
+        {
+            var v = View;
+            v.Width += amount.X;
+            v.Height += amount.Y;
+
+            View = v;
+        }
+
+        /// <summary>
+        /// Define a posição da Viewport da camada.
+        /// </summary>
+        /// <param name="position">A posição a ser definida.</param>
+        public void SetPosition(Point position)
+        {
+            var v = View;
+            v.X = position.X;
+            v.Y = position.Y;
+
+            View = v;
         }
 
         /// <summary>Desenha a camada.</summary>
@@ -143,7 +170,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             spriteBatch.Begin(transformMatrix: layerCamera.GetTransform());
 
-            Actors.ForEach(a => a.Draw(gameTime, spriteBatch));
+            Animation.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }

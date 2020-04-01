@@ -24,3 +24,4 @@ C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\mario.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\strider_idle.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\Yoshi.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\80800.xnb

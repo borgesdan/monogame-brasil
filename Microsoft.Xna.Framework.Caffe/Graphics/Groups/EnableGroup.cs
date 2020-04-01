@@ -5,15 +5,12 @@
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe que agrupa propriedades para disponibilidade da entidade.</summary>
-    public class EnableGroup
+    public struct EnableGroup
     {
         /// <summary>Obtém ou define se a entidade está ativa.</summary>
-        public bool IsEnabled { get; set; } = true;
+        public bool IsEnabled;
         /// <summary>Obtém ou define se a entidade é visível.</summary>
-        public bool IsVisible { get; set; } = true;
-
-        /// <summary>Inicia uma nova instância da classe EnableGroup</summary>
-        public EnableGroup() { }
+        public bool IsVisible;
 
         /// <summary>Inicia uma nova instância da classe EnableGroup com suas preferências</summary>
         /// <param name="enabled">True se a entidade está ativa.</param>
@@ -22,20 +19,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             IsEnabled = enabled;
             IsVisible = visible;
-        }        
-
-        /// <summary>Define as propriedades Enabled e Visible como true.</summary>
-        public void Show()
-        {
-            IsEnabled = true;
-            IsVisible = true;
-        }
-
-        /// <summary>Define as propriedades Enabled e Visible como false.</summary>
-        public void Hide()
-        {
-            IsEnabled = false;
-            IsVisible = false;
         }
     }
 }

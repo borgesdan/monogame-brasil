@@ -23,6 +23,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         private bool disposed = false;
         private Viewport staticView = new Viewport();
+        protected Camera camera = Camera.Create();
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -36,7 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a instância corrente do subgerenciador de telas.</summary>
         public SubScreenManager SubManager { get; set; } = null;
         /// <summary>Obtém ou define a capacidade da tela de ser ativa ou desenhável.</summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup();        
+        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);        
         /// <summary>Obtém o valor True se a tela foi carregada.</summary>
         public ScreenLoadState LoadState { get; protected set; } = ScreenLoadState.UnLoaded;
         /// <summary>Obtém ou define a cor de fundo da tela.</summary>
@@ -56,7 +57,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a lista de camadas frontais.</summary>
         public List<ScreenLayer> FrontLayers { get; set; } = new List<ScreenLayer>();
         /// <summary>Obtém ou define a câmera da tela.</summary>
-        public Camera Camera { get; set; } = Camera.Create();
+        public Camera Camera { get => camera; set => camera = value; }
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades traseiras que não são afetadas pela Viewport da tela.</summary>
         public SpriteBatchBeginConfig BackStaticEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades frontais que não são afetadas pela Viewport da tela.</summary>
@@ -145,8 +146,8 @@ namespace Microsoft.Xna.Framework.Graphics
             foreach (var fse in source.FrontStaticEntities)
                 this.FrontStaticEntities.Add(fse.Clone(fse));
 
-            this.Camera = source.Camera;
-            this.Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
+            this.camera = source.Camera;
+            this.Enable = source.Enable;
             this.BackgroundColor = source.BackgroundColor;
             this.Game = source.Game;
             this.LoadState = source.LoadState;
@@ -198,7 +199,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             staticView = new Viewport(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);
-            
+
+            BackLayers.ForEach(bl => bl.Update(gameTime));
+            FrontLayers.ForEach(fl => fl.Update(gameTime));
+            BackStaticEntities.ForEach(be => be.Update(gameTime));
+            FrontStaticEntities.ForEach(fe => fe.Update(gameTime));
+
             DrawableEntities.Clear();
 
             //Atualiza as entidades.
@@ -281,12 +287,52 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Adiciona entidades a cena.</summary>
-        /// <param name="entities">Lista de entidades a ser adicionada.</param>
-        public void Add(params Entity2D[] entities)
+        /// <param name="entities">Lista de entidades a serem adicionada.</param>
+        public void AddEntity(params Entity2D[] entities)
         {
             foreach(var e in entities)
             {
                 Entities.Add(e);
+            }
+        }
+
+        /// <summary>Adiciona camadas traseiras a cena.</summary>
+        /// <param name="entities">Lista de camadas a serem adicionada.</param>
+        public void AddBackLayer(params ScreenLayer[] backlayers)
+        {
+            foreach (var e in backlayers)
+            {
+                BackLayers.Add(e);
+            }
+        }
+
+        /// <summary>Adiciona camadas frontais a cena.</summary>
+        /// <param name="entities">Lista de camadas a serem adicionada.</param>
+        public void AddFrontLayer(params ScreenLayer[] frontLayers)
+        {
+            foreach (var e in frontLayers)
+            {
+                FrontLayers.Add(e);
+            }
+        }
+
+        /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
+        /// <param name="entities">Lista de entidades a serem adicionada.</param>
+        public void AddBackStaticEntity(params Entity2D[] backEntities)
+        {
+            foreach (var e in backEntities)
+            {
+                BackStaticEntities.Add(e);
+            }
+        }
+
+        /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
+        /// <param name="entities">Lista de entidades a serem adicionada.</param>
+        public void AddFrontStaticEntity(params Entity2D[] frontEntities)
+        {
+            foreach (var e in frontEntities)
+            {
+                FrontStaticEntities.Add(e);
             }
         }
 
