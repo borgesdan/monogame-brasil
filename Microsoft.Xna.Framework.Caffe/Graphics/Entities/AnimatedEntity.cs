@@ -32,7 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public AnimatedEntity(AnimatedEntity source) : base(source)
         {
             //Cópia das animações.
-            source.Animations.ForEach(a => this.Animations.Add(new Animation(Game, a)));
+            source.Animations.ForEach(a => this.Animations.Add(new Animation(a)));
             //Busca do index da animação ativa.
             int index = source.Animations.FindIndex(a => a.Equals(source.ActiveAnimation));
 
@@ -114,6 +114,16 @@ namespace Microsoft.Xna.Framework.Graphics
             Transform.SetPosition(Transform.Position);
 
             //Seta as propriedades
+            SetActiveProperties();
+
+            //Update da animação ativa.
+            ActiveAnimation?.Update(gameTime);            
+
+            base.Update(gameTime);
+        }
+
+        private void SetActiveProperties()
+        {
             ActiveAnimation.Color = Transform.Color;
             ActiveAnimation.SpriteEffect = Transform.SpriteEffect;
             ActiveAnimation.Rotation = Transform.Rotation;
@@ -122,11 +132,6 @@ namespace Microsoft.Xna.Framework.Graphics
             ActiveAnimation.LayerDepth = LayerDepth;
             ActiveAnimation.Origin = Origin;
             ActiveAnimation.DrawPercentage = DrawPercentage;
-
-            //Update da animação ativa.
-            ActiveAnimation?.Update(gameTime);            
-
-            base.Update(gameTime);
         }
 
         /// <summary>Desenha a entidade.</summary>
@@ -184,6 +189,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 ActiveAnimation?.ResetIndex();
 
             ActiveAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
+            SetActiveProperties();
 
             UpdateBounds();
         }
@@ -223,7 +229,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
-            animation.AddSprite(sprite);
+            animation.AddSprites(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);

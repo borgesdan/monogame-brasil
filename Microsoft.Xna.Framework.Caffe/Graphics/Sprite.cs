@@ -62,13 +62,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Inicializa uma nova instância da classe Sprite como cópida de outra instância.
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
-        public Sprite(Game game, Sprite source)
+        public Sprite(Sprite source)
         {
-            if(source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            this.Frames = source.Frames;
-            this.Texture = game.Content.Load<Texture2D>(source.Texture.Name);
+            this.Frames = new List<SpriteFrame>(source.Frames);
+            //this.Texture = game.Content.Load<Texture2D>(source.Texture.Name);
+            this.Texture = source.Texture;
         }
 
         //---------------------------------------//

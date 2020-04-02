@@ -18,7 +18,7 @@ namespace Game2.Screens
             Animation floor_animation = new Animation(Game, 0, "floor");
             Sprite floor_sprite = new Sprite(Game, "80800", false);
             floor_sprite.AddFrame(490, 971, 1342, 90);
-            floor_animation.AddSprite(floor_sprite);
+            floor_animation.AddSprites(floor_sprite);
 
             ScreenLayer floor_layer = new ScreenLayer(this);
             floor_layer.AddAnimation(floor_animation);
@@ -27,7 +27,7 @@ namespace Game2.Screens
             Animation floor_animation2 = new Animation(Game, 0, "floor");
             Sprite floor_sprite2 = new Sprite(Game, "80800", false);
             floor_sprite2.AddFrame(490, 971, 1342, 90);
-            floor_animation2.AddSprite(floor_sprite);
+            floor_animation2.AddSprites(floor_sprite);
 
             ScreenLayer floor_layer2 = new ScreenLayer(this);
             floor_layer2.AddAnimation(floor_animation2);

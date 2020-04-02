@@ -230,10 +230,23 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             //Atualiza todas as entidades.
-            Entities.ForEach(e => e.Update(gameTime));
+            //Entities.ForEach(e => e.Update(gameTime));
+            for(int e = 0; e < Entities.Count; e++)
+            {
+                Entities[e].Update(gameTime);
+            }            
 
-            BackStaticEntities.ForEach(e => e.Update(gameTime));
-            FrontStaticEntities.ForEach(e => e.Update(gameTime));
+            //BackStaticEntities.ForEach(e => e.Update(gameTime));
+            for (int e = 0; e < BackStaticEntities.Count; e++)
+            {
+                BackStaticEntities[e].Update(gameTime);
+            }
+
+            //FrontStaticEntities.ForEach(e => e.Update(gameTime));
+            for (int e = 0; e < FrontStaticEntities.Count; e++)
+            {
+                FrontStaticEntities[e].Update(gameTime);
+            }
         }
 
         /// <summary>Desenha a tela.</summary>
@@ -334,7 +347,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 FrontStaticEntities.Add(e);
             }
-        }
+        } 
 
         internal void CallLoad(ScreenManager manager)
         {

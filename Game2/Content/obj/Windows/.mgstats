@@ -1,6 +1,2 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/80800.png","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/80800.xnb","TextureProcessor","Texture2DContent",77906,11334085,1,157087
-"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/default.spritefont","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/default.xnb","FontDescriptionProcessor","SpriteFontContent",2009,82678,1,151087
-"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/mario.png","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/mario.xnb","TextureProcessor","Texture2DContent",8535,411117,0,0460037
-"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/strider_idle.png","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/strider_idle.xnb","TextureProcessor","Texture2DContent",7892,1664293,0,0650034
-"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/Yoshi.png","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/Yoshi.xnb","TextureProcessor","Texture2DContent",2238,245589,0,0310026
+"C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/smw_coin.wav","C:/Users/Borges/source/repos/MonoGameDevelop/Game2/Content/bin/Windows/smw_coin.xnb","SoundEffectProcessor","SoundEffectContent",18570,18587,1,420104

@@ -21,7 +21,7 @@ namespace Game2.Screens
 
             //Criamos uma animação para ser adicionada na entidade.
             Animation mario_idle = new Animation(Game, 0, nameof(mario_idle));
-            mario_idle.AddSprite("mario");
+            mario_idle.AddSprites("mario");
 
             entity.AddAnimation(mario_idle);            
             entity.Origin = new Vector2(entity.Transform.Width / 2, entity.Transform.Height / 2);            

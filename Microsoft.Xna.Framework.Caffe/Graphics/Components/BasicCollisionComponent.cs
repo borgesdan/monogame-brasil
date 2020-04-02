@@ -14,9 +14,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Define através deste evento a ação necessária que deve ocorrer ao acontecer uma colisão.</summary>
         public event CollisionAction OnCollision;
 
-        /// <summary>Obtém True se a entidade está colidindo.</summary>
-        public bool IsColliding { get; private set; } = false;
-
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
         //-----------------------------------------//
@@ -46,7 +43,6 @@ namespace Microsoft.Xna.Framework.Graphics
         public BasicCollisionComponent(Entity2D destination, BasicCollisionComponent source): base(destination, source)
         {
             OnCollision = source.OnCollision;
-            IsColliding = source.IsColliding;
         }
 
         //---------------------------------------//
@@ -71,9 +67,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
-            //Valor padrão.
-            IsColliding = false;
-
             //Recebe a tela em que a entidade está associada.
             var screen = Entity.Screen;
 
@@ -91,7 +84,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     if(result.HasCollided)
                     {
-                        IsColliding = true;
                         //O que fazer sobre a colisão será definido pelo usuário.
                         OnCollision?.Invoke(Entity, gameTime, result, other);
                     }

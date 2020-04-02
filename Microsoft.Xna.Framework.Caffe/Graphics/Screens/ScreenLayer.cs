@@ -65,7 +65,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public ScreenLayer(ScreenLayer source)
         {
             this.Screen = source.Screen;
-            this.Animation = new Animation(Screen.Game, source.Animation);
+            this.Animation = new Animation(source.Animation);
             this.Bottom = source.Bottom;
             this.position = source.position;
             this.layerCamera = source.layerCamera;

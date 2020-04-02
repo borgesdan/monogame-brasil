@@ -39,7 +39,7 @@ namespace Game2.Screens
                 new SpriteFrame(1810, 0, 216, 180),
                 new SpriteFrame(2074, 0, 212, 180)
                 );
-            strider.AddSprite(idle);            
+            strider.AddSprites(idle);            
 
             //Criamos então a entidade com esse defeito.
             entity1 = new AnimatedEntity(this, "strider");
@@ -73,7 +73,7 @@ namespace Game2.Screens
                 );
             //Se todos os frames necessitassem de um mesmo valor de alinhamento poderiamos fazer assim
             //idle2.Frames.ForEach(f => f.OriginCorrection = new Vector2(value, 0));
-            strider2.AddSprite(idle2);
+            strider2.AddSprites(idle2);
 
             //Criamos a segunda entidade, agora com a animação correta.
             entity2 = new AnimatedEntity(this, "strider2");

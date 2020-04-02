@@ -192,7 +192,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Inicializa uma nova instância da classe Animation como cópia de outro Animation.</summary>
         /// <param name="source">A animação a ser copiada.</param>
-        public Animation(Game game, Animation source)
+        public Animation(Animation source)
         {
             elapsedGameTime = source.elapsedGameTime;            
             Game = source.Game;
@@ -200,9 +200,8 @@ namespace Microsoft.Xna.Framework.Graphics
             FrameIndex = source.FrameIndex;
             Position = source.Position;
             Origin = source.Origin;
-
-            Sprites = new List<Sprite>();            
-            source.Sprites.ForEach(s => Sprites.Add(new Sprite(game, s)));
+            
+            source.Sprites.ForEach(s => Sprites.Add(new Sprite(s)));
             
             Rotation = source.Rotation;
             Scale = source.Scale;
@@ -411,7 +410,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma quantidade desejada de objetos a lista de Sprites.</summary>
         /// <param name="source">Lista contendo os caminhos das texturas na pasta Content.</param>
-        public void AddSprite(params string[] sources)
+        public void AddSprites(params string[] sources)
         {
             List<Sprite> tmpSprites = new List<Sprite>();
 
@@ -421,12 +420,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 tmpSprites.Add(temp);
             }
 
-            AddSprite(tmpSprites.ToArray());
+            AddSprites(tmpSprites.ToArray());
         }        
 
         /// <summary>Adiciona sprites a animação.</summary>
         /// <param name="sprites">Os sprites a serem adicionados.</param>
-        public void AddSprite(params Sprite[] sprites)
+        public void AddSprites(params Sprite[] sprites)
         {
             if (sprites != null)
                 Sprites.AddRange(sprites);
@@ -436,6 +435,23 @@ namespace Microsoft.Xna.Framework.Graphics
                 CurrentSprite = Sprites[0];
                 Frame = CurrentSprite[FrameIndex].Bounds;
             }
+        }
+
+        /// <summary>
+        /// Adiciona um sprite e os frames desejados da ação.
+        /// </summary>
+        /// <param name="sprite">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
+        /// <param name="frames">A lista de frames no sprite.</param>
+        public void AddSprite(Sprite source, params SpriteFrame[] frames)
+        {
+            Sprite sprite = new Sprite(source);
+            
+            foreach(var f in frames) 
+            {
+                sprite.AddFrame(f);
+            }
+
+            AddSprites(sprite);
         }
 
         //---------------------------------------//

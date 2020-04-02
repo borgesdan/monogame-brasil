@@ -25,3 +25,7 @@ C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\strider_idle.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\Yoshi.xnb
 C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\80800.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\mariosprite.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\smw_jump.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\items.xnb
+C:\Users\Borges\source\repos\MonoGameDevelop\Game2\bin\Windows\x86\Debug\Content\smw_coin.xnb

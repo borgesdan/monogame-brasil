@@ -84,6 +84,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">Nome da entidade.</param>
         protected Entity2D(Screen screen, string name) : this(screen.Game, name)
         {
+            Screen = screen;
             screen?.AddEntity(this);
         }
 

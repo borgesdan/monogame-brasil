@@ -27,14 +27,14 @@ namespace Game2.Screens
                 new SpriteFrame(428, 20, 120, 92)
                 );
 
-            yoshi.AddSprite(lowering);
+            yoshi.AddSprites(lowering);
 
             AnimatedEntity entity1 = new AnimatedEntity(this, "entity1");
             entity1.AddAnimation(yoshi);            
             entity1.Transform.SetViewPosition(AlignType.Left);
             entity1.Transform.Move(100, 0);
 
-            Animation yoshi2 = new Animation(Game, yoshi);            
+            Animation yoshi2 = new Animation(yoshi);            
             var frames = yoshi2[0].Frames.ToArray();
             frames[0].OriginCorrection = Vector2.Zero;
             frames[1].OriginCorrection = Vector2.Zero;
