@@ -17,7 +17,7 @@ namespace Game2.Screens
         public override void Load()
         {
             //Criamos a entidade com um construtor.
-            entity = new AnimatedEntity(this, "mario");
+            entity = new AnimatedEntity(Game, "mario");
 
             //Criamos uma animação para ser adicionada na entidade.
             Animation mario_idle = new Animation(Game, 0, nameof(mario_idle));
@@ -29,11 +29,13 @@ namespace Game2.Screens
             entity.Transform.Scale = new Vector2(0.5F, 0.5F);
             entity.OnUpdate += Entity_OnUpdate;
             
-            txtEntity = new TextEntity(this, nameof(txtEntity));
+            txtEntity = new TextEntity(Game, nameof(txtEntity));
             txtEntity.SetFont("default");
             txtEntity.Text.Append("4: Teste de animação estática.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as teclas Q e W para escala.");
+
+            AddEntity(entity, txtEntity);
 
             base.Load();
         }

@@ -45,7 +45,7 @@ namespace Game2.Screens
             //Adicionamos o componente
             entity.Components.Add(basicCollisionComponent);
 
-            txtEntity = new TextEntity(this, nameof(txtEntity));
+            txtEntity = new TextEntity(Game, nameof(txtEntity));
             txtEntity.SetFont("default");
             txtEntity.Text.Append("2: Teste de colisão.");
             txtEntity.Text.Append("\n");

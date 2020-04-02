@@ -44,14 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">O nome da entidade.</param>
         public AnimatedEntity(Game game, string name) : base(game, name)
         {
-        }
-
-        /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
-        /// <param name="screen">A tela que a entidade será associada.</param>
-        /// <param name="name">O nome da entidade</param>
-        public AnimatedEntity(Screen screen, string name) : base(screen, name) 
-        {
-        }        
+        }              
 
         //---------------------------------------//
         //-----         INDEXADOR           -----//
@@ -215,16 +208,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor do retângulo</param>
-        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color) => CreateRectangle(game, name, size, color, null);
-
-        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo.</summary>
-        /// <param name="game">A tela em que a entidade será associada.</param>
-        /// <param name="name">O nome da entidade.</param>
-        /// <param name="size">O tamanho do retângulo.</param>
-        /// <param name="color">A cor do retângulo</param>
-        public static AnimatedEntity CreateRectangle(Screen screen, string name, Point size, Color color) => CreateRectangle(screen.Game, name, size, color, screen);
-        
-        private static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color, Screen screen)
+        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color)
         {
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
@@ -233,8 +217,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);
-
-            screen?.AddEntity(animatedEntity);
 
             return animatedEntity;
         }        

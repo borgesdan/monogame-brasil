@@ -17,11 +17,11 @@ namespace Game2.Screens
         //Método para carregamento da tela.
         public override void Load()
         {
-            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(this, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50));
+            AnimatedEntity shadow = AnimatedEntity.CreateRectangle(Game, nameof(shadow), new Point(100, 100), new Color(50, 50, 50, 50));
             shadow.Transform.SetViewPosition(AlignType.Center);
 
             //Criação de uma entidade nomeada fora da tela.
-            entity = AnimatedEntity.CreateRectangle(this, nameof(entity), new Point(100, 100), Color.DarkBlue);
+            entity = AnimatedEntity.CreateRectangle(Game, nameof(entity), new Point(100, 100), Color.DarkBlue);
             entity.Origin = new Vector2(entity.Transform.Width / 2, entity.Transform.Height / 2);
             entity.Transform.SetViewPosition(AlignType.Center);
             //Atualiza a entidade utilizando o evento OnUpdate
@@ -45,13 +45,15 @@ namespace Game2.Screens
             entity.Transform.SetVelocity(3, 3);
 
             //Entidade para exibição de um texto.
-            txtEntity = new TextEntity(this, nameof(txtEntity));
+            txtEntity = new TextEntity(Game, nameof(txtEntity));
             txtEntity.SetFont("default");
             txtEntity.Text.Append("3: Teste de limites de tela");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Pressione as setas do teclado para movimentação e A e S para rotação.");
             txtEntity.Text.Append("\n");
             txtEntity.Text.Append("Q e W para escala.");
+
+            AddEntity(shadow, entity, txtEntity);
 
             base.Load();
         }

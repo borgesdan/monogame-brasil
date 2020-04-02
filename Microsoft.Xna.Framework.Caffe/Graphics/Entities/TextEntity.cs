@@ -44,12 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Game game, string name) : base(game, name) { }        
-
-        /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
-        /// <param name="screen">A tela em que a entidade será associada.</param>
-        /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Screen screen, string name) : base(screen, name) { }        
+        public TextEntity(Game game, string name) : base(game, name) { }                
 
         /// <summary>Inicializa uma nova instância de TextEntity como cópia de outro TextEntity.</summary>
         /// <param name="source">A entidade a ser copiada.</param>

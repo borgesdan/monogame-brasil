@@ -77,16 +77,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Transform = new TransformGroup(this);
             Name = name;
             Components = new ComponentGroup(this);
-        }
-
-        /// <summary>Inicializa uma nova instância de Entity2D.</summary>
-        /// <param name="screen">A tela em que a entidade será associada.</param>
-        /// <param name="name">Nome da entidade.</param>
-        protected Entity2D(Screen screen, string name) : this(screen.Game, name)
-        {
-            Screen = screen;
-            screen?.AddEntity(this);
-        }
+        }        
 
         /// <summary>Inicializa uma nova instância de Entity2D como cópia de outro Entity2D.</summary>
         /// <param name="source">A entidade a ser copiada.</param>

@@ -305,6 +305,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             foreach(var e in entities)
             {
+                e.Screen = this;
                 Entities.Add(e);
             }
         }
@@ -335,6 +336,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             foreach (var e in backEntities)
             {
+                e.Screen = this;
                 BackStaticEntities.Add(e);
             }
         }
@@ -345,6 +347,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             foreach (var e in frontEntities)
             {
+                e.Screen = this;
                 FrontStaticEntities.Add(e);
             }
         } 

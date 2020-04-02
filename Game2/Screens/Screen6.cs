@@ -29,7 +29,7 @@ namespace Game2.Screens
 
             yoshi.AddSprites(lowering);
 
-            AnimatedEntity entity1 = new AnimatedEntity(this, "entity1");
+            AnimatedEntity entity1 = new AnimatedEntity(Game, "entity1");
             entity1.AddAnimation(yoshi);            
             entity1.Transform.SetViewPosition(AlignType.Left);
             entity1.Transform.Move(100, 0);
@@ -45,28 +45,30 @@ namespace Game2.Screens
 
             yoshi2[0].Frames = frames.ToList();            
 
-            AnimatedEntity entity2 = new AnimatedEntity(this, "entity2");
+            AnimatedEntity entity2 = new AnimatedEntity(Game, "entity2");
             entity2.AddAnimation(yoshi2);
             entity2.Transform.SetViewPosition(AlignType.Right);
             entity2.Transform.Move(-100, 0);
 
-            AnimatedEntity line1x = AnimatedEntity.CreateRectangle(this, nameof(line1x), new Point(2, this.Viewport.Height), Color.White);
+            AnimatedEntity line1x = AnimatedEntity.CreateRectangle(Game, nameof(line1x), new Point(2, this.Viewport.Height), Color.White);
             line1x.Transform.X = entity1.Transform.X;
 
-            AnimatedEntity line2x = AnimatedEntity.CreateRectangle(this, nameof(line2x), new Point(2, this.Viewport.Height), Color.White);
+            AnimatedEntity line2x = AnimatedEntity.CreateRectangle(Game, nameof(line2x), new Point(2, this.Viewport.Height), Color.White);
             line2x.Transform.X = entity2.Transform.X;
 
-            AnimatedEntity liney = AnimatedEntity.CreateRectangle(this, nameof(liney), new Point(this.Viewport.Width, 2), Color.White);
+            AnimatedEntity liney = AnimatedEntity.CreateRectangle(Game, nameof(liney), new Point(this.Viewport.Width, 2), Color.White);
             liney.Transform.Y = entity1.Transform.Y;
 
-            AnimatedEntity liney2 = AnimatedEntity.CreateRectangle(this, nameof(liney2), new Point(this.Viewport.Width, 2), Color.White);
+            AnimatedEntity liney2 = AnimatedEntity.CreateRectangle(Game, nameof(liney2), new Point(this.Viewport.Width, 2), Color.White);
             liney2.Transform.Y = entity1.Transform.Y + 112;
 
             //O texto informativo.
-            TextEntity txtEntity = new TextEntity(this, nameof(txtEntity));
+            TextEntity txtEntity = new TextEntity(Game, nameof(txtEntity));
             txtEntity.SetFont("default");
             txtEntity.Text.Append("6: Teste de correção da origem da animação no eixo Y.");
             txtEntity.Transform.Color = Color.White;
+
+            AddEntity(entity1, entity2, txtEntity);
 
             base.Load();
         }

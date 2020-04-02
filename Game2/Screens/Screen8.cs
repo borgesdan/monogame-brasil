@@ -33,17 +33,19 @@ namespace Game2.Screens
             int floorWidth = Game.Window.ClientBounds.Width;
 
             //A entidade chão
-            floor = AnimatedEntity.CreateRectangle(this, "floor", new Point(floorWidth, 20), Color.Black);
+            floor = AnimatedEntity.CreateRectangle(Game, "floor", new Point(floorWidth, 20), Color.Black);
             floor.Transform.SetViewPosition(AlignType.Center);
 
             //Mario
-            mario = new MarioEntity(this, "mario");
+            mario = new MarioEntity(Game, "mario");
             mario.Transform.Y = floor.Transform.Y - mario.Bounds.Height;
             mario.Transform.X += 100;
 
             //Moeda
-            coin = new CoinEntity(this, "coin", sprite_items);
+            coin = new CoinEntity(Game, "coin", sprite_items);
             coin.Enable = new EnableGroup(true, false);
+
+            AddEntity(floor, mario);
 
             base.Load();
         }
@@ -80,7 +82,7 @@ namespace Game2.Screens
                     }
                 };
 
-                this.AddEntity(otherCoin);
+                AddEntity(otherCoin);
 
                 elapsedTime = 0;
                 coinTime -= 100;
@@ -115,7 +117,7 @@ namespace Game2.Screens
             SoundEffect jumpSound;
             SoundEffect coinSound;
 
-            public MarioEntity(Screen screen, string name) : base(screen, name)
+            public MarioEntity(Game game, string name) : base(game, name)
             {
                 jumpSound = Game.Content.Load<SoundEffect>("smw_jump");
                 coinSound = Game.Content.Load<SoundEffect>("smw_coin");
@@ -199,7 +201,7 @@ namespace Game2.Screens
 
             }                
 
-            public CoinEntity(Screen screen, string name, Sprite items) : base(screen, name)
+            public CoinEntity(Game game, string name, Sprite items) : base(game, name)
             {
                 List<SpriteFrame> coin_frames = new List<SpriteFrame>();
                 coin_frames.Add(new SpriteFrame(126, 354, 24, 32));

@@ -42,7 +42,7 @@ namespace Game2.Screens
             strider.AddSprites(idle);            
 
             //Criamos então a entidade com esse defeito.
-            entity1 = new AnimatedEntity(this, "strider");
+            entity1 = new AnimatedEntity(Game, "strider");
             //Adicionamos a animação.
             entity1.AddAnimation(strider);
             //Alinhamento na tela.
@@ -76,26 +76,28 @@ namespace Game2.Screens
             strider2.AddSprites(idle2);
 
             //Criamos a segunda entidade, agora com a animação correta.
-            entity2 = new AnimatedEntity(this, "strider2");
+            entity2 = new AnimatedEntity(Game, "strider2");
             entity2.AddAnimation(strider2);
             entity2.Transform.SetViewPosition(AlignType.Right);
             entity2.Transform.Move(-50, 0);
 
             //Aqui são as linhas desenhadas na tela.
-            AnimatedEntity line1x = AnimatedEntity.CreateRectangle(this, nameof(line1x), new Point(2, this.Viewport.Height), Color.White);
+            AnimatedEntity line1x = AnimatedEntity.CreateRectangle(Game, nameof(line1x), new Point(2, this.Viewport.Height), Color.White);
             line1x.Transform.X = entity1.Transform.X;
 
-            AnimatedEntity line2x = AnimatedEntity.CreateRectangle(this, nameof(line2x), new Point(2, this.Viewport.Height), Color.White);
+            AnimatedEntity line2x = AnimatedEntity.CreateRectangle(Game, nameof(line2x), new Point(2, this.Viewport.Height), Color.White);
             line2x.Transform.X = entity2.Transform.X;
 
-            AnimatedEntity liney = AnimatedEntity.CreateRectangle(this, nameof(liney), new Point(this.Viewport.Width, 2), Color.White);
+            AnimatedEntity liney = AnimatedEntity.CreateRectangle(Game, nameof(liney), new Point(this.Viewport.Width, 2), Color.White);
             liney.Transform.Y = entity1.Transform.Y;
 
             //O texto informativo.
-            TextEntity txtEntity = new TextEntity(this, nameof(txtEntity));
+            TextEntity txtEntity = new TextEntity(Game, nameof(txtEntity));
             txtEntity.SetFont("default");
             txtEntity.Text.Append("5: Teste de correção da origem da animação no eixo X.");
             txtEntity.Transform.Color = Color.Black;
+
+            AddEntity(entity1, entity2, line1x, line2x, liney);
 
             base.Load();
         }
