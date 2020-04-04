@@ -50,23 +50,24 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A entidade a ser copiada.</param>
         public TextEntity(TextEntity source) : base(source)
         {
-            var glyphs = source.Font.Glyphs;
-            List<Rectangle> gs = new List<Rectangle>();
-            List<Rectangle> cs = new List<Rectangle>();
-            List<Vector3> ks = new List<Vector3>();
-            List<char> chars = new List<char>();
-            foreach (var g in glyphs)
-            {
-                chars.Add(g.Character);
-                gs.Add(g.BoundsInTexture);
-                cs.Add(g.Cropping);
-                ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
-            }
+            //var glyphs = source.Font.Glyphs;
+            //List<Rectangle> gs = new List<Rectangle>();
+            //List<Rectangle> cs = new List<Rectangle>();
+            //List<Vector3> ks = new List<Vector3>();
+            //List<char> chars = new List<char>();
+            //foreach (var g in glyphs)
+            //{
+            //    chars.Add(g.Character);
+            //    gs.Add(g.BoundsInTexture);
+            //    cs.Add(g.Cropping);
+            //    ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
+            //}
 
-            SpriteFont font = new SpriteFont(source.Font.Texture, gs, cs, chars, source.Font.LineSpacing, source.Font.Spacing, ks, source.Font.DefaultCharacter);
+            //SpriteFont font = new SpriteFont(source.Font.Texture, gs, cs, chars, source.Font.LineSpacing, source.Font.Spacing, ks, source.Font.DefaultCharacter);
+
             
-            Font = font;
-            Text = source.Text;
+            Font = source.Font;
+            Text = new StringBuilder(source.Text.ToString());
         }
 
         /// <summary>

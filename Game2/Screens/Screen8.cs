@@ -186,6 +186,7 @@ namespace Game2.Screens
                     {
                         coinSound.CreateInstance().Play();
                         Screen.Entities.Remove(collidedEntity);
+                        collidedEntity = null;
                     }
                 };
 

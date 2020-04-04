@@ -52,6 +52,7 @@
     <Compile Include="Screens\Screen5.cs" />
     <Compile Include="Screens\Screen6.cs" />
     <Compile Include="Screens\Screen7.cs" />
+    <Compile Include="Screens\Screen9.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

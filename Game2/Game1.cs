@@ -59,8 +59,9 @@ namespace Game2
             Screen6 screen6 = new Screen6(manager, nameof(screen6));
             Screen7 screen7 = new Screen7(manager, nameof(screen7));
             Screen8 screen8 = new Screen8(manager, nameof(screen8));
+            Screen9 screen9 = new Screen9(manager, nameof(screen9));
 
-            manager.Add(screen1, screen2, screen3, screen4, screen5, screen6, screen7, screen8);
+            manager.Add(screen1, screen2, screen3, screen4, screen5, screen6, screen7, screen8, screen9);
         }
 
         /// <summary>

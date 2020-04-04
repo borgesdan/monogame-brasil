@@ -15,10 +15,17 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
+        //Representam a máxima posição onde a câmera pode ir
+        readonly int max_x_viewport = -2000000000;
+        readonly int max_y_viewport = -2000000000;
+
         private Camera layerCamera = Camera.Create();
         private Vector2 oldPosition = Vector2.Zero;
         private Vector2 position = Vector2.Zero;  
         private int top, left, right, bottom = 0;
+
+        private float infPositionStartX = 0;
+        private float infPositionStartY = 0;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -30,8 +37,13 @@ namespace Microsoft.Xna.Framework.Graphics
         public Screen Screen { get; }
         /// <summary>Obtém ou define o Viewport de desenho da camada.</summary>
         public Viewport View { get; set; } = new Viewport();
+        
         /// <summary>Obtém ou define o valor do efeito parallax. 1f = 100%.</summary>
         public float Parallax { get; set; } = 1f;
+        /// <summary>Obtém ou define se a animação será repetida ao infinito no eixo X.</summary>
+        public bool InfinityX { get; set; } = false;
+        /// <summary>Obtém ou define se a animação será repetida ao infinito no eixo Y.</summary>
+        public bool InfinityY { get; set; } = false;
 
         /// <summary>Obtém ou define o limite de rolagem da tela para cima.</summary>
         public int Top { get => top; set => top = MathHelper.Clamp(value, 0, int.MaxValue); }
@@ -62,6 +74,10 @@ namespace Microsoft.Xna.Framework.Graphics
             View = screen.Game.GraphicsDevice.Viewport;
         }
 
+        /// <summary>
+        /// Inicializa uma nova instância da classe ScreenLayer como cópia de outro ScreenLayer.
+        /// </summary>
+        /// <param name="source">A instância a ser copiada.</param>
         public ScreenLayer(ScreenLayer source)
         {
             this.Screen = source.Screen;
@@ -84,6 +100,77 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public void Update(GameTime gameTime)
         {
+            //Se houver repetição no eixo X.
+            if (InfinityX)
+            {
+                //Só recebe o valor da posição da câmera no eixo X.
+                var pos = layerCamera.Position;
+                pos.X = Screen.Camera.Position.X * Parallax;
+                layerCamera.Position = pos;
+
+                //Ajuda a view.
+                Viewport view = View;
+                view.Width = Screen.Game.Window.ClientBounds.Width;
+                view.X = 0;                
+                View = view;
+                
+                //Recebe os valores para o cálculo.
+                Point v1 = new Point(max_x_viewport, 0);
+                Point v2 = layerCamera.Position.ToPoint();
+                int aw = Animation.Bounds.Width;
+
+                //Cálculos
+
+                //Distância entre a o eixo X da view e o eixo X da câmera, R = (v1.X - v2.X)
+                int r = v1.X - v2.X;
+                //Quantidade de animações dentro dessa distância, Q = |R| / aw
+                int q = Math.Abs(r) / aw;
+                //Posição para início do desenho, Ps = (aw * q) - aw
+                int ps = Math.Abs(v1.X) - (aw * q);
+
+                infPositionStartX = -ps;
+            }
+            if(InfinityY)
+            {
+                //layerCamera.Position = Screen.Camera.Position * Parallax;
+                var pos = layerCamera.Position;
+                pos.Y = Screen.Camera.Position.Y * Parallax;
+                layerCamera.Position = pos;
+
+                Viewport view = View;                
+                view.Height = Screen.Game.Window.ClientBounds.Height;
+                view.Y = 0;
+                View = view;
+
+                //Point v1 = view.Bounds.Location;
+                Point v1 = new Point(0, max_y_viewport);
+                Point v2 = layerCamera.Position.ToPoint();
+                int ah = Animation.Bounds.Height;
+
+                //Distância entre a o eixo X da view e o eixo X da câmera, R = (v1.Y - v2.Y)
+                int r = v1.Y - v2.Y;
+                //Quantidade de animações dentro dessa distância, Q = |R| / ah
+                int q = Math.Abs(r) / ah;
+                //Posição para início do desenho Ps = (aw * q) - aw
+                int ps = Math.Abs(v1.Y) - (ah * q);
+
+                infPositionStartY = -ps;
+            }
+            //Se não, calcula normalmente
+            else
+            {
+                CalcCamera();
+            }            
+
+            Animation.Update(gameTime);
+        }
+
+        //Calcula a posição da câmera.
+        private void CalcCamera()
+        {
+            //Cálculos para a verificação do limite da viewport.
+            //A câmera não pode se mover mais do que o tamanho da camada.
+
             oldPosition = position;
             position = Screen.Camera.Position;
 
@@ -109,8 +196,6 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             layerCamera = c;
-
-            Animation.Update(gameTime);
         }
 
         /// <summary>
@@ -171,8 +256,48 @@ namespace Microsoft.Xna.Framework.Graphics
             Screen.Game.GraphicsDevice.Viewport = View;
 
             spriteBatch.Begin(transformMatrix: layerCamera.GetTransform());
+            
+            //O desenho caso seja para o infinito.
+            if(InfinityX || InfinityY)
+            {
+                //Recebe os valores para o infinito em X
+                int sw = View.Width;
+                int aw = Animation.Bounds.Width;
+                int rw = sw / aw;
+                var posx = infPositionStartX;
 
-            Animation.Draw(gameTime, spriteBatch);
+                //Em Y.
+                int sh = View.Height;
+                int ah = Animation.Bounds.Height;
+                var posy = infPositionStartY;
+
+                float total = (posy + ah) + sh;
+                    
+                //Uma correção para não ter animação duplicada.
+                if(!InfinityY)
+                    total = posy + sh;
+
+                while (posy < total)
+                {                    
+                    for (int ix = 0; ix <= rw; ix++)
+                    {
+                        Animation.Position = new Vector2(posx, posy);
+                        Animation.Draw(gameTime, spriteBatch);
+                        posx += aw;
+
+                        //Uma correção para não ter animação duplicada.
+                        if (!InfinityX)
+                            ix++;
+                    }
+
+                    posx = infPositionStartX;
+                    posy += ah;
+                }
+            }
+            else
+            {
+                Animation.Draw(gameTime, spriteBatch);
+            }           
 
             spriteBatch.End();
         }

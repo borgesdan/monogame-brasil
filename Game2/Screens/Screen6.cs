@@ -68,7 +68,7 @@ namespace Game2.Screens
             txtEntity.Text.Append("6: Teste de correção da origem da animação no eixo Y.");
             txtEntity.Transform.Color = Color.White;
 
-            AddEntity(entity1, entity2, txtEntity);
+            AddEntity(entity1, entity2, txtEntity, line1x, line2x, liney, liney2);
 
             base.Load();
         }
