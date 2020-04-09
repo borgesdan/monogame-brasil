@@ -22,6 +22,38 @@ namespace Microsoft.Xna.Framework.Graphics
             IsEnabled = enabled;
             IsVisible = visible;
         }
+        
+        /// <summary>
+        /// Retorna IsEnabled = false e IsVisible = true.
+        /// </summary>
+        public static EnableGroup Disabled
+        {
+            get => new EnableGroup(false, true);
+        }
+
+        /// <summary>
+        /// Retorna IsEnabled = true e IsVisible = false.
+        /// </summary>
+        public static EnableGroup Hidden
+        {
+            get => new EnableGroup(true, false);
+        }
+
+        /// <summary>
+        /// Retorna IsEnabled = false e IsVisible = false.
+        /// </summary>
+        public static EnableGroup Unavailable
+        {
+            get => new EnableGroup(false, false);
+        }
+
+        /// <summary>
+        /// Retorna IsEnabled = true e IsVisible = true.
+        /// </summary>
+        public static EnableGroup Available
+        {
+            get => new EnableGroup(true, true);
+        }
 
         public override bool Equals(object obj)
         {

@@ -21,7 +21,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define a disponibilidade do componente.
         /// </summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
+        public EnableGroup Enable { get; set; } = EnableGroup.Available;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//

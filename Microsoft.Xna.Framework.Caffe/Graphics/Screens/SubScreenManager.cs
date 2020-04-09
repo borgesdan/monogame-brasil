@@ -166,7 +166,6 @@ namespace Microsoft.Xna.Framework.Graphics
                 MainScreen = null;
                 SubScreens.Clear();
                 SubScreens = null;
-
                 Active = null;
             }
 

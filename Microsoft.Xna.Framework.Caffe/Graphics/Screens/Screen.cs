@@ -21,7 +21,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
-        private bool disposed = false;
+        protected bool disposed = false;
         private Viewport staticView = new Viewport();
         protected Camera camera = Camera.Create();
 
@@ -53,9 +53,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a lista de entidades que serão desenhadas.</summary>
         public List<Entity2D> DrawableEntities { get; private set; } = new List<Entity2D>();
         /// <summary>Obtém ou define a lista de camadas traseiras.</summary>
-        public List<ScreenLayer> BackLayers { get; set; } = new List<ScreenLayer>();
+        public List<Layer> BackLayers { get; set; } = new List<Layer>();
         /// <summary>Obtém ou define a lista de camadas frontais.</summary>
-        public List<ScreenLayer> FrontLayers { get; set; } = new List<ScreenLayer>();
+        public List<Layer> FrontLayers { get; set; } = new List<Layer>();
         /// <summary>Obtém ou define a câmera da tela.</summary>
         public Camera Camera { get => camera; set => camera = value; }
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades traseiras que não são afetadas pela Viewport da tela.</summary>
@@ -129,7 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 this.BackStaticEntities.Add(bse.Clone(bse));            
 
             foreach (var bl in source.BackLayers)
-                this.BackLayers.Add(new ScreenLayer(bl));
+                this.BackLayers.Add(bl.Clone(bl));
 
             foreach (var e in source.Entities)
                 this.Entities.Add(e.Clone(e));
@@ -141,7 +141,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             foreach (var fl in source.FrontLayers)
-                this.FrontLayers.Add(new ScreenLayer(fl));
+                this.FrontLayers.Add(fl.Clone(fl));
 
             foreach (var fse in source.FrontStaticEntities)
                 this.FrontStaticEntities.Add(fse.Clone(fse));
@@ -208,21 +208,21 @@ namespace Microsoft.Xna.Framework.Graphics
             DrawableEntities.Clear();
 
             //Atualiza as entidades.
-            UpdateEntities(gameTime, Viewport);            
+            UpdateEntities(gameTime);            
 
             //Chama OnEndUpdate
             OnUpdate?.Invoke(this, gameTime);
         }
 
         //Atualiza as entidades.
-        private void UpdateEntities(GameTime gameTime, Viewport viewport)
+        private void UpdateEntities(GameTime gameTime)
         {
             foreach (var e in Entities)
             {
                 e.Screen = this;
 
                 //Se a entidade é visível em tela.
-                if (Util.CheckFieldOfView(Game, Camera, viewport, e.Bounds))
+                if (Util.CheckFieldOfView(Game, Camera, e.Bounds))
                 {
                     //Adiciona-a a lista de entidades desenháveis.
                     DrawableEntities.Add(e);
@@ -312,7 +312,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona camadas traseiras a cena.</summary>
         /// <param name="entities">Lista de camadas a serem adicionada.</param>
-        public void AddBackLayer(params ScreenLayer[] backlayers)
+        public void AddBackLayer(params Layer[] backlayers)
         {
             foreach (var e in backlayers)
             {
@@ -322,7 +322,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona camadas frontais a cena.</summary>
         /// <param name="entities">Lista de camadas a serem adicionada.</param>
-        public void AddFrontLayer(params ScreenLayer[] frontLayers)
+        public void AddFrontLayer(params Layer[] frontLayers)
         {
             foreach (var e in frontLayers)
             {

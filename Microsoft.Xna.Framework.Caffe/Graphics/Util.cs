@@ -27,10 +27,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="viewport">A viewport em que se encontra a entidade.</param>
         /// <param name="bounds">Os limites da entidade.</param>
         /// <returns>Retorna true se a entidade se encontra no espaço de desenho da janela de jogo.</returns>
-        public static bool CheckFieldOfView(Game game, Camera camera, Viewport viewport, Rectangle bounds)
+        public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
         {
-            var x = camera.GetTransform().Translation.X;
-            var y = camera.GetTransform().Translation.Y;
+            var x = camera.X;
+            var y = camera.Y;
             var w = game.Window.ClientBounds.Width;
             var h = game.Window.ClientBounds.Height;
 
@@ -50,7 +50,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <returns>Retorna true se a entidade se encontra no espaço de desenho da janela de jogo.</returns>
         public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
         {
-            return CheckFieldOfView(screen.Game, screen.Camera, screen.Viewport, bounds);
+            return CheckFieldOfView(screen.Game, screen.Camera, bounds);
         }
 
         /// <summary>

@@ -2,8 +2,6 @@
 // Email: danilo.bsto@gmail.com
 // Versão: Conillon [1.0]
 
-// MIT License
-//
 // Copyright (c) 2006 Laurent Cozic
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy

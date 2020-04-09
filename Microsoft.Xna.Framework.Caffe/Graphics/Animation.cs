@@ -65,6 +65,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }
         /// <summary>Obtém ou define a posição na tela da animação</summary>
         public Vector2 Position { get; set; } = Vector2.Zero;
+        /// <summary>Obtém ou define a posição no eixo X.</summary>
+        public float X { get => Position.X; set => Position = new Vector2(value, Y); }
+        /// <summary>Obtém ou define a posição no eixo Y.</summary>
+        public float Y { get => Position.Y; set => Position = new Vector2(X, value); }
         /// <summary>Obtém ou define a origem para desenho de cada sprite.</summary>
         public Vector2 Origin { get; set; } = Vector2.Zero;        
         /// <summary>Obtém o atual frame da animação.</summary>
@@ -86,6 +90,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public float Rotation { get; set; } = 0.0f;
         /// <summary>Obtém ou define a escala da sprite quando ela for desenhada.</summary>
         public Vector2 Scale { get; set; } = Vector2.One;
+        /// <summary>Obtém ou define a escala em X.</summary>
+        public float Xs { get => Scale.X; set => Scale = new Vector2(value, Ys); }
+        /// <summary>Obtém ou define a escala em Y.</summary>
+        public float Ys { get => Scale.Y; set => Scale = new Vector2(Xs, value); }
         /// <summary>Obtém ou define a cor da sprite corrente ao ser desenhada.</summary>
         public Color Color { get; set; } = Color.White;
         /// <summary>Obtém ou define o LayerDepth do método Draw.</summary>
@@ -402,10 +410,11 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
-        public void ResetIndex()
+        public void Reset()
         {
             Index = 0;
             FrameIndex = 0;
+            elapsedGameTime = 0;
         }
 
         /// <summary>Adiciona uma quantidade desejada de objetos a lista de Sprites.</summary>
@@ -440,11 +449,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Adiciona um sprite e os frames desejados da ação.
         /// </summary>
-        /// <param name="sprite">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
+        /// <param name="source">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
         /// <param name="frames">A lista de frames no sprite.</param>
         public void AddSprite(Sprite source, params SpriteFrame[] frames)
         {
             Sprite sprite = new Sprite(source);
+            sprite.Frames.Clear();
             
             foreach(var f in frames) 
             {

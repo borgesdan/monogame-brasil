@@ -37,7 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        private Camera(Vector2 position, Vector2 zoom)
+        public Camera(Vector2 position)
         {            
             Position = position;
         }
@@ -48,7 +48,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Cria uma nova instância da estrutura Camera.</summary>
         public static Camera Create()
         {
-            return new Camera(Vector2.Zero, Vector2.One);
+            return new Camera(Vector2.Zero);
         }        
 
         /// <summary>Movimenta a câmera no sentido específicado.</summary>

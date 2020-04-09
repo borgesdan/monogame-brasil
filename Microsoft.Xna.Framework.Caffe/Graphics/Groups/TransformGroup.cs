@@ -63,6 +63,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 Entity.UpdateBounds();
             }
         }
+        /// <summary>Obtém ou define a escala em X.</summary>
+        public float Xs { get => Scale.X; set => Scale = new Vector2(value, Ys); }
+        /// <summary>Obtém ou define a escala em Y.</summary>
+        public float Ys { get => Scale.Y; set => Scale = new Vector2(Xs, value); }
         /// <summary>Obtém o valor da escala * tamanho.</summary>
         public Vector2 ScaledSize
         {

@@ -152,7 +152,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if(Animations.Count == 1)
             {
                 string name = Animations[0].Name;
-                Change(name);                
+                ChangeAnimation(name);                
                 UpdateBounds();
             }
         }
@@ -169,17 +169,17 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Troca a animação ativa.</summary>
         /// <param name="name">Nome da próxima animação. A animação atual será resetada.</param>
-        public void Change(string name) => Change(name, true);
+        public void ChangeAnimation(string name) => ChangeAnimation(name, true);
 
         /// <summary>Troca a animação ativa.</summary>
         /// <param name="name">Nome da próxima animação.</param>
         /// <param name="resetAnimation">True se a animação atual será resetada.</param>
-        public void Change(string name, bool resetAnimation)
+        public void ChangeAnimation(string name, bool resetAnimation)
         {
             Animation tempAnimation = Find(name);
             
             if(resetAnimation)
-                ActiveAnimation?.ResetIndex();
+                ActiveAnimation?.Reset();
 
             ActiveAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
             SetActiveProperties();
