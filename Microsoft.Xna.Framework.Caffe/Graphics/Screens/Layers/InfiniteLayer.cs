@@ -94,7 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
-            base.SetDefaultView();
+            //base.SetDefaultView();
 
             if (InfinityX)
             {

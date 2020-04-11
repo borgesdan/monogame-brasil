@@ -73,7 +73,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             //Resetamos a view pois a visão é estática.
-            SetDefaultView();
+            //SetDefaultView();
 
             GraphicsDevice device = Screen.Game.GraphicsDevice;
             Viewport oldView = device.Viewport;

@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\EntityComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoundsComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\FollowMouseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\MouseEventsComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\AnimatedEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\Entity2D.cs" />

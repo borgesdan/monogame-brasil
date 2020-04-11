@@ -7,8 +7,12 @@ namespace Microsoft.Xna.Framework.Graphics
     /// Componente que implementa a funcionalidade da entidade seguir o ponteiro do mouse na tela.
     /// </summary>
     public class FollowMouseComponent : EntityComponent
-    {        
+    {
+        private MouseState old;
         private MouseState state;
+
+        /// <summary>Obtém ou define se a entidade deve seguir o mouse.</summary>
+        public bool Follow { get; set; } = false;
 
         /// <summary>
         /// Inicializa uma nova instância de FollowMouseComponent.
@@ -16,6 +20,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public FollowMouseComponent()
         {
             state = Mouse.GetState();
+            old = state;
         }
 
         /// <summary>
@@ -25,6 +30,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">O componente a ser copiado.</param>
         public FollowMouseComponent(Entity2D destination, FollowMouseComponent source) : base(destination, source)
         {
+            old = source.old;
             state = source.state;
         }
 
@@ -46,8 +52,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
-            state = Mouse.GetState();            
-            Entity.Transform.SetPosition(state.Position.ToVector2());
+            old = state;
+            state = Mouse.GetState();
+
+            var pos = state.Position - old.Position;
+
+            if(Follow)
+                Entity.Transform.Move(pos);
 
             base.Update(gameTime);
         }

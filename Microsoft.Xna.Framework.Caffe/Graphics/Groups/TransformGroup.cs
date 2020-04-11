@@ -14,6 +14,7 @@ namespace Microsoft.Xna.Framework.Graphics
         Vector2 _oldPosition = Vector2.Zero;
         Vector2 _position = Vector2.Zero;
         Vector2 _scale = Vector2.One;
+        float _rotation = 0f;
 
         //Só usada no construtor de cópia.
         bool inCopy = false;
@@ -48,7 +49,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém o tamanho da entidade.</summary>
         public Point Size { get; internal set; } = Point.Zero;
         /// <summary>Obtém ou define a rotação. Valor padrão 0.</summary>
-        public float Rotation { get; set; } = 0;
+        public float Rotation
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = value;
+
+                if (inCopy)
+                    return;
+
+                Entity.UpdateBounds();
+            }
+        }
         /// <summary>Obtém ou define a escala. Valor padrão Vector.Zero.</summary>
         public Vector2 Scale 
         { 
@@ -62,11 +75,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 Entity.UpdateBounds();
             }
-        }
-        /// <summary>Obtém ou define a escala em X.</summary>
-        public float Xs { get => Scale.X; set => Scale = new Vector2(value, Ys); }
-        /// <summary>Obtém ou define a escala em Y.</summary>
-        public float Ys { get => Scale.Y; set => Scale = new Vector2(Xs, value); }
+        }        
         /// <summary>Obtém o valor da escala * tamanho.</summary>
         public Vector2 ScaledSize
         {
@@ -110,14 +119,22 @@ namespace Microsoft.Xna.Framework.Graphics
                 Entity.UpdateBounds();
             }
         }
+        /// <summary>Obtém ou define a escala em X.</summary>
+        public float Xs { get => Scale.X; set => Scale = new Vector2(value, Ys); }
+        /// <summary>Obtém ou define a escala em Y.</summary>
+        public float Ys { get => Scale.Y; set => Scale = new Vector2(Xs, value); }
         /// <summary>Obtém ou define a velocidade no eixo X.</summary>
-        public float Xv { get { return Velocity.X; } set { Velocity = new Vector2(value, Velocity.Y); } }
+        public float Xv { get { return Velocity.X; } set { Velocity = new Vector2(value, Yv); } }
         /// <summary>Obtém ou define a velocidade no eixo Y.</summary>
-        public float Yv { get { return Velocity.Y; } set { Velocity = new Vector2(Velocity.X, value); } }
+        public float Yv { get { return Velocity.Y; } set { Velocity = new Vector2(Xv, value); } }
         /// <summary>Obtém a largura da entidade.</summary>
-        public int Width { get { return Size.X; } }
+        public int Width { get { return Size.X; } }        
         /// <summary>Obtém a altura da entidade.</summary>
         public int Height { get { return Size.Y; } }
+        /// <summary>Obtém a largura escalada da entidade.</summary>
+        public float ScaledWidth { get { return ScaledSize.X; } }
+        /// <summary>Obtém a altura escalada da entidade.</summary>
+        public float ScaledHeight { get { return ScaledSize.Y; } }
         /// <summary>Obtém a direção da entidade.</summary>
         public Vector2 Direction 
         { 
@@ -204,6 +221,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Define a posição</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
+        public void SetPosition(Point position) => SetPosition(position.X, position.Y);
+
+        /// <summary>Define a posição</summary>
+        /// <param name="position">A posição no eixo X e Y.</param>
         public void SetPosition(Vector2 position) => SetPosition(position.X, position.Y);
 
         /// <summary>Define a posição</summary>
@@ -221,6 +242,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="x">Incremento no eixo X.</param>
         /// <param name="y">Incremento no eixo Y.</param>
         public void Move(float x, float y) => Move(new Vector2(x, y));
+
+        /// <summary>
+        /// Incrementa a posição da entidade.
+        /// </summary>
+        /// <param name="amount">A quantidade de posições a ser incrementada.</param>
+        public void Move(Point amount) => Move(amount.ToVector2());
 
         /// <summary>
         /// Incrementa a posição da entidade.

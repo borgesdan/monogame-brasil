@@ -87,7 +87,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
-            SetDefaultView();
+            //SetDefaultView();
 
             oldPosition = position;
             position = Screen.Camera.Position;

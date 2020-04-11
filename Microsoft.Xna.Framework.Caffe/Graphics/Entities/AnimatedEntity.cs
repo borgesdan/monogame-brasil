@@ -21,7 +21,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a animação ativa.</summary>
         public Animation ActiveAnimation { get; private set; } = null;
         /// <summary>Obtém o nome da animação ativa.</summary>
-        public string ActiveName { get => ActiveAnimation.Name; }        
+        public string ActiveName { get => ActiveAnimation.Name; }
+        /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo X. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
+        public int XRepeat { get; set; } = 0;
+        /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo Y. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
+        public int YRepeat { get; set; } = 0;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -37,6 +41,9 @@ namespace Microsoft.Xna.Framework.Graphics
             int index = source.Animations.FindIndex(a => a.Equals(source.ActiveAnimation));
 
             ActiveAnimation = Animations[index];
+
+            XRepeat = source.XRepeat;
+            YRepeat = source.YRepeat;
         }
 
         /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
@@ -138,7 +145,51 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsVisible || ActiveAnimation == null || outOfView)
                 return;            
 
-            ActiveAnimation?.Draw(gameTime, spriteBatch);  
+            if(XRepeat == 0 && YRepeat == 0)
+                ActiveAnimation?.Draw(gameTime, spriteBatch);
+            else
+            {
+                Vector2 position = Transform.Position;
+
+                for (int i = 0; i <= XRepeat; i++)
+                {
+                    Camera camera = Camera.Create();
+
+                    if (Screen != null)
+                        camera = Screen.Camera;
+
+                    var windowWidth = Game.Window.ClientBounds.Width;
+
+                    ActiveAnimation.Position = position;
+
+                    if (ActiveAnimation.Bounds.Right > camera.X)
+                    {
+                        if (ActiveAnimation.Bounds.X < camera.X + windowWidth)
+                            ActiveAnimation?.Draw(gameTime, spriteBatch);
+                        else
+                            break;
+                    }
+
+                    for (int j = 0; j < YRepeat; j++)
+                    {
+                        var windowHeight = Game.Window.ClientBounds.Height;
+
+                        position.Y += ActiveAnimation.ScaledSize.Y;
+                        ActiveAnimation.Position = position;
+
+                        if (ActiveAnimation.Bounds.Bottom > camera.Y)
+                        {
+                            if (ActiveAnimation.Bounds.Y < camera.Y + windowHeight)
+                                ActiveAnimation?.Draw(gameTime, spriteBatch);
+                            else
+                                break;
+                        }                        
+                    }
+
+                    position.X += ActiveAnimation.ScaledSize.X;
+                    position.Y = Transform.Y;
+                }                
+            }            
             
             base.Draw(gameTime, spriteBatch);
         }        
@@ -203,7 +254,7 @@ namespace Microsoft.Xna.Framework.Graphics
             return anms;
         }
 
-        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo.</summary>
+        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo preenchido com uma cor definida.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo.</param>
@@ -219,7 +270,28 @@ namespace Microsoft.Xna.Framework.Graphics
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
-        }        
+        }
+
+        /// <summary>
+        /// Cria uma nova instância de AnimatedEntity definida como um retângulo transparente mas com bordas visíveis.
+        /// </summary>
+        /// <param name="game">A instância da classe Game.</param>
+        /// <param name="name">O nome da entidade.</param>
+        /// <param name="size">O tamanho do retângulo</param>
+        /// <param name="borderWidth">O tamanho da borda.</param>
+        /// <param name="borderColor">A cor da borda.</param>
+        public static AnimatedEntity CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
+        {
+            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
+            Sprite sprite = new Sprite(texture, true);
+            Animation animation = new Animation(game, 0, "default");
+            animation.AddSprites(sprite);
+
+            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
+            animatedEntity.AddAnimation(animation);
+
+            return animatedEntity;
+        }
 
         /// <summary>Atualiza os limites da entidade.</summary>
         public override void UpdateBounds()
@@ -234,6 +306,11 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
                 cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
+
+                if(XRepeat > 0)
+                    cbw *= XRepeat + 1;
+                if (YRepeat > 0)
+                    cbh *= YRepeat + 1;
             }
             
             Transform.Size = new Point((int)cbw, (int)cbh);

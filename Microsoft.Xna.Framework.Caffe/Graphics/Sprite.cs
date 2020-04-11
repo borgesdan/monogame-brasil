@@ -131,7 +131,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Cria um instância da classe Sprite, com uma textura retangular.
+        /// Cria um nova instância da classe Sprite com uma textura retangular preenchida com a cor definida.
         /// </summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="size">O tamanho do retângulo</param>
@@ -157,6 +157,54 @@ namespace Microsoft.Xna.Framework.Graphics
                 data[i] = color;
 
             //Seta o array de cores a textura
+            texture.SetData(data);
+
+            return new Sprite(texture, true);
+        }
+
+        /// <summary>
+        /// Cria uma nova instância da classe Sprite com uma textura retangular transparente mas com bordas visíveis.
+        /// </summary>
+        /// <param name="game">A instância da classe Game.</param>
+        /// <param name="size">O tamanho do retângulo.</param>
+        /// <param name="borderWidth">O tamanho da borda.</param>
+        /// <param name="borderColor">A cor da borda.</param>
+        public static Sprite GetRectangle2(Game game, Point size, int borderWidth, Color borderColor)
+        {
+            //https://stackoverflow.com/questions/13893959/how-to-draw-the-border-of-a-square/13894276
+
+            if (game == null)
+                throw new ArgumentNullException(nameof(game));
+
+            if (size.X <= 0 || size.Y <= 0)
+                throw new ArgumentOutOfRangeException(nameof(size));
+
+            Color[] data;
+            Texture2D texture;
+
+            texture = new Texture2D(game.GraphicsDevice, size.X, size.Y);
+            data = new Color[texture.Width * texture.Height];
+
+            for (int x = 0; x < texture.Width; x++)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    bool colored = false;
+                    for (int i = 0; i <= borderWidth; i++)
+                    {
+                        if (x == i || y == i || x == texture.Width - 1 - i || y == texture.Height - 1 - i)
+                        {
+                            data[x + y * texture.Width] = borderColor;
+                            colored = true;
+                            break;
+                        }
+                    }
+
+                    if (colored == false)
+                        data[x + y * texture.Width] = Color.Transparent;
+                }
+            }
+
             texture.SetData(data);
 
             return new Sprite(texture, true);

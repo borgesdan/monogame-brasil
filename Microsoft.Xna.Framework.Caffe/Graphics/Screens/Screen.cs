@@ -21,9 +21,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
-        protected bool disposed = false;
         private Viewport staticView = new Viewport();
-        protected Camera camera = Camera.Create();
+        protected bool disposed = false;        
+        protected Camera camera = Camera.Create();        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -63,7 +63,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades frontais que não são afetadas pela Viewport da tela.</summary>
         public SpriteBatchBeginConfig FrontStaticEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades que serão desenhadas na Viewport da tela. (TransformMatrix será ignorado)</summary>
-        public SpriteBatchBeginConfig DrawableEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
+        public SpriteBatchBeginConfig DrawableEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();        
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//

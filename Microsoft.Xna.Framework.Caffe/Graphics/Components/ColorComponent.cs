@@ -61,38 +61,39 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;            
 
             if (elapsedTime > Delay)
             {
                 Color active = Entity.Transform.Color;
                 Color final = FinalColor;
 
-                if (active.R > final.R)
-                    active.R--;
-                else if (active.R < final.R)
-                    active.R++;
+                if(!final.Equals(active))
+                {
+                    if (active.R > final.R)
+                        active.R--;
+                    else if (active.R < final.R)
+                        active.R++;
 
-                if (active.G > final.G)
-                    active.G--;
-                else if (active.G < final.G)
-                    active.G++;
+                    if (active.G > final.G)
+                        active.G--;
+                    else if (active.G < final.G)
+                        active.G++;
 
-                if (active.B > final.B)
-                    active.B--;
-                else if (active.B < final.B)
-                    active.B++;
+                    if (active.B > final.B)
+                        active.B--;
+                    else if (active.B < final.B)
+                        active.B++;
 
-                if (active.A > final.A)
-                    active.A--;
-                else if (active.A < final.A)
-                    active.A++;
+                    if (active.A > final.A)
+                        active.A--;
+                    else if (active.A < final.A)
+                        active.A++;
 
-                Entity.Transform.Color = active;
+                    Entity.Transform.Color = active;                    
+                }
+
                 elapsedTime = 0;
-
-                if (active == final)
-                    Enable = EnableGroup.Unavailable;
             }
 
             base.Update(gameTime);

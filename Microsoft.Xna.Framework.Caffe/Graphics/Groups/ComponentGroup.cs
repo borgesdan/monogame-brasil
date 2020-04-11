@@ -81,6 +81,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 return null;
         }
 
+        //A ordem da adição dos componentes pode impactar no resultado desejado.
+        //Por exemplo ao adicionar "entity.Components.Add(mouseEvents)" primeiro - sendo que mouseEvents é uma instância de MouseEventsComponent,
+        //e depois "entity.Components.Add(followMouse)" - sendo que followMouse é uma instância de FollowMouseComponent;
+        //Ao tentar verificar com mouseEvents se o ponteiro do mouse está sobre a entidade e depois move-la com followMouse
+        //acontece um problema de não reconhecer bem o comando. O que não acontece se 'followMouse' for adicionado primeiro
+        //na lista de componentes.
+
         /// <summary>Adiciona um componente na lista de Componentes.</summary>
         /// <param name="component">O componente a ser adicionado.</param>
         public void Add(EntityComponent component)

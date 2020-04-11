@@ -5,22 +5,28 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe", "Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarioRun", "MarioRun\MarioRun.csproj", "{EC37F576-7D7D-457A-A63A-864027BD849E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game1", "Game1\Game1.csproj", "{DF8C1138-14BB-4AF1-A129-E4C7DA821648}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
-		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{ec37f576-7d7d-457a-a63a-864027bd849e}*SharedItemsImports = 4
+		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{df8c1138-14bb-4af1-a129-e4c7da821648}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EC37F576-7D7D-457A-A63A-864027BD849E}.Debug|x86.ActiveCfg = Debug|x86
-		{EC37F576-7D7D-457A-A63A-864027BD849E}.Debug|x86.Build.0 = Debug|x86
-		{EC37F576-7D7D-457A-A63A-864027BD849E}.Release|x86.ActiveCfg = Release|x86
-		{EC37F576-7D7D-457A-A63A-864027BD849E}.Release|x86.Build.0 = Release|x86
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF8C1138-14BB-4AF1-A129-E4C7DA821648}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
