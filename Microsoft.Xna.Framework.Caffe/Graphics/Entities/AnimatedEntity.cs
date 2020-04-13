@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System;
 using System.Collections.Generic;
@@ -61,10 +63,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">O nome da animação.</param>
         public Animation this[string name]
         {
-            get
-            {
-                return Find(name);
-            }
+            get => GetAnimation(name);
         }
 
         //---------------------------------------//
@@ -227,7 +226,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="resetAnimation">True se a animação atual será resetada.</param>
         public void ChangeAnimation(string name, bool resetAnimation)
         {
-            Animation tempAnimation = Find(name);
+            Animation tempAnimation = GetAnimation(name);
             
             if(resetAnimation)
                 ActiveAnimation?.Reset();
@@ -240,7 +239,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Encontra uma animação pelo seu nome.</summary>
         /// <param name="name">O nome da animação a ser encontrada.</param>
-        public Animation Find(string name)
+        public Animation GetAnimation(string name)
         {
             Animation a = Animations.Find(x => x.Name.Equals(name));
             return a;
@@ -248,7 +247,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Encontra todas as animações que contenham o nome especificado.</summary>
         /// <param name="name">O nome a ser pesquisado.</param>
-        public List<Animation> FindAll(string name)
+        public List<Animation> GetAllAnimations(string name)
         {
             var anms = Animations.FindAll(x => x.Name.Contains(name));
             return anms;
@@ -264,7 +263,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
-            animation.AddSprites(sprite);
+            animation.AddSprite(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);
@@ -285,7 +284,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
-            animation.AddSprites(sprite);
+            animation.AddSprite(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);

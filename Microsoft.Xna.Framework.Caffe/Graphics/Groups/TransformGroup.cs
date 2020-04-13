@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -260,8 +262,12 @@ namespace Microsoft.Xna.Framework.Graphics
             if(amount.Y != 0)
                 Y += amount.Y;
         }
-        
+
         //Escala
+
+        /// <summary>Define a escala.</summary>
+        /// <param name="scale">A escala no eixo X e Y simultaneamente.</param>
+        public void SetScale(float scale) => Scale = new Vector2(scale);
 
         /// <summary>Define a escala.</summary>
         /// <param name="x">A escala no eixo X.</param>

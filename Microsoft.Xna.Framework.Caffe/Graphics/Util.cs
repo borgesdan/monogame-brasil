@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -26,7 +28,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="game">A instância atual classe Game.</param>
         /// <param name="viewport">A viewport em que se encontra a entidade.</param>
         /// <param name="bounds">Os limites da entidade.</param>
-        /// <returns>Retorna true se a entidade se encontra no espaço de desenho da janela de jogo.</returns>
         public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
         {
             var x = camera.X;
@@ -43,11 +44,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Calcula se os limites de uma entidade em uma viewport se encontra no espaço de desenho da janela de jogo.
+        /// Calcula se os limites de uma entidade se encontra no espaço de desenho da janela de jogo.
         /// </summary>
         /// <param name="screen">A tela a ser verificada.</param>
         /// <param name="bounds">Os limites da entidade.</param>
-        /// <returns>Retorna true se a entidade se encontra no espaço de desenho da janela de jogo.</returns>
         public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
         {
             return CheckFieldOfView(screen.Game, screen.Camera, bounds);
@@ -72,6 +72,7 @@ namespace Microsoft.Xna.Framework.Graphics
             boundsR.Offset(bounds.Location.ToVector2());
             boundsR.BuildEdges();
         }
+
         /// <summary>Define a posição do ator relativa a um retângulo.</summary>   
         /// <param name="view">O retângulo para alinhamento.</param>
         /// <param name="actorScaledSize">O tamanho total do ator.</param>

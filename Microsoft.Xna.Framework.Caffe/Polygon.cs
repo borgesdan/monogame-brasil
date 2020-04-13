@@ -1,7 +1,11 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
+// Polygon class by
+//
 // Copyright (c) 2006 Laurent Cozic
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,7 +25,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
+//
 // Code: https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
 
 using System.Collections.Generic;
@@ -72,9 +76,7 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Inicializa uma nova instância de Polygon.
         /// </summary>
-        public Polygon()
-        {
-        }
+        public Polygon() { }
 
         /// <summary>
         /// Inicializa uma nova instância de Polygon como cópia de outro Polygon.
@@ -129,10 +131,19 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Aplica o deslocamento das posições dos pontos do polígono.
         /// </summary>
+        /// <param name="point">O valor no eixo X e Y.</param>
+        public void Offset(Point point)
+        {
+            Offset(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Aplica o deslocamento das posições dos pontos do polígono.
+        /// </summary>
         /// <param name="vector">O valor no eixo X e Y.</param>
         public void Offset(Vector2 vector)
         {
-            Offset(vector.X, vector.Y);            
+            Offset(vector.X, vector.Y);
         }
 
         /// <summary>

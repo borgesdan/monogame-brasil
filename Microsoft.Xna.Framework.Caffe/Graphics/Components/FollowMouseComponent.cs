@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
+
+using System;
 using Microsoft.Xna.Framework.Input;
 
 namespace Microsoft.Xna.Framework.Graphics

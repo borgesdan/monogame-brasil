@@ -1,24 +1,26 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Input
 {
-    /// <summary>Classe que gerencia e auxilia nas entradas do jogador com GamePad.</summary>
+    /// <summary>Classe que gerencia e auxilia nas entradas do usuário com o GamePad.</summary>
     public class GamePadHelper
     {
         private KeyboardState keyboardState;
         private KeyboardState lastKeyboardState;
 
-        /// <sumary>Obtém ou define se esta instância está apta a executar os trabalhos.</sumary>
+        /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>Obtém o estado atual do GamePad.</summary>
         public GamePadState State { get; private set; }
-        /// <summary>Obtém o último estado do GamePad antes da atualização.</summary>
-        public GamePadState LastState { get; private set; }
+        /// <summary>Obtém o estado anterior do GamePad antes da atualização.</summary>
+        public GamePadState OldState { get; private set; }
 
         /// <summary>Obtém o index do GamePad.</summary>
         public PlayerIndex Index { get; private set; }
@@ -31,13 +33,11 @@ namespace Microsoft.Xna.Framework.Input
 
         /// <summary>Inicializa uma nova instância de GamePadHelper.</summary>
         /// <param name="playerIndex">O index do GamePad.</param>
-        public GamePadHelper(PlayerIndex playerIndex) : this(playerIndex, null)
-        {
-        }
+        public GamePadHelper(PlayerIndex playerIndex) : this(playerIndex, null) { }
 
         /// <summary>Inicializa uma nova instância de GamePadHelper.</summary>
         /// <param name="playerIndex">O index do GamePad.</param>
-        /// <param name="keyboardMap">O mapeamento de teclas para botões do GamePad. Valor pode ser nulo.</param>
+        /// <param name="keyboardMap">O mapeamento de teclas para botões do GamePad.</param>
         /// <param name="padState">Define o estdo do GamePad.</param>
         public GamePadHelper(PlayerIndex playerIndex, KeyboardMap keyboardMap, GamePadState padState) : this(playerIndex, keyboardMap)
         {
@@ -46,7 +46,7 @@ namespace Microsoft.Xna.Framework.Input
 
         /// <summary>Inicializa uma nova instância de GamePadHelper.</summary>
         /// <param name="playerIndex">O index do GamePad.</param>
-        /// <param name="keyboardMap">o mapeamento de teclas para botões do GamePad. Valor pode ser nulo.</param>
+        /// <param name="keyboardMap">o mapeamento de teclas para botões do GamePad.</param>
         public GamePadHelper(PlayerIndex playerIndex, KeyboardMap keyboardMap)
         {
             Index = playerIndex;
@@ -67,7 +67,7 @@ namespace Microsoft.Xna.Framework.Input
             lastKeyboardState = keyboardState;
             keyboardState = Keyboard.GetState();
 
-            LastState = State;
+            OldState = State;
             State = GamePad.GetState(Index);
         }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Xna.Framework.Input
             return result;
         }
 
-        /// <summary>Verifica se o botão selecionado não estava pressionado no estado anterior, mas sim no atual.</summary>
+        /// <summary>Verifica se o botão selecionado foi pressionado.</summary>
         /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool IsPress(Buttons button)
         {
@@ -102,7 +102,7 @@ namespace Microsoft.Xna.Framework.Input
 
             if (State.IsConnected)
             {
-                if (LastState.IsButtonUp(button) && State.IsButtonDown(button))
+                if (OldState.IsButtonUp(button) && State.IsButtonDown(button))
                     result = true;
             }
             else if (KeyboardMap != null)
@@ -117,7 +117,7 @@ namespace Microsoft.Xna.Framework.Input
             return result;
         }
 
-        /// <summary>Verifica se o botão selecionado não está pressionado.</summary>     
+        /// <summary>Verifica se o botão selecionado está liberado.</summary>     
         /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool IsUp(Buttons button)
         {

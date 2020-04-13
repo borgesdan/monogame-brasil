@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System.Collections.Generic;
 
@@ -46,7 +48,7 @@ namespace Microsoft.Xna.Framework.Input
         public KeyboardMap() { }
 
         /// <summary>
-        /// Inicializa uma nova instância de KeyboardMap. Valores podem ser nulos.
+        /// Inicializa uma nova instância de KeyboardMap definindo o mapa do teclado. Valores podem ser nulos.
         /// </summary>
         /// <param name="dpadup">Direcional digital para cima.</param>
         /// <param name="dpaddown">Direcional digital para baixo.</param>
@@ -128,7 +130,7 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>
-        /// Define o mapada dos botões X, Y, A e B.
+        /// Define o mapa dos botões X, Y, A e B.
         /// </summary>
         /// <param name="x">Botão X do GamePad.</param>
         /// <param name="y">Botão Y do GamePad.</param>
@@ -180,6 +182,7 @@ namespace Microsoft.Xna.Framework.Input
             RightThumbStickRight = rightthumbstickright;
             RightThumbStickLeft = rightthumbstickleft;
         }
+        
         /// <summary>
         /// Define o mapa do direcional analógico esquerdo.
         /// </summary>
@@ -210,8 +213,7 @@ namespace Microsoft.Xna.Framework.Input
             BigButton = bigbutton;
         }
 
-        /// <summary>Obter um dicionário com o mapa do teclado em referência ao GamePad.</summary>
-        /// <returns>Retorna um objeto Dictionary<Button, Keys> com o mapa do teclado.</Button></returns>
+        /// <summary>Obtém um dicionário com o mapa do teclado em referência ao GamePad.</summary>
         public Dictionary<Buttons, Keys?> GetKeyboardMap()
         {
             Dictionary<Buttons, Keys?> dictionary = new Dictionary<Buttons, Keys?>

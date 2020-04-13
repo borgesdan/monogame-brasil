@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Input
 {
@@ -14,13 +16,12 @@ namespace Microsoft.Xna.Framework.Input
         X2 = 5
     }
 
-    /// <summary>Classe que auxilia o uso do mouse.</summary>
+    /// <summary>Classe que auxilia no gerenciamento de entradas do mouse.</summary>
     public class MouseHelper
     {
         //---------------------------------------//
         //-----         VARIAVEIS           -----//
-        //---------------------------------------//
-        private Game game;
+        //---------------------------------------//       
         
         private int clickTimeL = 0;
         private byte clickCountL = 0;
@@ -33,27 +34,23 @@ namespace Microsoft.Xna.Framework.Input
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-
-        /// <summary>Obtém ou define se o mouse está visível em tela.</summary>
-        public bool IsVisible { get => game.IsMouseVisible; set => game.IsMouseVisible = value; }
-        /// <sumary>Obtém ou define se esta instância está apta a executar os trabalhos.</sumary>
+        
+        /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
-        /// <summary>Obtém ou define o tempo de execução para um duplo clique.</summary>
+        /// <summary>Obtém ou define o tempo para reconhecimento de um duplo clique.</summary>
         public int DoubleClickDelay { get; set; } = 900;
         /// <summary>Obtém o estado atual do mouse.</summary>
         public MouseState State { get; private set; }
-        /// <summary>Obtém o último estado do mouse.</summary>
-        public MouseState LastState { get; private set; }
+        /// <summary>Obtém estado anterior do mouse.</summary>
+        public MouseState OldState { get; private set; }
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
         /// <summary>Inicializa uma nova instância da classe MouseHelper.</summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        public MouseHelper(Game game)
+        public MouseHelper()
         {
-            this.game = game;
             State = Mouse.GetState();
         }
 
@@ -68,7 +65,7 @@ namespace Microsoft.Xna.Framework.Input
             if (!IsEnabled)
                 return;
 
-            LastState = State;
+            OldState = State;
             State = Mouse.GetState();
 
             //Verifica o duplo clique no botão esquerdo e direito
@@ -128,27 +125,24 @@ namespace Microsoft.Xna.Framework.Input
         /// <param name="state">O estado do mouse a ser definido.</param>
         public void SetState(MouseState state)
         {
-            LastState = State;
+            OldState = State;
             State = state;
         }
 
         /// <summary>Verifica se houve duplo clique no botão direito.</summary>
-        /// <returns>Retorna True se ocorreu o duplo clique.</returns>
         public bool CheckLefDoubleClick()
         {
             return hasDoubleClickL;
         }
 
         /// <summary>Verifica se houve duplo clique no botão esquerdo.</summary>
-        /// <returns>Retorna True se ocorreu o duplo clique.</returns>
         public bool CheckRightDoubleClick()
         {
             return hasDoubleClickR;
         }
 
-        /// <summary>Checa se o botão do mouse está clicado.</summary>
+        /// <summary>Checa se o botão do mouse está pressionado.</summary>
         /// <param name="button">O botão do mouse a ser checado.</param>
-        /// <returns>Retorna True se o botão estiver clicado.</returns>
         public bool IsDown(MouseButtons button)
         {
             bool rtn = false;
@@ -160,9 +154,8 @@ namespace Microsoft.Xna.Framework.Input
             return rtn;
         }
 
-        /// <summary>Checa se o botão do mouse está levantado.</summary>
+        /// <summary>Checa se o botão do mouse está liberado.</summary>
         /// <param name="button">O botão do mouse a ser checado.</param>
-        /// <returns>Retorna True se o botão estiver levantado.</returns>
         public bool IsUp(MouseButtons button)
         {
             bool rtn = false;
@@ -176,7 +169,6 @@ namespace Microsoft.Xna.Framework.Input
 
         /// <summary>Checa se o botão do mouse foi pressionado.</summary>
         /// <param name="button">O botão do mouse a ser checado.</param>
-        /// <returns>Retorna True se o último estado do botão for 'IsUp' e o atual 'IsDown'.</returns>
         public bool IsPress(MouseButtons button)
         {
             bool rtn = false;
@@ -189,12 +181,13 @@ namespace Microsoft.Xna.Framework.Input
             return rtn;
         }
 
+        //Checa os estados dos botões
         private ButtonState Check(MouseButtons button, bool checkLastState)
         {
             MouseState stt;
 
             if (checkLastState)
-                stt = LastState;
+                stt = OldState;
             else
                 stt = State;
 

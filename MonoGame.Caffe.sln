@@ -5,8 +5,11 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe", "Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game1", "Game1\Game1.csproj", "{0360B5D8-C7D9-45CF-8164-19ECF1005E89}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{0360b5d8-c7d9-45cf-8164-19ecf1005e89}*SharedItemsImports = 4
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +17,16 @@ Global
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Debug|x86.Build.0 = Debug|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Release|x86.ActiveCfg = Release|Any CPU
+		{0360B5D8-C7D9-45CF-8164-19ECF1005E89}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

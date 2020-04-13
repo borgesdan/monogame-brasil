@@ -1,10 +1,12 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Enumeração que representa o tipo de alinhamento na tela da sprite.</summary>
+    /// <summary>Enumeração que representa o tipo de alinhamento na tela de uma entidade.</summary>
     public enum AlignType : byte
     {
         Center = 1,

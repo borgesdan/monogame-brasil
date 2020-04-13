@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System;
 using System.Collections.Generic;
@@ -38,13 +40,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="texture">Um objeto da classe Texture2D.</param>
         public Sprite(Texture2D texture) : this(texture, false) { }
 
-        /// <summary>Inicia uma nova instância da classe Sprite.</summary>
-        /// <param name="game">Instância atual da classe Game.</param>
+        /// <summary>
+        /// Inicia uma nova instância da classe Sprite informando o caminho da textura 
+        /// e se um frame do tamanho da textura será adicionado a propriedade Frames.
+        /// </summary>
+        /// <param name="game">Instância da classe Game.</param>
         /// <param name="sourceName">O caminho do arquivo de textura na pasta Content.</param>
         /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da textura na lista de Frames.</param>
         public Sprite(Game game, string sourceName, bool addSingleFrame) : this(game.Content.Load<Texture2D>(sourceName), addSingleFrame) { }
 
-        /// <summary>Inicia uma nova instância da classe Sprite.</summary>
+        /// <summary>
+        /// Inicia uma nova instância da classe Sprite informando a textura 
+        /// e se um frame do tamanho da textura será adicionado a propriedade Frames.
+        /// </summary>
         /// <param name="texture">Um objeto da classe Texture2D.</param>        
         /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da textura na lista de Frames.</param>
         public Sprite(Texture2D texture, bool addSingleFrame)
@@ -77,17 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="index">Posição na lista a ser acessada.</param>        
         public SpriteFrame this[int index]
         {
-            get
-            {
-                try
-                {
-                    return Frames[index];
-                }
-                catch (IndexOutOfRangeException ex)
-                {
-                    throw new IndexOutOfRangeException(ex.Message);
-                }
-            }
+            get => Frames[index];
         }
 
         //---------------------------------------//
@@ -95,18 +93,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>
-        /// Adiciona retângulos que representam partes (recortes) em uma folha de sprite (sprite sheet), se a textura é deste tipo.        
-        /// </summary>
-        /// <param name="x">Posição em X referente a textura.</param>
-        /// <param name="y">Posição em Y referente a textura.</param>
-        /// <param name="w">Largura referente a textura.</param>
-        /// <param name="h">Altura referente a textura.</param>
-        /// </param>
-        public void AddFrame(int x, int y, int w, int h) => AddFrame(new SpriteFrame(x, y, w, h));
-
-
-        /// <summary>
-        /// Adiciona retângulos que representam partes (recortes) em uma folha de sprite (sprite sheet), se a textura é deste tipo.        
+        /// Adiciona retângulos que representam partes (recortes) em uma textura.
         /// </summary>
         /// <param name="frames">Frames a serem adicionados.</param>
         public void AddFrame(params SpriteFrame[] frames)
@@ -137,13 +124,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="size">O tamanho do retângulo</param>
         /// <param name="color">A cor definida.</param>
         public static Sprite GetRectangle(Game game, Point size, Color color)
-        {
-            if(game == null)
-                throw new ArgumentNullException(nameof(game));
-
-            if(size.X <= 0 || size.Y <= 0)
-                throw new ArgumentOutOfRangeException(nameof(size));
-
+        {            
             Color[] data;
             Texture2D texture;
 
@@ -163,7 +144,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Cria uma nova instância da classe Sprite com uma textura retangular transparente mas com bordas visíveis.
+        /// Cria uma nova instância da classe Sprite com uma textura retangular transparente mas com bordas coloridas.
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
         /// <param name="size">O tamanho do retângulo.</param>
@@ -171,13 +152,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="borderColor">A cor da borda.</param>
         public static Sprite GetRectangle2(Game game, Point size, int borderWidth, Color borderColor)
         {
-            //https://stackoverflow.com/questions/13893959/how-to-draw-the-border-of-a-square/13894276
-
-            if (game == null)
-                throw new ArgumentNullException(nameof(game));
-
-            if (size.X <= 0 || size.Y <= 0)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            //https://stackoverflow.com/questions/13893959/how-to-draw-the-border-of-a-square/13894276            
 
             Color[] data;
             Texture2D texture;
@@ -228,7 +203,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (disposing)
             {
-                Texture?.Dispose();
+                Texture = null;
 
                 Frames.Clear();
                 Frames = null;

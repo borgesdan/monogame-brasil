@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Input
 {
@@ -25,38 +27,20 @@ namespace Microsoft.Xna.Framework.Input
         /// <summary>
         /// Inicializa uma nova instância da classe InputManager.
         /// </summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        public InputManager(Game game)
+        public InputManager()
         {
             One = new GamePadHelper(PlayerIndex.One, null);
             Two = new GamePadHelper(PlayerIndex.Two, null);
             Three = new GamePadHelper(PlayerIndex.Three, null);
             Four = new GamePadHelper(PlayerIndex.Four, null);
             Keyboard = new KeyboardHelper();
-            Mouse = new MouseHelper(game);
-        }
-
-        /// <summary>
-        /// Inicializa uma nova instância de InputManager como cópia de outra instância.
-        /// </summary>
-        /// <param name="source">A instância a ser copiada.</param>
-        public InputManager(InputManager source)
-        {
-            //resolver a clonagem
-
-            this.One = source.One;
-            this.Two = source.Two;
-            this.Three = source.Three;
-            this.Four = source.Four;
-            this.Keyboard = source.Keyboard;
-            this.Mouse = source.Mouse;
-        }
+            Mouse = new MouseHelper();
+        }        
 
         /// <summary>
         /// Obtém o GamePadHelper pelo seu index.
         /// </summary>
         /// <param name="index">O index do jogador.</param>
-        /// <returns>Retorna o GamePadHelper selecionado.</returns>
         public GamePadHelper this[PlayerIndex index]
         {
             get
@@ -77,7 +61,7 @@ namespace Microsoft.Xna.Framework.Input
             }
         }
         
-        /// <summary>Atualiza os estados do GamePad.</summary>
+        /// <summary>Atualiza os estados das entradas do usuário.</summary>
         /// <param name="gameTime">Uma instância de GameTime.</param>
         public void Update(GameTime gameTime)
         {

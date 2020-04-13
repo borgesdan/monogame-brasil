@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System;
 using System.Collections.Generic;
@@ -32,7 +34,7 @@ namespace Microsoft.Xna.Framework
         //---------------------------------------//
 
         /// <summary>
-        /// Inicializa uma nova instância de RotatedRectangle com suas posições rotacionadas.
+        /// Cria uma nova instância de RotatedRectangle com suas posições rotacionadas.
         /// </summary>
         /// <param name="p1">O valor da coordenada Top-Left.</param>
         /// <param name="p2">O valor da coordenada Top-right.</param>
@@ -49,19 +51,15 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Inicializa uma nova instância de RotatedRectangle com suas posições rotacionadas.
+        /// Cria uma nova instância de RotatedRectangle com suas posições rotacionadas.
         /// </summary>
         /// <param name="rectangle">O retângulo.</param>
         /// <param name="origin">A origem da rotação.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
-        public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees) : this(Rotation.GetRotation(rectangle, origin, degrees)) { }
-
-        //---------------------------------------//
-        //-----         FUNÇÕES             -----//
-        //---------------------------------------//
+        public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees) : this(Rotation.GetRotation(rectangle, origin, degrees)) { }        
 
         /// <summary>
-        /// Inicializa uma nova instância de RotatedRectangle como cópia de outro RotatedRectangle.
+        /// Cria uma nova instância de RotatedRectangle como cópia de outro RotatedRectangle.
         /// </summary>
         /// <param name="source">O retângulo para cópia.</param>
         public RotatedRectangle(RotatedRectangle source)
@@ -72,6 +70,10 @@ namespace Microsoft.Xna.Framework
             P4 = source.P4;
             Center = source.Center;
         }
+
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         public override bool Equals(object obj)
         {

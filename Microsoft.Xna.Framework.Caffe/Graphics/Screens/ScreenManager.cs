@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -45,7 +47,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public ScreenManager(Game game)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game), "O argumento não pode ser nulo.");
-            Input = new InputManager(game);
+            Input = new InputManager();
         }
 
         //---------------------------------------//

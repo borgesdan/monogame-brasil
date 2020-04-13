@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System.Collections.Generic;
 using System;
@@ -29,8 +31,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
+        /// <summary>Obtém a instância da classe Game.</summary>
         public Game Game { get; protected set; } = null;
-        ///<summary>Obtém ou define se a animaçãp é desenhável ou atualizável.</summary>
+        ///<summary>Obtém ou define se a animaçãp é desenhável e atualizável.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
         /// <summary>Obtém ou define a lista de sprites.</summary>
         public List<Sprite> Sprites { get; set; } = new List<Sprite>();
@@ -235,14 +238,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="index">Posição na lista a ser acessada.</param>  
         public Sprite this[int index]
         {
-            get
-            {
-                return Sprites[index];
-            }
-            set
-            {
-                Sprites[index] = value;
-            }
+            get => Sprites[index];        
+            set => Sprites[index] = value;
         }
 
         //---------------------------------------//
@@ -419,7 +416,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma quantidade desejada de objetos a lista de Sprites.</summary>
         /// <param name="source">Lista contendo os caminhos das texturas na pasta Content.</param>
-        public void AddSprites(params string[] sources)
+        public void AddSprite(params string[] sources)
         {
             List<Sprite> tmpSprites = new List<Sprite>();
 
@@ -429,12 +426,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 tmpSprites.Add(temp);
             }
 
-            AddSprites(tmpSprites.ToArray());
+            AddSprite(tmpSprites.ToArray());
         }        
 
         /// <summary>Adiciona sprites a animação.</summary>
         /// <param name="sprites">Os sprites a serem adicionados.</param>
-        public void AddSprites(params Sprite[] sprites)
+        public void AddSprite(params Sprite[] sprites)
         {
             if (sprites != null)
                 Sprites.AddRange(sprites);
@@ -451,7 +448,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="source">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
         /// <param name="frames">A lista de frames no sprite.</param>
-        public void AddSprite(Sprite source, params SpriteFrame[] frames)
+        public void AddSprite(Sprite source, SpriteFrame[] frames)
         {
             Sprite sprite = new Sprite(source);
             sprite.Frames.Clear();
@@ -461,7 +458,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 sprite.AddFrame(f);
             }
 
-            AddSprites(sprite);
+            AddSprite(sprite);
         }
 
         //---------------------------------------//

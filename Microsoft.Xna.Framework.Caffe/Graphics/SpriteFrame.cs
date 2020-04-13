@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,10 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Representa uma parte da imagem de um Sprite.</summary>
     public struct SpriteFrame : IEquatable<SpriteFrame>
     {
+        //---------------------------------------//
+        //-----         VARIAVEIS           -----//
+        //---------------------------------------//   
+
         /// <summary>A posição no eixo Y na Textura.</v>
         public int X;
         /// <summary>A posição no eixo X na Textura.</summary>
@@ -25,7 +31,11 @@ namespace Microsoft.Xna.Framework.Graphics
         public Rectangle Bounds
         {
             get => new Rectangle(X, Y, Width, Height);
-        }        
+        }
+
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//
 
         /// <summary>Cria um objeto da estrutura SpriteFrame.</summary>
         /// <param name="frame">Um retângulo com a posição e o tamanho do frame.</param>        
@@ -58,6 +68,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="height">A altura do frame.</param>
         /// <param name="originCorrection">Necessário para um alinhamento caso nem todos os frames de uma animação são iguais.</param> 
         public SpriteFrame(int x, int y, int width, int height, Vector2 originCorrection) : this(new Rectangle(x, y, width, height), originCorrection) { }
+
+        //---------------------------------------//
+        //-----         METÓDOS             -----//
+        //---------------------------------------//
 
         public override bool Equals(object obj)
         {

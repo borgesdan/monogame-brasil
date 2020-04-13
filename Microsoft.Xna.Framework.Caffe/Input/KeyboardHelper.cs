@@ -1,18 +1,20 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 namespace Microsoft.Xna.Framework.Input
 {
     /// <summary>Classe que gerencia e auxilia nas entradas do jogador com um teclado.</summary>
     public class KeyboardHelper
     {
-        /// <sumary>Obtém ou define se esta instância está apta a executar os trabalhos.</sumary>
+        /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
         /// <summary>Obtém o estado atual do teclado.</summary>
         public KeyboardState State { get; private set; }
-        /// <summary>Obtém o último estado do teclado antes da atualização.</summary>
-        public KeyboardState LastState { get; private set; }
+        /// <summary>Obtém o estado anterior do teclado antes da atualização.</summary>
+        public KeyboardState OldState { get; private set; }
 
         /// <summary>
         /// Inicializa uma nova instância de KeyboardHelper.
@@ -26,11 +28,11 @@ namespace Microsoft.Xna.Framework.Input
             if (!IsEnabled)
                 return;
 
-            LastState = State;
+            OldState = State;
             State = Keyboard.GetState();
         }
 
-        /// <summary>Verifica se o botão selecionado está pressionado.</summary>
+        /// <summary>Verifica se a tecla selecionada está pressionada.</summary>
         /// <param name="key">A tecla a ser verificada.</param>
         public bool IsDown(Keys key)
         {
@@ -42,19 +44,19 @@ namespace Microsoft.Xna.Framework.Input
             return result;
         }
 
-        /// <summary>Verifica se o botão selecionado não estava pressionado no estado anterior, mas sim no atual.</summary>
+        /// <summary>Verifica se a tecla selecionada foi pressionada.</summary>
         /// <param name="key">A tecla a ser verificada.</param>
         public bool IsPress(Keys key)
         {
             bool result = false;
 
-            if (LastState.IsKeyUp(key) && State.IsKeyDown(key))
+            if (OldState.IsKeyUp(key) && State.IsKeyDown(key))
                 result = true;
 
             return result;
         }
 
-        /// <summary>Verifica se o botão selecionado não está pressionado.</summary>   
+        /// <summary>Verifica se a tecla selecionada está liberada.</summary>   
         /// <param name="key">A tecla a ser verificada.</param>
         public bool IsUp(Keys key)
         {

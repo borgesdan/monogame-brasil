@@ -1,6 +1,8 @@
-﻿// Danilo Borges Santos, 2020. 
-// Email: danilo.bsto@gmail.com
-// Versão: Conillon [1.0]
+﻿//---------------------------------------//
+// Danilo Borges Santos, 2020       -----//
+// danilo.bsto@gmail.com            -----//
+// MonoGame.Caffe [1.0]             -----//
+//---------------------------------------//
 
 using System;
 
@@ -12,12 +14,11 @@ namespace Microsoft.Xna.Framework
     public static class Rotation
     {
         /// <summary>
-        /// Obtém a posição de um ponto ao informar a origem e o grau de rotação.
+        /// Obtém a posição de um ponto rotacionado ao informar a origem e o grau de rotação.
         /// </summary>
         /// <param name="point">A posição do ponto na tela.</param>
         /// <param name="origin">A origem da rotação.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
-        /// <returns>A posição rotacionada no eixo X e Y.</returns>
         public static Point GetRotation(Point point, Vector2 origin, double degrees)
         {
             //http://www.inf.pucrs.br/~pinho/CG/Aulas/Vis2d/Instanciamento/Instanciamento.htm
@@ -37,12 +38,11 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Obtém a posição de um retângulo ao informar a origem e o grau de rotação.
+        /// Obtém a posição de um retângulo rotacionado ao informar a origem e o grau de rotação.
         /// </summary>
         /// <param name="rectangle">O retângulo.</param>
         /// <param name="origin">A origem da rotação.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
-        /// <returns>Retorna a posição dos cantos do retângulo após a rotação.</returns>
         public static RotatedRectangle GetRotation(Rectangle rectangle, Vector2 origin, double degrees)
         {
             //Top-Left
