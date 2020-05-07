@@ -73,7 +73,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a posição no eixo Y.</summary>
         public float Y { get => Position.Y; set => Position = new Vector2(X, value); }
         /// <summary>Obtém ou define a origem para desenho de cada sprite.</summary>
-        public Vector2 Origin { get; set; } = Vector2.Zero;        
+        public Vector2 Origin { get; set; } = Vector2.Zero;
+        /// <summary>Obtém ou define a origem no eixo X.</summary>
+        public float Xo { get => Origin.X; set => Origin = new Vector2(value, Yo); }
+        /// <summary>Obtém ou define a origem no eixo Y.</summary>
+        public float Yo { get => Origin.Y; set => Origin = new Vector2(Xo, value); }
         /// <summary>Obtém o atual frame da animação.</summary>
         public Rectangle Frame { get; protected set; }
         /// <summary>Obtém os limites da animação. Sua largura e altura (com escala) e sua posição.</summary>
@@ -87,6 +91,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }
         /// <summary>Obtém o tamanho atual da animação</summary>
         public Point Size { get; protected set; } = Point.Zero;
+        /// <summary>Obtém a largura da animação</summary>
+        public int Width { get => Size.X; }
+        /// <summary>Obtém a altura da animação</summary>
+        public int Height { get => Size.Y; }
         /// <summary>Obtém o tamanho da Textura em relação a escala atual.</summary>
         public Vector2 ScaledSize { get => Util.GetScaledSize(Size, Scale); }
         /// <summary>Obtém ou define a rotação da sprite corrente ao ser desenhada.</summary>
@@ -222,6 +230,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Enable = source.Enable;
 
             int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);
+           
             CurrentSprite = Sprites[cs_index];
 
             Time = source.Time;
@@ -352,6 +361,22 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 OnEndAnimation?.Invoke(this);
             }
+        }
+
+        /// <summary>
+        /// Importa os valores das propriedades da entidade e as define na animação.
+        /// </summary>
+        /// <param name="entity"></param>
+        public void SetProperties(Entity2D entity)
+        {
+            Color = entity.Transform.Color;
+            SpriteEffect = entity.Transform.SpriteEffect;
+            Rotation = entity.Transform.Rotation;
+            Scale = entity.Transform.Scale;
+            Position = entity.Transform.Position;
+            LayerDepth = entity.LayerDepth;
+            Origin = entity.Origin;
+            DrawPercentage = entity.DrawPercentage;
         }
 
         /// <summary>Avança um sprite da animação.</summary>

@@ -27,7 +27,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteFont Font { get; set; } = null;
         
         /// <summary>Obtém ou define o texto a ser exibido atráves de uma instância da classe StringBuilder.</summary>
-        public StringBuilder Text
+        public StringBuilder TextBuilder
         {
             get => builder;
             set
@@ -45,7 +45,16 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Game game, string name) : base(game, name) { }                
+        public TextEntity(Game game, string name) : base(game, name) { }
+
+        /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
+        /// <param name="game">A instância ativa da classe Game.</param>
+        /// <param name="name">O nome da entidade.</param>
+        /// <param name="font">A fonte para desenho do texto.</param>
+        public TextEntity(Game game, string name, SpriteFont font) : base(game, name) 
+        {
+            Font = font;
+        }
 
         /// <summary>Inicializa uma nova instância de TextEntity como cópia de outro TextEntity.</summary>
         /// <param name="source">A entidade a ser copiada.</param>
@@ -68,7 +77,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             
             Font = source.Font;
-            Text = new StringBuilder(source.Text.ToString());
+            TextBuilder = new StringBuilder(source.TextBuilder.ToString());
         }
 
         /// <summary>
@@ -134,8 +143,8 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsVisible || outOfView)
                 return;
 
-            if (Text != null)
-                spriteBatch.DrawString(Font, Text, Transform.Position, Transform.Color, Transform.Rotation, Origin, Transform.Scale, Transform.SpriteEffect, LayerDepth);
+            if (TextBuilder != null)
+                spriteBatch.DrawString(Font, TextBuilder, Transform.Position, Transform.Color, Transform.Rotation, Origin, Transform.Scale, Transform.SpriteEffect, LayerDepth);
 
             base.Draw(gameTime, spriteBatch);
         }
@@ -145,21 +154,27 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Vector2 measure;
 
-            if (Text == null || Text.Length == 0)
+            if (TextBuilder == null || TextBuilder.Length == 0)
                 measure = Vector2.Zero;
             else
-                measure = Font.MeasureString(Text);
+                measure = Font.MeasureString(TextBuilder);
 
             //Atualiza o tamanho da entidade.
-            float cbw = measure.X * Transform.Scale.X;
-            float cbh = measure.Y * Transform.Scale.Y;
+            //float cbw = measure.X * Transform.Scale.X;
+            //float cbh = measure.Y * Transform.Scale.Y;
+
+            float cbw = measure.X;
+            float cbh = measure.Y;
+
             Transform.Size = new Point((int)cbw, (int)cbh);
 
             //O tamanho da da entidade e sua posição.
             int x = (int)Transform.X;
             int y = (int)Transform.Y;
-            int w = Transform.Width;
-            int h = Transform.Height;
+            //int w = Transform.Width;
+            //int h = Transform.Height;
+            int w = (int)Transform.ScaledSize.X;
+            int h = (int)Transform.ScaledSize.Y;
 
             var totalOrigin = Origin * Transform.Scale;
 
@@ -182,8 +197,8 @@ namespace Microsoft.Xna.Framework.Graphics
             if (disposing)
             {
                 Font = null;                    
-                Text.Clear();
-                Text = null;
+                TextBuilder.Clear();
+                TextBuilder = null;
             }
 
             base.Dispose(disposing);

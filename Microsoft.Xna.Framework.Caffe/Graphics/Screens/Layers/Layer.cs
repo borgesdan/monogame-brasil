@@ -27,9 +27,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a tela em que essa camada está associada.</summary>
         public Screen Screen { get; protected set; } = null;
         /// <summary>Obtém ou define o Viewport de desenho da camada.</summary>
-        public Viewport View { get; set; } = new Viewport();        
+        public Viewport View { get; set; } = new Viewport();
         /// <summary>Obtém ou define o valor do efeito parallax. 1f = 100%.</summary>
-        public float Parallax { get; set; } = 1f;        
+        public float Parallax { get; set; } = 1f;
         /// <summary>Define o nome da camada.</summary>
         public string Name { get; set; } = "";
         /// <summary>Define a disponibilidade da camada.</summary>
@@ -94,7 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            
+
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Animation = animation;
 
-            if(updateBounds)
+            if (updateBounds)
                 animation.UpdateBounds();
         }
 

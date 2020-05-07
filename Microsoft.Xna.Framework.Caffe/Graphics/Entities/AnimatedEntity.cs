@@ -123,14 +123,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private void SetActiveProperties()
         {
-            ActiveAnimation.Color = Transform.Color;
-            ActiveAnimation.SpriteEffect = Transform.SpriteEffect;
-            ActiveAnimation.Rotation = Transform.Rotation;
-            ActiveAnimation.Scale = Transform.Scale;
-            ActiveAnimation.Position = Transform.Position;
-            ActiveAnimation.LayerDepth = LayerDepth;
-            ActiveAnimation.Origin = Origin;
-            ActiveAnimation.DrawPercentage = DrawPercentage;
+            ActiveAnimation.SetProperties(this);
         }
 
         /// <summary>Desenha a entidade.</summary>
@@ -303,22 +296,27 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(ActiveAnimation != null)
             {
-                cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
-                cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
+                //cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
+                //cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
 
-                if(XRepeat > 0)
+                cbw = ActiveAnimation.Frame.Width;
+                cbh = ActiveAnimation.Frame.Height;
+
+                if (XRepeat > 0)
                     cbw *= XRepeat + 1;
                 if (YRepeat > 0)
                     cbh *= YRepeat + 1;
             }
-            
+
             Transform.Size = new Point((int)cbw, (int)cbh);
 
             //O tamanho da entidade e sua posição.
             int x = (int)Transform.X;
             int y = (int)Transform.Y;
-            int w = Transform.Width;
-            int h = Transform.Height;
+            //int w = Transform.Width;
+            //int h = Transform.Height;
+            int w = (int)Transform.ScaledSize.X;
+            int h = (int)Transform.ScaledSize.Y;
 
             //A origem do frame.
             Vector2 s_f_oc;

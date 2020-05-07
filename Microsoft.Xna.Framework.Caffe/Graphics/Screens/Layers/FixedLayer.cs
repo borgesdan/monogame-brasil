@@ -45,7 +45,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="screen">A tela em que a camada será associada.</param>        
         public FixedLayer(Screen screen) : base(screen)
-        {            
+        {
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="screen">A tela em que a camada será associada.</param>
         /// <param name="animation">A animação a ser exibida na camada.</param>
         public FixedLayer(Screen screen, Animation animation) : base(screen, animation)
-        {            
+        {
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             dright = -Right;
                         }
                     }
-                }                
+                }
 
                 //se a câmera da tela se moveu para direita
                 if (diff.X > 0)
@@ -144,11 +144,11 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         if (c.X + cwidth > Animation.Bounds.Width + Right)
                         {
-                            c.X -= absDiffX; 
+                            c.X -= absDiffX;
                         }
                     }
                     else
-                    {                        
+                    {
                         dright += absDiffX;
 
                         //Se passou do limite definido                        
@@ -171,7 +171,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 //se a câmera da tela se moveu para cima
                 if (diff.Y < 0)
                 {
-                    ddown = ddown > 0 ? ddown + diff.Y : 0;                    
+                    ddown = ddown > 0 ? ddown + diff.Y : 0;
 
                     if (Animation.Bounds.Height > View.Height)
                     {
@@ -187,7 +187,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                         //Se passou do limite definido                        
                         if (dup > Up)
-                        {                            
+                        {
                             c.Position.Y += absDiffY;
                             dup = Up;
                             ddown = -Down;

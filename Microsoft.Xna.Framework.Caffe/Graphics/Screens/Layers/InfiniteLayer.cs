@@ -107,7 +107,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 //Só recebe o valor da posição da câmera no eixo X.
                 var pos = layerCamera.Position;
                 pos.X = Screen.Camera.Position.X * Parallax;
-                layerCamera.Position = pos;                
+                layerCamera.Position = pos;
 
                 //Recebe os valores para o cálculo.
                 Point v1 = new Point(max_x_viewport, 0);
@@ -135,7 +135,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 var pos = layerCamera.Position;
                 pos.Y = Screen.Camera.Position.Y * Parallax;
-                layerCamera.Position = pos;                
+                layerCamera.Position = pos;
 
                 //Point v1 = view.Bounds.Location;
                 Point v1 = new Point(0, max_y_viewport);
@@ -151,7 +151,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 infPositionStartY = -ps;
 
-                if(!InfinityX)
+                if (!InfinityX)
                     infPositionStartX = Animation.Position.X;
 
                 if (!InfinityX)
@@ -169,7 +169,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Vector2 diff = position - oldPosition;
             Camera c = layerCamera;
 
-            if(!InfinityX)
+            if (!InfinityX)
             {
                 //se a câmera da tela se moveu lateralmente
                 if (diff.X != 0)
@@ -232,7 +232,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
                 }
             }
-            if(!InfinityY)
+            if (!InfinityY)
             {
                 //se a câmera da tela se moveu verticalmente
                 if (diff.Y != 0)
@@ -316,7 +316,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 //Recebe os valores para o infinito em X
                 int sw = View.Width;
-                int aw = Animation.Bounds.Width;                
+                int aw = Animation.Bounds.Width;
 
                 int rw = sw / aw;
                 var posx = infPositionStartX;

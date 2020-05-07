@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IUpdateDrawable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\TextEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\FixedLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\InfiniteLayer.cs" />
@@ -35,8 +36,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMapReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Util.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Screen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GamePadHelper.cs" />

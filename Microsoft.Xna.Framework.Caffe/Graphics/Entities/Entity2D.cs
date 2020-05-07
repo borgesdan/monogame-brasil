@@ -26,6 +26,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public TransformGroup Transform { get; protected set; }
         /// <summary>Obtém ou define a origem.</summary>
         public Vector2 Origin { get; set; } = Vector2.Zero;
+        /// <summary>Obtém ou define a origem no eixo X.</summary>
+        public float Xo { get => Origin.X; set => Origin = new Vector2(value, Yo); }
+        /// <summary>Obtém ou define a origem no eixo Y.</summary>
+        public float Yo { get => Origin.Y; set => Origin = new Vector2(Xo, value); }
         /// <summary>Obtém ou define o LayerDepth para o método Draw.</summary>
         public float LayerDepth { get; set; } = 0;
         /// <summary>Obtém os limites da entidade.</summary>
@@ -41,7 +45,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
         public bool UpdateOutOfView { get; set; } = true;
         /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
-        public Screen Screen { get; set; } = null;
+        public LayeredScreen Screen { get; set; } = null;
         /// <summary>Obtém ou define a lista de componentes da entidade.</summary>
         public ComponentGroup Components { get; private set; } = null;
         /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
@@ -56,6 +60,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 percentage = new Vector2(x, y);
             }
         }
+        public float XDraw { get => DrawPercentage.X; set => DrawPercentage = new Vector2(value, YDraw); }
+        public float YDraw { get => DrawPercentage.Y; set => DrawPercentage = new Vector2(XDraw, value); }
 
         //---------------------------------------//
         //-----         EVENTOS             -----//

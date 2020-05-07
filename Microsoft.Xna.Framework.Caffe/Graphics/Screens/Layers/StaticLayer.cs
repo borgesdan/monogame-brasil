@@ -40,7 +40,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="source">A instância a ser copiada.</param>
         public StaticLayer(StaticLayer source) : base(source)
-        {            
+        {
         }
 
         //---------------------------------------//
@@ -94,7 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //Recuperamos a viewport originária da tela.
             device.Viewport = oldView;
 
-            base.Draw(gameTime, spriteBatch);            
+            base.Draw(gameTime, spriteBatch);
         }
     }
 }
