@@ -1,40 +1,40 @@
 # MonoGame.Caffe
 
-Conjunto simpes de classes para auxiliar no desenvolvimento de jogos 2D como a biblioteca C# MonoGame.
+Conjunto de classes para auxiliar no desenvolvimento de jogos 2D como a biblioteca C# MonoGame.
 
-## Iniciando
+## Início
 
-A solução MonoGameDevelop tem um projeto do tipo Shared nomeado Microsoft.Xna.Framework.Shared passível de uso em seus projeto ao referenciá-lo.
+A solução MonoGameDevelop tem um projeto do tipo Shared nomeado Microsoft.Xna.Framework.Caffe para uso em seus projeto ao referenciá-lo.
 
 Como destaques podemos citar:
 
-1º) ScreenManager (gerenciador de telas): que recebe instâncias de Screen (telas do jogo). Você pode trocar de telas com um ScreenManager.Change(string: name) onde 'name' é o nome da tela. Também é possível carregar uma tela em paralelo, utilizando o conceito de uma tela em "Loading".
+1º) ScreenManager (gerenciador de telas): recebe instâncias da classe Screen (telas do jogo). Você pode trocar de telas ao invocar o método ScreenManager.Change(string: name) onde o argumento 'name' é o nome da tela. Também é possível carregar uma tela em paralelo utilizando o conceito de "load screen".
 
 2º)InputManager: que expõe os GamePad's, o teclado e o mouse de maneira acessíveis para facilitar a verifcação de entradas do usuário.
 
-3º)Entity2D: são entidades a serem usadas na tela do jogo. No momento contamos com AnimatedEntity e TextEntity.
+3º)Entity2D: são entidades a serem usadas na tela do jogo.
 
 Entre outras funcionalidades.
 
 ### Pré-requisitos
 
-Por ser um projeto C# do tipo Shared, os requisitos necessários é seu projeto suportar a linguagem e sua compatibilidade com as instruções da biblioteca. Basicamente, referencie o projeto 'Microsoft.Xna.Framework.Shared' ao seu e faça os ajustes necessários.
+Por ser um projeto C# do tipo Shared, os requisitos necessários é seu projeto suportar a linguagem e sua compatibilidade com as instruções da biblioteca. Basicamente, referencie o projeto 'Microsoft.Xna.Framework.Caffe' ao seu e faça os ajustes necessários.
 
 
 ## Exemplos
 
-O projeto trabalha com entidades 'Entity2D', telas 'Screen', gerenciador de telas 'ScreenManager', e gerenciamento de entradas do usuário 'InputManager'
+O projeto trabalha com o conceito de entidades (Entity2D), telas (Screen), gerenciador de telas (ScreenManager), e gerenciamento de entradas do usuário (InputManager)
 
 ### ScreenManager e 'loading screen'
 
-Você pode fazer, através do gerenciador de telas 'ScreenManager', uma tela de carregamento, comumente chamada de 'tela de loading' (loading screen). Para isso criamos uma instância dela e chamamos o método.
+Você pode fazer, através do gerenciador de telas (ScreenManager), uma tela de carregamento. Para isso criamos uma instância dela e chamamos o método.
 
 ```
 ScreenManager manager = new ScreenManger(game);
 manager.LoadAsyc(string name, bool callWhenIsFinished);
 ```
 
-onde 'name' e 'callWhenIsFinished' no método LoadAsync são respectivamente: o nome da tela a ser carredada de modo assíncrono e se a tela será chamada automaticamente ao fim do carregamento.
+onde os argumentos 'name' e 'callWhenIsFinished' no método LoadAsync são respectivamente: o nome da tela a ser carredada de modo assíncrono e se a tela será chamada automaticamente ao fim do carregamento.
 
 ScreenManager também expõe outros métodos para gerenciamento de telas e você pode usá-lo na sua classe principal, normalmente 'Game1', chamando seu método Update e Draw nos respectivos lugares.
 
@@ -73,7 +73,7 @@ manager.Add(screen);
 
 ```
 
-Recomendá-se criar uma classe herdada de Screen e criar sua própria tela a partir dela, para assim, sobrecarregar os métodos virtuais disponíveis:
+Recomenda-se criar uma classe herdada de Screen e criar sua própria tela a partir dela, para assim, sobrecarregar os métodos virtuais disponíveis:
 
 ```
 public class MinhaTela : Screen
