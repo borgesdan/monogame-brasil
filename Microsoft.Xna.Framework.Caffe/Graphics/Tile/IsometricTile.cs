@@ -5,20 +5,44 @@
     /// </summary>
     public class IsometricTile : IUpdateDrawable
     {
-        public static int TILE_WIDTH { get; set; } = 170;
-        public static int TILE_HEIGHT { get; set; } = 85;
+        private static bool defSize = false;
+        private static int tWidth = 170;
+        private static int tHeight = 85;
+
+        /// <summary>Obtém ou define a largura dos tiles para cálculos posteriores.</summary>
+        public static int TileWidth 
+        { 
+            get => tWidth; 
+            set
+            {
+                tWidth = value;
+                defSize = true;
+            }
+        }
+        /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
+        public static int TileHeight 
+        { 
+            get => tHeight; 
+            set
+            {
+                tHeight = value;
+                defSize = true;
+            }
+        } 
 
         /// <summary>Obtém ou define a animação do topo do Tile.</summary>
         public Animation Animation { get; set; } = null;
         /// <summary>Obtém ou define onde o tile se encontra no mapa.</summary>
         public Point MapPoint { get; set; } = Point.Zero;
-        /// <summary>Obtém ou define o valor do Tile.</summary>
+        /// <summary>Obtém ou define um valor para o Tile.</summary>
         public short Value { get; set; } = 0;
 
         /// <summary>
         /// Inicializa uma nova instância de Tile.
         /// </summary>
-        public IsometricTile() { }
+        public IsometricTile() 
+        {
+        }
 
         /// <summary>
         /// Inicializa uma nova instância de Tile.
@@ -27,6 +51,40 @@
         public IsometricTile(Animation animation)
         {
             Animation = animation;
+            SetSize();               
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de Tile.
+        /// </summary>
+        /// <param name="game">A instância corrente da classe Game.</param>
+        /// <param name="sprite">O objeto sprite a ser utilizado para a animação.</param>
+        /// <param name="frames">Os frames do sprite.</param>
+        public IsometricTile(Game game, Sprite sprite, params SpriteFrame[] frames)
+        {
+            Animation anm = new Animation(game, 0, "default");
+
+            if (frames != null && frames.Length > 0)
+                anm.AddSprite(sprite, frames);
+            else
+                anm.AddSprite(sprite);
+
+            Animation = anm;
+
+            SetSize();
+        }
+
+        private void SetSize()
+        {
+            if (!defSize)
+            {
+                Animation.UpdateBounds();
+
+                TileWidth = Animation.Width;
+                TileHeight = Animation.Height;
+
+                defSize = true;
+            }
         }
 
         /// <summary>
@@ -37,7 +95,8 @@
         {
             if(source.Animation != null)
                 Animation = new Animation(source.Animation);
-            
+
+            MapPoint = source.MapPoint;
             Value = source.Value;
         }
 

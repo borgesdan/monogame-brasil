@@ -131,7 +131,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 return true;
             else
                 return false;
-        }      
+        }              
 
         /// <summary>
         /// Verifica se um polígono colidiu com outro.

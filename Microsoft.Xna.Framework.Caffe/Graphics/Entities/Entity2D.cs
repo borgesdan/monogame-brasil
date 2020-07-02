@@ -16,7 +16,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         protected bool disposed = false;
-        private Vector2 percentage = Vector2.One;        
+        /// <summary>Obtém ou define a disponilidade de atualização e desenho da entidade.</summary>
+        protected EnableGroup enable = EnableGroup.Available;
+        private Vector2 percentage = Vector2.One;            
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -38,8 +40,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public Polygon BoundsR { get; protected set; } = new Polygon();
         /// <summary>Obtém a instância atual da classe Game.</summary>
         public Game Game { get; set; } = null;
-        /// <summary>Obtém ou define a disponibilidade da entidade.</summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
+        /// <summary>Obtém ou define a disponibilidade de atualização e desenho da entidade.</summary>
+        public EnableGroup Enable { get => enable; set => enable = value; }
         /// <summary>Obtém ou define o nome da entidade.</summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>

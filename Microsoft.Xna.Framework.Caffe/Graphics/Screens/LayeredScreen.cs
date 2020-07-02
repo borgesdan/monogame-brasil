@@ -55,7 +55,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="manager">O gerenciador de telas atual.</param>
         /// <param name="name">O nome da tela.</param>
         /// <param name="loadScreen">True se a tela será carregada.</param>
-        public LayeredScreen(ScreenManager manager, string name, bool loadScreen) : base(manager.Game, name, loadScreen) { }
+        public LayeredScreen(ScreenManager manager, string name, bool loadScreen) : base(manager, name, loadScreen) { }
 
         /// <summary>
         /// Inicializa uma nova instância da classe Screen.
@@ -63,7 +63,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="subManager">O subgerenciador de telas associado a uma tela administradora.</param>
         /// <param name="name">O nome da tela.</param>
         /// <param name="loadScreen">True se a tela será carregada.</param>
-        public LayeredScreen(SubScreenManager subManager, string name, bool loadScreen) : base(subManager.Game, name, loadScreen) { }        
+        public LayeredScreen(SubScreenManager subManager, string name, bool loadScreen) : base(subManager, name, loadScreen) { }        
 
         /// <summary>Inicializa uma nova instância da classe Screen.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>

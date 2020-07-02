@@ -25,7 +25,11 @@ namespace Microsoft.Xna.Framework.Graphics
         public Texture2D Texture { get; private set; } = null;
 
         /// <summary>Obtém ou define a lista de frames da textura.</summary>
-        public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();      
+        public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();
+
+        //public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
+
+        //public List<AttackBox> AttackBoxes { get; set; } = new List<AttackBox>();
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//

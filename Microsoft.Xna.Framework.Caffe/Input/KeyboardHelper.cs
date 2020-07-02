@@ -56,6 +56,18 @@ namespace Microsoft.Xna.Framework.Input
             return result;
         }
 
+        /// <summary>Verifica se a tecla estava pressionada e foi liberada.</summary>
+        /// <param name="key">A tecla a ser verificada.</param>
+        public bool IsReleased(Keys key)
+        {
+            bool result = false;
+
+            if (OldState.IsKeyDown(key) && State.IsKeyUp(key))
+                result = true;
+
+            return result;
+        }
+
         /// <summary>Verifica se a tecla selecionada está liberada.</summary>   
         /// <param name="key">A tecla a ser verificada.</param>
         public bool IsUp(Keys key)

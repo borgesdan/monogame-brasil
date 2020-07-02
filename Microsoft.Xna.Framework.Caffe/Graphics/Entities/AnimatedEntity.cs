@@ -21,9 +21,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a lista de animações</summary>
         public List<Animation> Animations { get; set; } = new List<Animation>();
         /// <summary>Obtém a animação ativa.</summary>
-        public Animation ActiveAnimation { get; private set; } = null;
+        public Animation CurrentAnimation { get; private set; } = null;
         /// <summary>Obtém o nome da animação ativa.</summary>
-        public string ActiveName { get => ActiveAnimation.Name; }
+        public string CurrentName { get => CurrentAnimation.Name; }
         /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo X. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
         public int XRepeat { get; set; } = 0;
         /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo Y. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
@@ -40,9 +40,9 @@ namespace Microsoft.Xna.Framework.Graphics
             //Cópia das animações.
             source.Animations.ForEach(a => this.Animations.Add(new Animation(a)));
             //Busca do index da animação ativa.
-            int index = source.Animations.FindIndex(a => a.Equals(source.ActiveAnimation));
+            int index = source.Animations.FindIndex(a => a.Equals(source.CurrentAnimation));
 
-            ActiveAnimation = Animations[index];
+            CurrentAnimation = Animations[index];
 
             XRepeat = source.XRepeat;
             YRepeat = source.YRepeat;
@@ -88,7 +88,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Update(GameTime gameTime)
         {   
             //Se a entidade não estiver disponível ou não existir uma animação ativa, então não se prossegue com a atualização.
-            if (!Enable.IsEnabled || ActiveAnimation == null)
+            if (!Enable.IsEnabled || CurrentAnimation == null)
                 return;
 
             //Define que a entidade está dentro dos limites de desenho da tela
@@ -116,14 +116,14 @@ namespace Microsoft.Xna.Framework.Graphics
             SetActiveProperties();
 
             //Update da animação ativa.
-            ActiveAnimation?.Update(gameTime);            
+            CurrentAnimation?.Update(gameTime);            
 
             base.Update(gameTime);
         }
 
         private void SetActiveProperties()
         {
-            ActiveAnimation.SetProperties(this);
+            CurrentAnimation.SetProperties(this);
         }
 
         /// <summary>Desenha a entidade.</summary>
@@ -134,11 +134,11 @@ namespace Microsoft.Xna.Framework.Graphics
             //Se a entidade não é visível
             //Se não existe uma animação ativa
             //Ou se a entidade se encontra fora dos limites da tela, não prossegue com a execução do método.            
-            if (!Enable.IsVisible || ActiveAnimation == null || outOfView)
+            if (!Enable.IsVisible || CurrentAnimation == null || outOfView)
                 return;            
 
             if(XRepeat == 0 && YRepeat == 0)
-                ActiveAnimation?.Draw(gameTime, spriteBatch);
+                CurrentAnimation?.Draw(gameTime, spriteBatch);
             else
             {
                 Vector2 position = Transform.Position;
@@ -152,12 +152,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     var windowWidth = Game.Window.ClientBounds.Width;
 
-                    ActiveAnimation.Position = position;
+                    CurrentAnimation.Position = position;
 
-                    if (ActiveAnimation.Bounds.Right > camera.X)
+                    if (CurrentAnimation.Bounds.Right > camera.X)
                     {
-                        if (ActiveAnimation.Bounds.X < camera.X + windowWidth)
-                            ActiveAnimation?.Draw(gameTime, spriteBatch);
+                        if (CurrentAnimation.Bounds.X < camera.X + windowWidth)
+                            CurrentAnimation?.Draw(gameTime, spriteBatch);
                         else
                             break;
                     }
@@ -166,19 +166,19 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         var windowHeight = Game.Window.ClientBounds.Height;
 
-                        position.Y += ActiveAnimation.ScaledSize.Y;
-                        ActiveAnimation.Position = position;
+                        position.Y += CurrentAnimation.ScaledSize.Y;
+                        CurrentAnimation.Position = position;
 
-                        if (ActiveAnimation.Bounds.Bottom > camera.Y)
+                        if (CurrentAnimation.Bounds.Bottom > camera.Y)
                         {
-                            if (ActiveAnimation.Bounds.Y < camera.Y + windowHeight)
-                                ActiveAnimation?.Draw(gameTime, spriteBatch);
+                            if (CurrentAnimation.Bounds.Y < camera.Y + windowHeight)
+                                CurrentAnimation?.Draw(gameTime, spriteBatch);
                             else
                                 break;
                         }                        
                     }
 
-                    position.X += ActiveAnimation.ScaledSize.X;
+                    position.X += CurrentAnimation.ScaledSize.X;
                     position.Y = Transform.Y;
                 }                
             }            
@@ -222,9 +222,9 @@ namespace Microsoft.Xna.Framework.Graphics
             Animation tempAnimation = GetAnimation(name);
             
             if(resetAnimation)
-                ActiveAnimation?.Reset();
+                CurrentAnimation?.Reset();
 
-            ActiveAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
+            CurrentAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
             SetActiveProperties();
 
             UpdateBounds();
@@ -294,13 +294,13 @@ namespace Microsoft.Xna.Framework.Graphics
             float cbw = 0;
             float cbh = 0;
 
-            if(ActiveAnimation != null)
+            if(CurrentAnimation != null)
             {
                 //cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
                 //cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
 
-                cbw = ActiveAnimation.Frame.Width;
-                cbh = ActiveAnimation.Frame.Height;
+                cbw = CurrentAnimation.Frame.Width;
+                cbh = CurrentAnimation.Frame.Height;
 
                 if (XRepeat > 0)
                     cbw *= XRepeat + 1;
@@ -321,9 +321,9 @@ namespace Microsoft.Xna.Framework.Graphics
             //A origem do frame.
             Vector2 s_f_oc;
 
-            if (ActiveAnimation != null && ActiveAnimation.CurrentSprite != null)
+            if (CurrentAnimation != null && CurrentAnimation.CurrentSprite != null)
             {
-                s_f_oc = ActiveAnimation.CurrentSprite.Frames[ActiveAnimation.FrameIndex].OriginCorrection;
+                s_f_oc = CurrentAnimation.CurrentSprite.Frames[CurrentAnimation.FrameIndex].OriginCorrection;
             }
             else
             {
@@ -353,7 +353,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 Animations.Clear();
                 Animations = null;
-                ActiveAnimation = null;
+                CurrentAnimation = null;
             }
 
             base.Dispose(disposing);

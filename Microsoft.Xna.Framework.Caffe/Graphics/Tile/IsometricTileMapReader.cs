@@ -5,7 +5,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
     /// <summary>
     /// Representa um leitor de mapas de tiles que os desenha na tela.
     /// </summary>
-    public class IsometricTileMapReader : IUpdateDrawable
+    public class IsometricTileMapReader : IUpdateDrawable, IIsometricReader
     {
         private short[,] array = null;
         private Screen _screen = null;
@@ -40,6 +40,15 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
             Map = map;
         }
 
+        /// <summary>
+        /// Inicializa uma nova instância de MapReader.
+        /// </summary>
+        /// <param name="map">O mapa de tiles a ser lido.</param>
+        public IsometricTileMapReader(Game game, IsometricTileMap map)
+        {
+            Map = map;
+        }
+
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
@@ -64,17 +73,21 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
                 {
                     //O valor da posição no array
                     short index = array[row, col];
-                    //Recebe o Tile da tabela                    
-
+                    
+                    //Recebe o Tile da tabela
                     if(Map.Table.ContainsKey(index))
                     {
                         IsometricTile tile = new IsometricTile(Map.Table[index]);
                         //Atualiza todas as animações do tile
-                        tile.UpdateBounds();
-
+                        //tile.UpdateBounds();
                         //largura e altura para cálculo
-                        int w = tile.Animation.Bounds.Width;
-                        int h = tile.Animation.Bounds.Height;
+                        //Usa as configuraçõs do tamanho do tile pela animação
+                        //int w = tile.Animation.Bounds.Width;
+                        //int h = tile.Animation.Bounds.Height;
+
+                        //Usa as configurações de tamanho geral
+                        int w = IsometricTile.TileWidth;
+                        int h = IsometricTile.TileHeight;
                         float sx = StartPosition.X;
                         float sy = StartPosition.Y;
 
@@ -118,8 +131,17 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         {
             foreach (var t in Tiles)
             {   
-                if(Util.CheckFieldOfView(_screen,t.Value.Animation.Bounds))
+                if(_screen != null)
+                {
+                    if (Util.CheckFieldOfView(_screen, t.Value.Animation.Bounds))
+                    {
+                        t.Value.Draw(gameTime, spriteBatch);
+                    }                        
+                }
+                else
+                {
                     t.Value.Draw(gameTime, spriteBatch);
+                }
             }
         }
     }

@@ -9,9 +9,12 @@
     <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Compile\Compiler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Debug\DebugPolygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\AttackBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\CollisionBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\CollisionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\CollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ColorComponent.cs" />
@@ -36,9 +39,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\Interfaces\IIsometricReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMapReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSectorReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
@@ -59,5 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Tile\Interfaces\" />
   </ItemGroup>
 </Project>

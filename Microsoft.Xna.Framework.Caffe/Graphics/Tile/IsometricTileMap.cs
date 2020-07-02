@@ -25,6 +25,17 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         }
 
         /// <summary>
+        /// Inicializa uma nova instância de Map.
+        /// </summary>
+        /// <param name="array">O array com a numeração de tiles do mapa</param>
+        /// <param name="table">A tabela de índices com seus respectivos Tiles.</param>
+        public IsometricTileMap(short[,] array, Dictionary<short, IsometricTile> table)
+        {
+            mapArray = array;
+            Table = table;
+        }
+
+        /// <summary>
         /// Obtém o mapa com a numeração dos tiles.
         /// </summary>
         public short[,] GetMap()

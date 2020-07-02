@@ -117,6 +117,29 @@ namespace Microsoft.Xna.Framework.Input
             return result;
         }
 
+        /// <summary>Verifica se o botão estava pressionada e foi liberada.</summary>
+        /// <param name="key">A tecla a ser verificada.</param>
+        public bool IsReleased(Buttons button)
+        {
+            bool result = false;
+
+            if (State.IsConnected)
+            {
+                if (OldState.IsButtonDown(button) && State.IsButtonUp(button))
+                    result = true;
+            }
+            else if (KeyboardMap != null)
+            {
+                var k = KeyboardMap[button];
+
+                if (k != null)
+                    if (lastKeyboardState.IsKeyDown(k.Value) && keyboardState.IsKeyUp(k.Value))
+                        result = true;
+            }
+
+            return result;
+        }
+
         /// <summary>Verifica se o botão selecionado está liberado.</summary>     
         /// <param name="button">O botão do GamePad a ser verificado.</param>
         public bool IsUp(Buttons button)

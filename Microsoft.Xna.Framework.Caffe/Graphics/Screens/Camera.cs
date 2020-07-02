@@ -99,6 +99,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             X = bounds.Center.X - game.Window.ClientBounds.GetHalfW();
             Y = bounds.Center.Y - game.Window.ClientBounds.GetHalfH();
+
+            //X = bounds.X;
+            //Y = bounds.Y;
         }
 
         /// <summary>Obtém a Matrix a ser usada no método SpriteBatch.Begin(transformMatrix).</summary>
