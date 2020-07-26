@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public struct AttackBox
+    public struct AttackBox : IEquatable<AttackBox>
     {
         /// <summary>O index relativo ao frame do sprite.</summary>
         public readonly int Index;
@@ -102,6 +102,84 @@ namespace Microsoft.Xna.Framework.Graphics
                 else
                     break;
             }
+        }
+
+        public AttackBox GetRelativePosition(Rectangle frame, Rectangle target)
+        {
+            int x = frame.X - this.X;
+            int y = frame.Y - this.Y;
+            int w = frame.Width - this.Width;
+            int h = frame.Height - this.Height;
+
+            Rectangle rectangle = new Rectangle(target.X - x, target.Top - y, target.Width - w, target.Height - h);
+
+            AttackBox cb = new AttackBox(Index, Power, rectangle,
+                T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12);
+
+            return cb;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is AttackBox frame && Equals(frame);
+        }
+
+        public bool Equals(AttackBox box)
+        {
+            return Index == box.Index &&
+                   Power == box.Power &&
+                   X == box.X &&
+                   Y == box.Y &&
+                   Width == box.Width &&
+                   Height == box.Height &&
+                   T01 == box.T01 &&
+                   T02 == box.T02 &&
+                   T03 == box.T03 &&
+                   T04 == box.T04 &&
+                   T05 == box.T05 &&
+                   T06 == box.T06 &&
+                   T07 == box.T07 &&
+                   T08 == box.T08 &&
+                   T09 == box.T09 &&
+                   T10 == box.T10 &&
+                   T11 == box.T11 &&
+                   T12 == box.T12 &&
+                   Bounds.Equals(box.Bounds);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 2131157796;
+            hashCode = hashCode * -1521134295 + Index.GetHashCode();
+            hashCode = hashCode * -1521134295 + Power.GetHashCode();
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            hashCode = hashCode * -1521134295 + Width.GetHashCode();
+            hashCode = hashCode * -1521134295 + Height.GetHashCode();
+            hashCode = hashCode * -1521134295 + T01.GetHashCode();
+            hashCode = hashCode * -1521134295 + T02.GetHashCode();
+            hashCode = hashCode * -1521134295 + T03.GetHashCode();
+            hashCode = hashCode * -1521134295 + T04.GetHashCode();
+            hashCode = hashCode * -1521134295 + T05.GetHashCode();
+            hashCode = hashCode * -1521134295 + T06.GetHashCode();
+            hashCode = hashCode * -1521134295 + T07.GetHashCode();
+            hashCode = hashCode * -1521134295 + T08.GetHashCode();
+            hashCode = hashCode * -1521134295 + T09.GetHashCode();
+            hashCode = hashCode * -1521134295 + T10.GetHashCode();
+            hashCode = hashCode * -1521134295 + T11.GetHashCode();
+            hashCode = hashCode * -1521134295 + T12.GetHashCode();
+            hashCode = hashCode * -1521134295 + Bounds.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(AttackBox left, AttackBox right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(AttackBox left, AttackBox right)
+        {
+            return !(left == right);
         }
     }
 }

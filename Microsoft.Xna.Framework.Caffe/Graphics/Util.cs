@@ -72,14 +72,23 @@ namespace Microsoft.Xna.Framework.Graphics
             if (camera.Scale != Vector2.One)
             {
                 if (camera.Scale.X < 1)
+                {
                     w = (int)(w * (camera.Scale.X * 100));
+                }                    
                 if (camera.Scale.Y < 1)
+                {
                     h = (int)(h * (camera.Scale.Y * 100));
+                }                    
 
                 if (camera.Scale.X > 1)
+                {
                     w = (int)(w * (camera.Scale.X / 100));
+                }                    
                 if (camera.Scale.Y > 1)
+                {
                     h = (int)(h * (camera.Scale.Y / 100));
+                }
+                    
             }                
 
             Viewport visible_view = new Viewport((int)x, (int)y, w, h);

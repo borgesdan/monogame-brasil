@@ -18,7 +18,7 @@ namespace Microsoft.Xna.Framework.Graphics
         protected bool disposed = false;
         /// <summary>Obtém ou define a disponilidade de atualização e desenho da entidade.</summary>
         protected EnableGroup enable = EnableGroup.Available;
-        private Vector2 percentage = Vector2.One;            
+        private Vector2 percentage = Vector2.One;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -143,7 +143,15 @@ namespace Microsoft.Xna.Framework.Graphics
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             OnDraw?.Invoke(this, gameTime, spriteBatch);
-            Components.Draw(gameTime, spriteBatch);            
+            Components.Draw(gameTime, spriteBatch);
+
+            if (DEBUG.IsEnabled && Screen != null)
+            { 
+                if (DEBUG.ShowBounds)
+                {
+                    Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(Bounds), DEBUG.BoundsColor));                    
+                }
+            }
         }        
 
         /// <summary>Atualiza os limites da entidade.</summary>

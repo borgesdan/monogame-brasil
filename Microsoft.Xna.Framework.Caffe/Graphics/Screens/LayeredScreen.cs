@@ -237,6 +237,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //Define novamente a view.
             Game.GraphicsDevice.Viewport = Viewport;
+
+            base.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Adiciona entidades a cena.</summary>

@@ -29,6 +29,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo Y. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
         public int YRepeat { get; set; } = 0;
 
+        public List<CollisionBox> CollisionBoxes { get; private set; } = new List<CollisionBox>();
+
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
@@ -181,9 +183,20 @@ namespace Microsoft.Xna.Framework.Graphics
                     position.X += CurrentAnimation.ScaledSize.X;
                     position.Y = Transform.Y;
                 }                
-            }            
-            
+            }
+
             base.Draw(gameTime, spriteBatch);
+
+            if (DEBUG.IsEnabled && Screen != null)
+            {
+                if(DEBUG.ShowCollisionBox)
+                {
+                    foreach(CollisionBox cb in CollisionBoxes)
+                    {
+                        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(cb.Bounds), DEBUG.CollisionBoxColor));
+                    }
+                }
+            }            
         }        
 
         /// <summary>Adiciona uma nova animação à entidade.</summary>
@@ -256,7 +269,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
-            animation.AddSprite(sprite);
+            animation.AddSprites(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);
@@ -277,7 +290,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
-            animation.AddSprite(sprite);
+            animation.AddSprites(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
             animatedEntity.AddAnimation(animation);
@@ -336,7 +349,17 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
 
-            Bounds = new Rectangle(recX, recY, w, h);                  
+            Bounds = new Rectangle(recX, recY, w, h);
+            
+            //Adição dos boxes de colisão
+            var clist = CurrentAnimation.CollisionBoxesList;
+            CollisionBoxes.Clear();
+
+            foreach(CollisionBox cb in clist)
+            {
+                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.Frame, Bounds);
+                CollisionBoxes.Add(relative);
+            }
             
             //Criação do polígono (BoundsR).
             Util.CreateBoundsR(this, totalOrigin, Bounds);

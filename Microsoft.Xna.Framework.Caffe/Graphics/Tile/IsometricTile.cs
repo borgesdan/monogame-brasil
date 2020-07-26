@@ -67,7 +67,7 @@
             if (frames != null && frames.Length > 0)
                 anm.AddSprite(sprite, frames);
             else
-                anm.AddSprite(sprite);
+                anm.AddSprites(sprite);
 
             Animation = anm;
 
@@ -85,6 +85,12 @@
 
                 defSize = true;
             }
+        }
+
+        public static void SetTileSize(int width, int height)
+        {
+            TileWidth = width;
+            TileHeight = height;
         }
 
         /// <summary>

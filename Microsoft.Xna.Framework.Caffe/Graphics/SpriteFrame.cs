@@ -27,6 +27,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Necessário para um alinhamento caso nem todos os frames de uma animação são iguais.</summary>
         public Vector2 OriginCorrection;
 
+        /*
+         * Sobre OriginCorrection
+         * Se uma entidade tem uma altura de 90 no primeiro frame e este valor é a base para as demais correções; e se
+         * o próximo frame tiver a altura 95, então deve-se adicionar o valor new Vector (0, 5) em OriginCorrection. Se
+         * o próximo frame tiver a altura de 85, então deve-se adicionar o valor new Vector(0, -5).
+         * 
+         */
+
         /// <summary>Obtém um retângulo com a posição e tamanho do frame dentro do SpriteSheet.</summary>
         public Rectangle Bounds
         {

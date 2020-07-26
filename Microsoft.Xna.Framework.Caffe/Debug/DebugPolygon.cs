@@ -1,44 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Collections.Generic;
 
-namespace Microsoft.Xna.Framework
+namespace Microsoft.Xna.Framework.Graphics
 {
-    public class DebugPolygon
+    /// <summary>
+    /// Representa um polígono com vetores em coordenada 3D.
+    /// </summary>
+    public class Polygon3D
     {
-        GraphicsDevice graphics;
-        Color color;
+        GraphicsDevice graphics = null;        
         VertexPositionColor[] vertices = null;
+        Polygon _poly = new Polygon();
 
-        public BasicEffect Effect { get; private set; }        
+        public Color Color { get; set; } = Color.White;
 
-        public DebugPolygon(GraphicsDevice graphicsDevice, Polygon poly, Color clr)
-        {
-            graphics = graphicsDevice;
-            color = clr;
-
-            List<VertexPositionColor> vs = new List<VertexPositionColor>();
-
-            poly.Points.ForEach((Vector2 v) => 
+        /// <summary>
+        /// Obtém ou define o objeto Effect para desenho.
+        /// </summary>
+        public BasicEffect Effect { get; set; } 
+        
+        /// <summary>
+        /// Obtém ou define o polígono a ser desenhado.
+        /// </summary>
+        public Polygon Poly 
+        { 
+            get => _poly; 
+            set
             {
-                vs.Add(new VertexPositionColor(new Vector3(v, 0), clr));
-            }
-            );
+                _poly = value;
 
-            vs.Add(vs[0]);
-            vertices = vs.ToArray();
+                if(_poly.Points.Count > 0)
+                    Set(_poly);
+            }
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de DebugPolygon.
+        /// </summary>
+        /// <param name="game">A instância atual da classe Game.</param>
+        /// <param name="polygon">O polígono de referência</param>
+        /// <param name="color">A cor do polígono.</param>
+        public Polygon3D(Game game, Polygon polygon, Color color)
+        {
+            graphics = game.GraphicsDevice;
+            Color = color;
+            
+            Poly = polygon;
 
             InitializeBasicEffect();
         }
 
-        public void Set(List<Vector2> points)
+        private void Set(Polygon polygon)
         {
             List<VertexPositionColor> vs = new List<VertexPositionColor>();
 
-            points.ForEach((Vector2 v) =>
+            polygon.Points.ForEach((Vector2 v) =>
             {
-                vs.Add(new VertexPositionColor(new Vector3(v, 0), color));
+                vs.Add(new VertexPositionColor(new Vector3(v, 0), Color));
             }
             );
 
@@ -46,13 +63,16 @@ namespace Microsoft.Xna.Framework
             vertices = vs.ToArray();
         }
 
-        void InitializeBasicEffect()
+        private void InitializeBasicEffect()
         {
             Effect = new BasicEffect(graphics);
             Effect.VertexColorEnabled = true;
             Effect.World = Matrix.CreateOrthographicOffCenter(0, graphics.Viewport.Width, graphics.Viewport.Height, 0, 0, 1);
         }
 
+        /// <summary>
+        /// Desenha o polígono.
+        /// </summary>
         public void Draw()
         {
             foreach (EffectPass pass in Effect.CurrentTechnique.Passes)

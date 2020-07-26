@@ -109,7 +109,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Matrix m = new Matrix();
             m += Matrix.CreateTranslation(-Position.X, -Position.Y, 0) * Matrix.CreateScale(Scale.X, Scale.Y, 0);
-            return m;
+            return m;            
         }
 
         public override bool Equals(object obj)

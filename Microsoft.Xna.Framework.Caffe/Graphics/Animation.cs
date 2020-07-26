@@ -6,12 +6,15 @@
 
 using System.Collections.Generic;
 using System;
+using System.Xml.Schema;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma animação de sprites.</summary>
     public class Animation : IDisposable, IUpdateDrawable, IBoundable
     {
+        #region VARIAVEIS
+
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
@@ -113,6 +116,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
         /// <summary>Obtém o Sprite atual que está sendo trabalhado.</summary>
         public Sprite CurrentSprite { get; protected set; } = null;
+
+        public List<CollisionBox> CollisionBoxesList { get; private set; } = new List<CollisionBox>();
         /// <summary>Obtém ou define o nome da animação.</summary>
         public string Name { get; set; } = string.Empty;
 
@@ -193,7 +198,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Evento chamado quando o valor do Index é mudado.</summary>
         public event Action<Animation> OnChangeIndex;
         /// <summary>Evento chamado quando o valor do FrameIndex é mudado.</summary>
-        public event Action<Animation> OnChangeFrameIndex;        
+        public event Action<Animation> OnChangeFrameIndex;
+
+        #endregion
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -269,10 +276,16 @@ namespace Microsoft.Xna.Framework.Graphics
             UpdateBounds();
 
             //Atualiza os valores para o desenho final.
-            UpdateOrigin();           
+            UpdateOrigin();
 
-            //Chama OnUpdate
-            OnUpdate?.Invoke(this, gameTime);
+            var cboxes = CurrentSprite.CollisionBoxes;
+            CollisionBoxesList.Clear();
+
+            foreach (CollisionBox cb in cboxes)
+            {
+                if (cb.Index == FrameIndex)
+                    CollisionBoxesList.Add(cb);
+            }
 
             //Verifica se é necessário usar 'destinationBounds' ao invés de 'Bounds' no método Draw.
             if (DrawPercentage == Vector2.One)
@@ -288,6 +301,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 destinationBounds = new Rectangle(x, y, (int)w, (int)h);
             }
+
+            //Chama OnUpdate
+            OnUpdate?.Invoke(this, gameTime);
         }
         
         /// <summary>
@@ -428,7 +444,7 @@ namespace Microsoft.Xna.Framework.Graphics
                    );
 
             //chama OnDraw
-            OnDraw?.Invoke(this, gameTime, spriteBatch);
+            OnDraw?.Invoke(this, gameTime, spriteBatch);            
         }
 
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
@@ -441,7 +457,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona uma quantidade desejada de objetos a lista de Sprites.</summary>
         /// <param name="source">Lista contendo os caminhos das texturas na pasta Content.</param>
-        public void AddSprite(params string[] sources)
+        public void AddSprites(params string[] sources)
         {
             List<Sprite> tmpSprites = new List<Sprite>();
 
@@ -451,12 +467,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 tmpSprites.Add(temp);
             }
 
-            AddSprite(tmpSprites.ToArray());
+            AddSprites(tmpSprites.ToArray());
         }        
 
         /// <summary>Adiciona sprites a animação.</summary>
         /// <param name="sprites">Os sprites a serem adicionados.</param>
-        public void AddSprite(params Sprite[] sprites)
+        public void AddSprites(params Sprite[] sprites)
         {
             if (sprites != null)
                 Sprites.AddRange(sprites);
@@ -483,7 +499,24 @@ namespace Microsoft.Xna.Framework.Graphics
                 sprite.AddFrame(f);
             }
 
-            AddSprite(sprite);
+            AddSprites(sprite);
+        }
+
+        /// <summary>
+        /// Adiciona um sprite e os frames desejados da ação.
+        /// </summary>
+        /// <param name="source">O sprite a ser adicionado através de um arquivo na pasta Content.</param>
+        /// <param name="frames">A lista de frames no sprite.</param>
+        public void AddSprite(string source, SpriteFrame[] frames)
+        {
+            Sprite sprite = new Sprite(Game, source);
+
+            foreach (var f in frames)
+            {
+                sprite.AddFrame(f);
+            }
+
+            AddSprites(sprite);
         }
 
         //---------------------------------------//

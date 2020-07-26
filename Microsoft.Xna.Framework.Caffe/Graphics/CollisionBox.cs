@@ -4,25 +4,25 @@ using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public struct CollisionBox
+    public struct CollisionBox : IEquatable<CollisionBox>
     {
         /// <summary>O index relativo ao frame do sprite.</summary>
-        public readonly int Index;
+        public int Index;
         /// <summary>Define se o box recebe colisão com outro CollisionBox.</summary>
-        public readonly bool CanCollide;
+        public bool CanCollide;
         /// <summary>Define pode receber dano de um AttackBox.</summary>
-        public readonly bool CanTakeDamage;
+        public bool CanTakeDamage;
         /// <summary>Define a porcentagem do dano sofrido, 1f equivale a 100%.</summary>
-        public readonly float DamagePercentage;
+        public float DamagePercentage;
 
         /// <summary>A posição no eixo Y relativo ao frame.</v>
-        public readonly int X;
+        public int X;
         /// <summary>A posição no eixo X relativo ao frame.</summary>
-        public readonly int Y;
+        public int Y;
         /// <summary>A largura do box.</summary>
-        public readonly int Width;
+        public int Width;
         /// <summary>A altura do box.</summary>
-        public readonly int Height;
+        public int Height;
 
         /// <summary>Define uma valor que pode ser recuperado futuramente na tag 01.</summary>
         public byte T01;
@@ -54,6 +54,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get => new Rectangle(X, Y, Width, Height);
         }        
+
+        public CollisionBox(int index, Rectangle rectangle) : this(index, rectangle, true, true, 1f) 
+        { }
 
         public CollisionBox(int index, Rectangle rectangle, bool canCollide, bool canTakeDamage, float damagePercentage, params byte[] tags)
         {
@@ -108,6 +111,88 @@ namespace Microsoft.Xna.Framework.Graphics
                 else
                     break;
             }
+        }    
+        
+        public CollisionBox GetRelativePosition(Rectangle frame, Rectangle target)
+        {
+            int x = frame.X - this.X;
+            int y = frame.Y - this.Y;
+            int w = frame.Width - this.Width;
+            int h = frame.Height - this.Height;
+
+            Rectangle rectangle = new Rectangle(target.X - x, target.Top - y, target.Width - w, target.Height - h);
+
+            CollisionBox cb = new CollisionBox(Index, rectangle, CanCollide, CanTakeDamage, DamagePercentage,
+                T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12);
+
+            return cb;
+        }
+
+        public static bool operator ==(CollisionBox left, CollisionBox right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CollisionBox left, CollisionBox right)
+        {
+            return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is SpriteFrame frame && Equals(frame);
+        }
+
+        public bool Equals(CollisionBox box)
+        {
+            return Index == box.Index &&
+                   CanCollide == box.CanCollide &&
+                   CanTakeDamage == box.CanTakeDamage &&
+                   DamagePercentage == box.DamagePercentage &&
+                   X == box.X &&
+                   Y == box.Y &&
+                   Width == box.Width &&
+                   Height == box.Height &&
+                   T01 == box.T01 &&
+                   T02 == box.T02 &&
+                   T03 == box.T03 &&
+                   T04 == box.T04 &&
+                   T05 == box.T05 &&
+                   T06 == box.T06 &&
+                   T07 == box.T07 &&
+                   T08 == box.T08 &&
+                   T09 == box.T09 &&
+                   T10 == box.T10 &&
+                   T11 == box.T11 &&
+                   T12 == box.T12 &&
+                   Bounds.Equals(box.Bounds);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -856949754;
+            hashCode = hashCode * -1521134295 + Index.GetHashCode();
+            hashCode = hashCode * -1521134295 + CanCollide.GetHashCode();
+            hashCode = hashCode * -1521134295 + CanTakeDamage.GetHashCode();
+            hashCode = hashCode * -1521134295 + DamagePercentage.GetHashCode();
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            hashCode = hashCode * -1521134295 + Width.GetHashCode();
+            hashCode = hashCode * -1521134295 + Height.GetHashCode();
+            hashCode = hashCode * -1521134295 + T01.GetHashCode();
+            hashCode = hashCode * -1521134295 + T02.GetHashCode();
+            hashCode = hashCode * -1521134295 + T03.GetHashCode();
+            hashCode = hashCode * -1521134295 + T04.GetHashCode();
+            hashCode = hashCode * -1521134295 + T05.GetHashCode();
+            hashCode = hashCode * -1521134295 + T06.GetHashCode();
+            hashCode = hashCode * -1521134295 + T07.GetHashCode();
+            hashCode = hashCode * -1521134295 + T08.GetHashCode();
+            hashCode = hashCode * -1521134295 + T09.GetHashCode();
+            hashCode = hashCode * -1521134295 + T10.GetHashCode();
+            hashCode = hashCode * -1521134295 + T11.GetHashCode();
+            hashCode = hashCode * -1521134295 + T12.GetHashCode();
+            hashCode = hashCode * -1521134295 + Bounds.GetHashCode();
+            return hashCode;
         }
     }
 }

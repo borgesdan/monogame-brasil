@@ -195,35 +195,47 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             InvertVelocityX();
             InvertVelocityY();
+
             return Velocity;
         }
         /// <summary>Inverte a velocidade no eixo X.</summary>
         public Vector2 InvertVelocityX() 
         {
             Xv *= -1;
+
             return Velocity;
         }
         /// <summary>Inverte a velocidade no eixo Y.</summary>
         public Vector2 InvertVelocityY() 
         { 
             Yv *= -1;
+
             return Velocity;
         }
 
         /// <summary>Define a velocidade.</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>
-        public void SetVelocity(Vector2 velocity) => Velocity = velocity;
+        public void SetVelocity(Vector2 velocity) 
+        { 
+            Velocity = velocity;
+        }
 
         /// <summary>Define a velocidade.</summary>
         /// <param name="x">A velocidade no eixo X.</param>
         /// <param name="y">A velocidade no eixo Y.</param>
-        public void SetVelocity(float x, float y) => Velocity = new Vector2(x, y);
+        public void SetVelocity(float x, float y) 
+        { 
+            Velocity = new Vector2(x, y);
+        }
 
         //Posição
 
         /// <summary>Define a posição</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
-        public void SetPosition(Point position) => SetPosition(position.X, position.Y);
+        public void SetPosition(Point position) 
+        { 
+            SetPosition(position.X, position.Y);
+        }
 
         /// <summary>Define a posição</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
@@ -236,6 +248,8 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             X = x;
             Y = y;
+
+            Entity.UpdateBounds();
         }
 
         /// <summary>
@@ -261,6 +275,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 X += amount.X;
             if(amount.Y != 0)
                 Y += amount.Y;
+
+            Entity.UpdateBounds();
         }
 
         //Escala
@@ -276,7 +292,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Define a escala</summary>
         /// <param name="velocity">A escala no eixo X e Y.</param>
-        public void SetScale(Vector2 scale) => Scale = scale;
+        public void SetScale(Vector2 scale) 
+        { 
+            Scale = scale;
+            Entity.UpdateBounds();
+        }
         
         //Rotação
 
@@ -305,7 +325,7 @@ namespace Microsoft.Xna.Framework.Graphics
             var view = Entity.Game.GraphicsDevice.Viewport;
             SetPosition(view.X, view.Y);
 
-            Vector2 tempPosition = Util.AlignActor(view.Bounds, ScaledSize, alignType);            
+            Vector2 tempPosition = Util.AlignActor(view.Bounds, ScaledSize, alignType);
 
             tempPosition.X += Entity.Origin.X;
             tempPosition.Y += Entity.Origin.Y;

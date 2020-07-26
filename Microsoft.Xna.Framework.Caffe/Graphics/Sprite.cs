@@ -27,9 +27,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a lista de frames da textura.</summary>
         public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();
 
-        //public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
-
-        //public List<AttackBox> AttackBoxes { get; set; } = new List<AttackBox>();
+        /// <summary>Obtém ou define a lista de caixas de colisão.</summary>
+        public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
+        /// <summary>Obtém ou define a lista de caixas de ataque.</summary>
+        public List<AttackBox> AttackBoxes { get; set; } = new List<AttackBox>();
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//

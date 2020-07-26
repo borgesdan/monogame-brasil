@@ -56,3 +56,27 @@ namespace Microsoft.Xna.Framework.Compile
         }
     }
 }
+
+/*  - EXEMPLO -
+ * 
+ *  Suponha que existe um arquivo C# escrito com um código que explicita uma classe
+ *  que herda de AnimatedEntity que se chama ExempleEntity.
+ *  
+ *  Leia esse arquivo de código e traga para seu projeto da seguinte maneira.
+ *  
+ *  -- Código -- 
+ *      AnimatedEntity entity = Compiler.CompileCSharpCode<AnimatedEntity>(@"file.cs", "ExempleEntity", new object[2] { Game, "name" }, usingsReferences);
+ *      
+ *      // O argumento 'usingReferences' são as referências necessárias para compilar o arquivo, por exemplo:
+ *      //
+ *      // string[] usings = new string[]
+ *      // {
+ *      //   { @"C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll" },
+ *      // }
+ *      
+ *      //Invoca os métodos da classe base AnimatedEntity.
+ *      entity.Update(gameTime);
+ *      entity.Draw(gameTime); 
+ *  
+ *  -- Fim --
+ */

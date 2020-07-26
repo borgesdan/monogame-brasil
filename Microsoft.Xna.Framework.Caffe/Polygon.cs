@@ -90,6 +90,20 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Inicializa uma nova instância de Polygon.
         /// </summary>
+        /// <param name="rectangle">Define os pontos do polígono através de um retângulo.</param>
+        public Polygon(Rectangle rectangle)
+        {
+            Points.Add(new Vector2(rectangle.Left, rectangle.Top));
+            Points.Add(new Vector2(rectangle.Right, rectangle.Top));
+            Points.Add(new Vector2(rectangle.Right, rectangle.Bottom));
+            Points.Add(new Vector2(rectangle.Left, rectangle.Bottom));
+
+            BuildEdges();
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de Polygon.
+        /// </summary>
         /// <param name="points">Define os pontos do polígono.</param>
         public Polygon(params Vector2[] points)
         {

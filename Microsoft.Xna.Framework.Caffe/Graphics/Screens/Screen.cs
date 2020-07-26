@@ -5,6 +5,7 @@
 //---------------------------------------//
 
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -24,6 +25,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         protected bool disposed = false;
         protected Camera camera = Camera.Create();
+        private Polygon3D poly = null;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -46,6 +48,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public Viewport Viewport { get; set; }
         /// <summary>Obtém ou define a câmera da tela.</summary>
         public Camera Camera { get => camera; set => camera = value; }
+
+        public List<Tuple<Polygon, Color>> DebugPolygons = new List<Tuple<Polygon, Color>>();
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//
@@ -168,6 +172,24 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             OnDraw?.Invoke(this, gameTime, spriteBatch);
+
+            if(DEBUG.IsEnabled)
+            {
+                if(poly == null)
+                {
+                    poly = new Polygon3D(Game, new Polygon(), Color.White);
+                }
+
+                foreach(var dp in DebugPolygons)
+                {
+                    poly.Color = dp.Item2;
+                    poly.Poly = dp.Item1;
+
+                    poly.Draw();
+                }
+
+                DebugPolygons.Clear();
+            }
         }
 
         internal void CallLoad(ScreenManager manager)
