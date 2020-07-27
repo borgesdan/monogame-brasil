@@ -49,7 +49,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a câmera da tela.</summary>
         public Camera Camera { get => camera; set => camera = value; }
 
-        public List<Tuple<Polygon, Color>> DebugPolygons = new List<Tuple<Polygon, Color>>();
+        internal List<Tuple<Polygon, Color>> DebugPolygons = new List<Tuple<Polygon, Color>>();
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//

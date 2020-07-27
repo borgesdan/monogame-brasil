@@ -116,8 +116,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
         /// <summary>Obtém o Sprite atual que está sendo trabalhado.</summary>
         public Sprite CurrentSprite { get; protected set; } = null;
-
+        /// <summary>Obtém as caixas de colisão do atual frame.</summary>
         public List<CollisionBox> CollisionBoxesList { get; private set; } = new List<CollisionBox>();
+        /// <summary>Obtém as caixas de ataque do atual frame.</summary>
+        public List<AttackBox> AttackBoxesList { get; private set; } = new List<AttackBox>();
         /// <summary>Obtém ou define o nome da animação.</summary>
         public string Name { get; set; } = string.Empty;
 
@@ -244,6 +246,9 @@ namespace Microsoft.Xna.Framework.Graphics
             Frame = source.Frame;
             Name = source.Name;
             DrawPercentage = source.DrawPercentage;
+
+            source.CollisionBoxesList.ForEach(cb => CollisionBoxesList.Add(cb));
+            source.AttackBoxesList.ForEach(ab => AttackBoxesList.Add(ab));
         }
 
         //---------------------------------------//
@@ -278,14 +283,8 @@ namespace Microsoft.Xna.Framework.Graphics
             //Atualiza os valores para o desenho final.
             UpdateOrigin();
 
-            var cboxes = CurrentSprite.CollisionBoxes;
-            CollisionBoxesList.Clear();
-
-            foreach (CollisionBox cb in cboxes)
-            {
-                if (cb.Index == FrameIndex)
-                    CollisionBoxesList.Add(cb);
-            }
+            //Atualiza as caixas de colisão.
+            SetBoxes();
 
             //Verifica se é necessário usar 'destinationBounds' ao invés de 'Bounds' no método Draw.
             if (DrawPercentage == Vector2.One)
@@ -306,6 +305,24 @@ namespace Microsoft.Xna.Framework.Graphics
             OnUpdate?.Invoke(this, gameTime);
         }
         
+        private void SetBoxes()
+        {
+            CollisionBoxesList.Clear();
+            AttackBoxesList.Clear();
+
+            foreach (CollisionBox cb in CurrentSprite.CollisionBoxes)
+            {
+                if (cb.Index == FrameIndex)
+                    CollisionBoxesList.Add(cb);
+            }
+
+            foreach (AttackBox ab in CurrentSprite.AttackBoxes)
+            {
+                if (ab.Index == FrameIndex)
+                    AttackBoxesList.Add(ab);
+            }
+        }
+
         /// <summary>
         /// Atualiza os limites da animação.
         /// </summary>

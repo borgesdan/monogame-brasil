@@ -5,8 +5,9 @@
     /// </summary>
     public static class DEBUG
     {
-        public static Color BoundsColor = Color.Red;
-        public static Color CollisionBoxColor = Color.Green;
+        public static Color BoundsColor { get; set; } = Color.DarkBlue;
+        public static Color CollisionBoxColor { get; set; } = Color.Green;
+        public static Color AttackBoxColor { get; set; } = Color.Red;
 
         public static bool IsEnabled { get; private set; } = false;
         public static bool ShowBounds { get; set; } = false;

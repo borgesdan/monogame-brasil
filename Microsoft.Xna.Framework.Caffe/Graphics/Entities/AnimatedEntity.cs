@@ -28,8 +28,11 @@ namespace Microsoft.Xna.Framework.Graphics
         public int XRepeat { get; set; } = 0;
         /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo Y. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
         public int YRepeat { get; set; } = 0;
-
+        /// <summary>Obtém as caixas de colisão do atual frame.</summary>
         public List<CollisionBox> CollisionBoxes { get; private set; } = new List<CollisionBox>();
+        /// <summary>Obtém as caixas de ataque do atual frame.</summary>
+        public List<AttackBox> AttackBoxes { get; private set; } = new List<AttackBox>();
+
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -48,6 +51,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
             XRepeat = source.XRepeat;
             YRepeat = source.YRepeat;
+
+            source.CollisionBoxes.ForEach(cb => CollisionBoxes.Add(cb));
+            source.AttackBoxes.ForEach(ab => AttackBoxes.Add(ab));
         }
 
         /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
@@ -194,6 +200,14 @@ namespace Microsoft.Xna.Framework.Graphics
                     foreach(CollisionBox cb in CollisionBoxes)
                     {
                         Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(cb.Bounds), DEBUG.CollisionBoxColor));
+                    }
+                }
+
+                if (DEBUG.ShowAttackBox)
+                {
+                    foreach (AttackBox ab in AttackBoxes)
+                    {
+                        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(ab.Bounds), DEBUG.AttackBoxColor));
                     }
                 }
             }            
@@ -351,16 +365,22 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Bounds = new Rectangle(recX, recY, w, h);
             
-            //Adição dos boxes de colisão
-            var clist = CurrentAnimation.CollisionBoxesList;
+            //Adição dos boxes de colisão e ataque
             CollisionBoxes.Clear();
+            AttackBoxes.Clear();
 
-            foreach(CollisionBox cb in clist)
+            foreach(CollisionBox cb in CurrentAnimation.CollisionBoxesList)
             {
                 CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.Frame, Bounds);
                 CollisionBoxes.Add(relative);
             }
-            
+
+            foreach (AttackBox ab in CurrentAnimation.AttackBoxesList)
+            {
+                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.Frame, Bounds);
+                AttackBoxes.Add(relative);
+            }
+
             //Criação do polígono (BoundsR).
             Util.CreateBoundsR(this, totalOrigin, Bounds);
 

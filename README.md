@@ -4,7 +4,7 @@ Conjunto de classes para auxiliar no desenvolvimento de jogos 2D como a bibliote
 
 ## Início
 
-A solução MonoGameDevelop tem um projeto do tipo Shared nomeado Microsoft.Xna.Framework.Caffe para uso em seus projeto ao referenciá-lo.
+A solução tem um projeto do tipo Shared nomeado Microsoft.Xna.Framework.Caffe para uso em seus projeto ao referenciá-lo.
 
 Como destaques podemos citar:
 

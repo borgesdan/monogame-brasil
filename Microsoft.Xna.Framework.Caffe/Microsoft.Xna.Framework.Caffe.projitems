@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Compile\Compiler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Debug\DEBUG.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Debug\DebugPolygon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DEBUG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AttackBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision.cs" />
@@ -65,7 +65,9 @@
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Tile\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
 </Project>

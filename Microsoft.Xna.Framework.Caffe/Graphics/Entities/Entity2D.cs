@@ -62,7 +62,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 percentage = new Vector2(x, y);
             }
         }
+        /// <summary>Obtém ou define a porcentagem de largura do desenho. De 0f (0%) a 1f (100%).</summary>
         public float XDraw { get => DrawPercentage.X; set => DrawPercentage = new Vector2(value, YDraw); }
+        /// <summary>Obtém ou define a porcentagem de altura do desenho. De 0f (0%) a 1f (100%).</summary>
         public float YDraw { get => DrawPercentage.Y; set => DrawPercentage = new Vector2(XDraw, value); }
 
         //---------------------------------------//
@@ -149,7 +151,8 @@ namespace Microsoft.Xna.Framework.Graphics
             { 
                 if (DEBUG.ShowBounds)
                 {
-                    Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(Bounds), DEBUG.BoundsColor));                    
+                    //Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(Bounds), DEBUG.BoundsColor));
+                    Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
                 }
             }
         }        

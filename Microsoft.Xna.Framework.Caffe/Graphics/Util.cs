@@ -115,9 +115,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public static void CreateBoundsR(Entity2D e, Vector2 totalOrigin, Rectangle bounds)
         {
             var transform = e.Transform;
-            var boundsR = e.BoundsR;            
-
-            var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.Size), totalOrigin, transform.Rotation);
+            var boundsR = e.BoundsR;
+            
+            //var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.Size), totalOrigin, transform.Rotation);
+            var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.ScaledSize.ToPoint()), totalOrigin, transform.Rotation);
 
             boundsR.Points.Clear();
             boundsR.Points.Add(r.P1.ToVector2());
