@@ -9,9 +9,9 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que implementa a funcionalidade de uma colisão simples entre da tela. 
+    /// Componente que verifica uma colisão simples entre entidades. 
     /// </summary>
-    class CollisionComponent : EntityComponent
+    public class CollisionComponent : EntityComponent
     {   
         /// <summary>Define através deste evento a ação necessária que deve ocorrer ao acontecer uma colisão.</summary>
         public event CollisionAction OnCollision;
@@ -38,7 +38,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Inicializa uma nova instância da classe CollisionComponent como uma cópia de outro BasicCollisionComponent.
+        /// Inicializa uma nova instância da classe CollisionComponent como uma cópia de outro CollisionComponent.
         /// </summary>
         /// <param name="destination">A entidade a ser associada esse componente.</param>
         /// <param name="source">A origem para cópia.</param>

@@ -506,7 +506,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="source">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
         /// <param name="frames">A lista de frames no sprite.</param>
-        public void AddSprite(Sprite source, SpriteFrame[] frames)
+        public void AddSprite(Sprite source, params SpriteFrame[] frames)
         {
             Sprite sprite = new Sprite(source);
             sprite.Frames.Clear();
@@ -524,7 +524,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="source">O sprite a ser adicionado através de um arquivo na pasta Content.</param>
         /// <param name="frames">A lista de frames no sprite.</param>
-        public void AddSprite(string source, SpriteFrame[] frames)
+        public void AddSprite(string source, params SpriteFrame[] frames)
         {
             Sprite sprite = new Sprite(Game, source);
 

@@ -124,10 +124,13 @@ namespace Microsoft.Xna.Framework.Graphics
         public virtual void Update(GameTime gameTime)
         {
             //Define a velocidade da entidade.
-            if (Transform.Xv != 0)
-                Transform.X += Transform.Velocity.X;
-            if (Transform.Yv != 0)
-                Transform.Y += Transform.Velocity.Y;
+            //if (Transform.Xv != 0)
+            //    Transform.X += Transform.Velocity.X;
+            //if (Transform.Yv != 0)
+            //    Transform.Y += Transform.Velocity.Y;
+
+            //Transform.Velocity += Transform.VResistance;
+            Transform.Update();
 
             //Chama o evento.
             OnUpdate?.Invoke(this, gameTime);

@@ -371,13 +371,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
             foreach(CollisionBox cb in CurrentAnimation.CollisionBoxesList)
             {
-                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.Frame, Bounds);
+                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.Frame, Bounds, Transform.Scale, Transform.SpriteEffect);
                 CollisionBoxes.Add(relative);
             }
 
             foreach (AttackBox ab in CurrentAnimation.AttackBoxesList)
             {
-                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.Frame, Bounds);
+                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.Frame, Bounds, Transform.Scale, Transform.SpriteEffect);
                 AttackBoxes.Add(relative);
             }
 

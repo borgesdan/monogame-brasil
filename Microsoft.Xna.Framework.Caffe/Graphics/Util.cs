@@ -4,6 +4,8 @@
 // MonoGame.Caffe [1.0]             -----//
 //---------------------------------------//
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe de auxílio.</summary>
@@ -175,7 +177,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             return tempPosition;
-        }
+        }        
     }    
 
     //---------------------------------------//
@@ -192,13 +194,23 @@ namespace Microsoft.Xna.Framework.Graphics
     public delegate void CollisionAction(Entity2D source, GameTime gameTime, CollisionResult result, Entity2D collidedEntity);
 
     /// <summary>
+    /// Encapsula um método que tem os seguintes parâmetros definidos como resultado de uma colisão entre boxes.
+    /// </summary>
+    /// <param name="source">A entidade que implementa este delegate</param>
+    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+    /// <param name="boxes">As caixas recorrentes da colisão.</param>
+    /// <param name="result">O resultado da colisão entre os boxes.</param>
+    /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
+    public delegate void BoxCollisionAction<T1, T2>(Entity2D source, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result, Entity2D collidedEntity) where T1 : struct where T2 : struct;
+
+    /// <summary>
     /// Encapsula um metodo que tem os seguintes parâmetros definidos e que expõe o resultado final de uma ação.
     /// </summary>
     /// <typeparam name="T">O tipo do resultado.</typeparam>
     /// <param name="source">A entidade que implementa este delegate</param>
     /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
     /// <param name="result">O resultado exposto da ação a ser exposto.</param>
-    public delegate void ResultAction<T>(Entity2D source, GameTime gameTime, T result);
+    public delegate void ResultAction<in T>(Entity2D source, GameTime gameTime, T result);
 
     /// <summary>
     /// Encapsula um método que tem os seguintes parâmetros definidos para ser uma entidade atualizável.

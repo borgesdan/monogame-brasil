@@ -19,7 +19,7 @@ namespace Microsoft.Xna.Framework.Graphics
         float _rotation = 0f;
 
         //Só usada no construtor de cópia.
-        bool inCopy = false;
+        readonly bool inCopy = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -47,7 +47,9 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
         /// <summary>Obtém ou define a velocidade.</summary>
-        public Vector2 Velocity { get; set; } = Vector2.Zero;
+        public Vector2 Velocity { get; set; }
+        /// <summary>Obtém ou define o valor de resitência à velocidade definida.</summary>
+        public Vector2 VResistance { get; set; }
         /// <summary>Obtém o tamanho da entidade.</summary>
         public Point Size { get; internal set; } = Point.Zero;
         /// <summary>Obtém ou define a rotação. Valor padrão 0.</summary>
@@ -188,6 +190,19 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
+        /// <summary>
+        /// Atualiza os cálculos de velocidade.
+        /// </summary>
+        public void Update()
+        {
+            if (Xv != 0)
+                X += Velocity.X;
+            if (Yv != 0)
+                Y += Velocity.Y;
+
+            Velocity += VResistance;
+        }
+
         //Velocidade
 
         /// <summary>Interte a velocidade nos eixos X e Y.</summary>
@@ -215,17 +230,54 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Define a velocidade.</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>
-        public void SetVelocity(Vector2 velocity) 
-        { 
-            Velocity = velocity;
-        }
+        public void SetVelocity(float velocity)
+        {
+            SetVelocity(new Vector2(velocity));
+        }        
 
         /// <summary>Define a velocidade.</summary>
         /// <param name="x">A velocidade no eixo X.</param>
         /// <param name="y">A velocidade no eixo Y.</param>
         public void SetVelocity(float x, float y) 
-        { 
-            Velocity = new Vector2(x, y);
+        {
+            SetVelocity(new Vector2(x, y));
+        }
+
+        /// <summary>
+        /// Define a resistência à velocidade.
+        /// </summary>
+        /// <param name="x">Resistência no eixo X.</param>
+        /// <param name="y">Resistência no eixo Y.</param>
+        public void SetVResistance(float x, float y)
+        {
+            SetVResistance(new Vector2(x, y));
+        }
+
+        /// <summary>
+        /// Define a resistência à velocidade
+        /// </summary>
+        /// <param name="resistance">O vetor com os valores da resistência.</param>
+        public void SetVResistance(Vector2 resistance)
+        {
+            VResistance = resistance;
+        }
+
+        /// <summary>
+        /// Define a resistência à velocidade
+        /// </summary>
+        /// <param name="resistance">O vetor com os valores da resistência.</param>
+        /// <param name="velocity">O valor da velocidade caso precise redefiní-la.</param>
+        public void SetVResistance(Vector2 resistance, Vector2 velocity)
+        {
+            VResistance = resistance;
+            SetVelocity(velocity);
+        }
+
+        /// <summary>Define a velocidade.</summary>
+        /// <param name="velocity">A velocidade no eixo X e Y.</param>
+        public void SetVelocity(Vector2 velocity)
+        {
+            Velocity = velocity;
         }
 
         //Posição

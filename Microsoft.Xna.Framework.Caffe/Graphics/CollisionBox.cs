@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -111,16 +112,34 @@ namespace Microsoft.Xna.Framework.Graphics
                 else
                     break;
             }
-        }    
-        
-        public CollisionBox GetRelativePosition(Rectangle frame, Rectangle target)
+        }        
+
+        /// <summary>
+        /// Obtém a posição relativa da caixa no frame independente da escala deste.
+        /// </summary>
+        /// <param name="frame">O frame que o mesmo index do box.</param>
+        /// <param name="target">O frame do mesmo index mas com o tamanho final para o calculo.</param>
+        /// <param name="scale">O valor da escala do target.</param>
+        /// <param name="flip">O SpriteEffect pertencente ao estado atual da entidade.</param>
+        public CollisionBox GetRelativePosition(Rectangle frame, Rectangle target, Vector2 scale, SpriteEffects flip)
         {
             int x = frame.X - this.X;
             int y = frame.Y - this.Y;
             int w = frame.Width - this.Width;
-            int h = frame.Height - this.Height;
+            int h = frame.Height - this.Height;            
 
-            Rectangle rectangle = new Rectangle(target.X - x, target.Top - y, target.Width - w, target.Height - h);
+            Rectangle rectangle = new Rectangle(target.X - (int)(x * scale.X), target.Top - (int)(y * scale.Y), target.Width - (int)(w * scale.X), target.Height - (int)(h * scale.Y));
+
+            if(flip == SpriteEffects.FlipHorizontally)
+            {
+                Point rotated = Rotation.GetRotation(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
+                rectangle.X = rotated.X - rectangle.Width;
+            }
+            if (flip == SpriteEffects.FlipVertically)
+            {
+                Point rotated = Rotation.GetRotation(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
+                rectangle.Y = rotated.Y - rectangle.Height;
+            }
 
             CollisionBox cb = new CollisionBox(Index, rectangle, CanCollide, CanTakeDamage, DamagePercentage,
                 T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12);

@@ -131,7 +131,52 @@ namespace Microsoft.Xna.Framework.Graphics
                 return true;
             else
                 return false;
-        }              
+        }
+
+        /// <summary>
+        /// Retorna a subtração da intersecção entre dois retângulos
+        /// </summary>
+        public static Vector2 IntersectionSubtract(Rectangle one, Rectangle two)
+        {
+            Rectangle rcr = Rectangle.Intersect(one, two);
+            Vector2 sub = Vector2.Zero;
+
+            //Lógica de colisão entre retângulos
+
+            //Se na intersecção entre os retângulos
+            //A altura é maior que a largura da intersecção,
+            //Então significa que foi uma colisão lateral.
+            if (rcr.Height > rcr.Width)
+            {
+                //Verificamos o limite.
+                //Se a ponta direita é maior que a ponta esquerda do outro retângulo
+                //e essa ponta está dentro do outro retângulo.
+                //Então encontramos o valor de subtração.
+                //A lógica serve para o restante.
+                if (one.Right > two.Left && one.Right < two.Right)
+                {
+                    sub.X -= one.Right - two.Left;
+                }
+                else if (one.Left < two.Right && one.Left > two.Left)
+                {
+                    sub.X -= one.Left - two.Right;
+                }
+            }
+            //O contrário é uma colisão vertical.
+            if (rcr.Width > rcr.Height)
+            {
+                if (one.Bottom > two.Top && one.Bottom < two.Bottom)
+                {
+                    sub.Y -= one.Bottom - two.Top;
+                }
+                else if (one.Top < two.Bottom && one.Top > two.Top)
+                {
+                    sub.Y -= one.Top - two.Bottom;
+                }
+            }
+
+            return sub;
+        }
 
         /// <summary>
         /// Verifica se um polígono colidiu com outro.

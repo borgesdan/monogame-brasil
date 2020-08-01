@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Compile\Compiler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DEBUG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AttackBox.cs" />

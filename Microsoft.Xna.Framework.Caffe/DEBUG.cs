@@ -10,9 +10,9 @@
         public static Color AttackBoxColor { get; set; } = Color.Red;
 
         public static bool IsEnabled { get; private set; } = false;
-        public static bool ShowBounds { get; set; } = false;
-        public static bool ShowCollisionBox { get; set; } = false;
-        public static bool ShowAttackBox { get; set; } = false;
+        public static bool ShowBounds { get; set; } = true;
+        public static bool ShowCollisionBox { get; set; } = true;
+        public static bool ShowAttackBox { get; set; } = true;
 
         public static void EnableDebug(bool value)
         {
