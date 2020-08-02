@@ -111,8 +111,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
                         outOfView = true;
-
-                        return;
+                        //return;
                     }
                 }
             }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.Policy;
-using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -18,7 +15,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public BoxCollisionAction<AttackBox, AttackBox> AxACollision;
         /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um retângulo.</summary>
         public BoxCollisionAction<CollisionBox, Rectangle> CxBCollision;
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um retângulo.</summary>
+        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um AttackBox e um retângulo.</summary>
         public BoxCollisionAction<AttackBox, Rectangle> AxBCollision;
 
         /// <summary>
@@ -121,14 +118,30 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         AttackBox eab = e.AttackBoxes[i];
 
+                        for (int j = 0; j < o.CollisionBoxes.Count; j++)
+                        {
+                            CollisionBox ocb = o.CollisionBoxes[j];
+
+                            if(Collision.BoundsCollision(eab.Bounds, ocb.Bounds))
+                            {
+                                result.Intersection = Rectangle.Intersect(eab.Bounds, ocb.Bounds);
+                                result.Subtract = Collision.IntersectionSubtract(eab.Bounds, ocb.Bounds);
+
+                                CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ocb, eab), result, other);
+                            }
+                        }
+
                         for (int j = 0; j < o.AttackBoxes.Count; j++)
                         {
                             AttackBox oab = o.AttackBoxes[j];
 
-                            result.Intersection = Rectangle.Intersect(eab.Bounds, oab.Bounds);
-                            result.Subtract = Collision.IntersectionSubtract(eab.Bounds, oab.Bounds);
+                            if (Collision.BoundsCollision(eab.Bounds, oab.Bounds))
+                            {
+                                result.Intersection = Rectangle.Intersect(eab.Bounds, oab.Bounds);
+                                result.Subtract = Collision.IntersectionSubtract(eab.Bounds, oab.Bounds);
 
-                            AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(eab, oab), result, other);
+                                AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(eab, oab), result, other);
+                            }
                         }                        
 
                         if (Collision.BoundsCollision(e.AttackBoxes[i].Bounds, other.Bounds))
@@ -139,61 +152,6 @@ namespace Microsoft.Xna.Framework.Graphics
                             AxBCollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, Rectangle>(eab, other.Bounds), result, other);
                         }
                     }
-
-                    //Uso do for ao invés do foreach pois a coleção era modificada ao usar o UpdateBounds no evento.
-
-                    //foreach (CollisionBox cb in e.CollisionBoxes)
-                    //{
-                    //    foreach(CollisionBox ocb in o.CollisionBoxes)
-                    //    {
-                    //        if(Collision.BoundsCollision(cb.Bounds, ocb.Bounds))
-                    //        {
-                    //            result.Intersection = Rectangle.Intersect(cb.Bounds, ocb.Bounds);
-                    //            result.Subtract = Collision.IntersectionSubtract(cb.Bounds, ocb.Bounds);
-
-                    //            CxCCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, CollisionBox>(cb, ocb), result, other);
-                    //        }
-                    //    }
-
-                    //    foreach (AttackBox oab in o.AttackBoxes)
-                    //    {
-                    //        if (Collision.BoundsCollision(cb.Bounds, oab.Bounds))
-                    //        {
-                    //            result.Intersection = Rectangle.Intersect(cb.Bounds, oab.Bounds);
-                    //            result.Subtract = Collision.IntersectionSubtract(cb.Bounds, oab.Bounds);
-
-                    //            CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(cb, oab), result, other);
-                    //        }
-                    //    }
-
-                    //    if(Collision.BoundsCollision(cb.Bounds, other.Bounds))
-                    //    {
-                    //        result.Intersection = Rectangle.Intersect(cb.Bounds, other.Bounds);
-                    //        result.Subtract = Collision.IntersectionSubtract(cb.Bounds, other.Bounds);
-
-                    //        CxBCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, Rectangle>(cb, other.Bounds), result, other);
-                    //    }
-                    //}
-
-                    ////Procura todos os AttackBox da entidade
-                    //foreach (AttackBox ab in e.AttackBoxes)
-                    //{
-                    //    foreach(AttackBox oab in o.AttackBoxes)
-                    //    {                            
-                    //        result.Intersection = Rectangle.Intersect(ab.Bounds, oab.Bounds);
-                    //        result.Subtract = Collision.IntersectionSubtract(ab.Bounds, oab.Bounds);
-
-                    //        AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(ab, oab), result, other);
-                    //    }
-
-                    //    if (Collision.BoundsCollision(ab.Bounds, other.Bounds))
-                    //    {                            
-                    //        result.Intersection = Rectangle.Intersect(ab.Bounds, other.Bounds);
-                    //        result.Subtract = Collision.IntersectionSubtract(ab.Bounds, other.Bounds);
-
-                    //        AxBCollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, Rectangle>(ab, other.Bounds), result, other);
-                    //    }
-                    //}
                 }
             }
 

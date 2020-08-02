@@ -95,10 +95,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
         /// <param name="bounds">Os limites do objeto.</param>
-        public void Focus(Game game, Rectangle bounds)
+        public Camera Focus(Game game, Rectangle bounds)
         {
             X = bounds.Center.X - game.Window.ClientBounds.GetHalfW();
             Y = bounds.Center.Y - game.Window.ClientBounds.GetHalfH();
+
+            return this;
 
             //X = bounds.X;
             //Y = bounds.Y;
