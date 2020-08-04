@@ -68,9 +68,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Movimenta a câmera no sentido específicado.</summary>
         /// <param name="amount">O valor a ser movida a câmera.</param>
-        public void Move(Vector2 amount)
+        public Camera Move(Vector2 amount)
         {
             Position += amount;
+            return this;
         }
 
         /// <summary>
@@ -78,16 +79,17 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="x">O valor do movimento no eixo X.</param>
         /// <param name="y">O valor do movimento no eixo Y.</param>
-        public void Move(float x, float y)
+        public Camera Move(float x, float y)
         {
-            Move(new Vector2(x, y));
+            return Move(new Vector2(x, y));
         }
 
         /// <summary>Define a escala da câmera nos valores X e Y.</summary>
         /// <param name="value">O valor do zoom</param>
-        public void Zoom(float value)
+        public Camera Zoom(float value)
         {
             Scale = new Vector2(value);
+            return this;
         }
 
         /// <summary>

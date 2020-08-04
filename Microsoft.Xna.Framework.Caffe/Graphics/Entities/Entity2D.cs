@@ -150,12 +150,19 @@ namespace Microsoft.Xna.Framework.Graphics
             OnDraw?.Invoke(this, gameTime, spriteBatch);
             Components.Draw(gameTime, spriteBatch);
 
-            if (DEBUG.IsEnabled && Screen != null)
-            { 
+            //if (DEBUG.IsEnabled && Screen != null)
+            //{ 
+            //    if (DEBUG.ShowBounds)
+            //    {
+            //        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
+            //    }
+            //}
+
+            if (DEBUG.IsEnabled)
+            {
                 if (DEBUG.ShowBounds)
                 {
-                    //Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(Bounds), DEBUG.BoundsColor));
-                    Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
+                    DEBUG.Polygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
                 }
             }
         }        

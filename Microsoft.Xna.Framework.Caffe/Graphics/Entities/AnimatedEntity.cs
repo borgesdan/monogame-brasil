@@ -111,7 +111,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
                         outOfView = true;
-                        //return;
+                        return;
                     }
                 }
             }
@@ -192,13 +192,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
             base.Draw(gameTime, spriteBatch);
 
-            if (DEBUG.IsEnabled && Screen != null)
+            if (DEBUG.IsEnabled)
             {
                 if(DEBUG.ShowCollisionBox)
                 {
                     foreach(CollisionBox cb in CollisionBoxes)
                     {
-                        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(cb.Bounds), DEBUG.CollisionBoxColor));
+                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(new Polygon(cb.Bounds), DEBUG.CollisionBoxColor));
                     }
                 }
 
@@ -206,7 +206,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     foreach (AttackBox ab in AttackBoxes)
                     {
-                        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(new Polygon(ab.Bounds), DEBUG.AttackBoxColor));
+                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(new Polygon(ab.Bounds), DEBUG.AttackBoxColor));
                     }
                 }
             }            

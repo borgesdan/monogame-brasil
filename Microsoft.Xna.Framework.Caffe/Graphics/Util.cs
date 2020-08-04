@@ -177,7 +177,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             return tempPosition;
-        }        
+        } 
     }    
 
     //---------------------------------------//
