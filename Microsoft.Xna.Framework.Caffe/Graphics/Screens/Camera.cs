@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 using System.Collections.Generic;
@@ -55,7 +51,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public static Camera Create()
         {
             return new Camera(Vector2.Zero, Vector2.One);
-        }    
+        }
         
         /// <summary>
         /// Obtém o tamanho total do campo de exibição da câmera.
@@ -103,9 +99,6 @@ namespace Microsoft.Xna.Framework.Graphics
             Y = bounds.Center.Y - game.Window.ClientBounds.GetHalfH();
 
             return this;
-
-            //X = bounds.X;
-            //Y = bounds.Y;
         }
 
         /// <summary>Obtém a Matrix a ser usada no método SpriteBatch.Begin(transformMatrix).</summary>

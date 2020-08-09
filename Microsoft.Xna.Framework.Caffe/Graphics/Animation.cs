@@ -1,34 +1,28 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System.Collections.Generic;
 using System;
-using System.Xml.Schema;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma animação de sprites.</summary>
-    public class Animation : IDisposable, IUpdateDrawable, IBoundable
+    public class Animation : IDisposable, IUpdateDrawable, IBoundsable
     {
-        #region VARIAVEIS
+        #region CAMPOS
 
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
-        protected int elapsedGameTime = 0;
-        protected Vector2 origin = Vector2.Zero;                
-        protected bool useDestinationBounds = false;
-        protected Rectangle destinationBounds = Rectangle.Empty;
-        protected bool disposed = false;
-
-        private int time = 0;        
-        private Vector2 drawPercentage = Vector2.One;
-        private int _index = 0;
-        private int _findex = 0;
+        int _index = 0;
+        int _findex = 0;
+        int time = 0;
+        int elapsedGameTime = 0;        
+        bool useDestinationBounds = false;
+        bool disposed = false;
+        Rectangle destinationBounds = Rectangle.Empty;
+        Vector2 origin = Vector2.Zero;
+        Vector2 drawPercentage = Vector2.One;        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -123,7 +117,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define o nome da animação.</summary>
         public string Name { get; set; } = string.Empty;
 
-        /// <summary>Retorna o valor True se a animação chegou ao fim.</summary>
+        /// <summary>Retorna True se a animação chegou ao fim.</summary>
         public bool IsFinished
         {
             get
@@ -175,6 +169,7 @@ namespace Microsoft.Xna.Framework.Graphics
         
         /// <summary>
         /// Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).
+        /// </summary>
         public Vector2 DrawPercentage 
         {
             get => drawPercentage;
@@ -211,6 +206,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância da classe Animation.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="time">O tempo de cada quadro da animação.</param>
+        /// <param name="name">O nome da animação.</param>
         public Animation(Game game, int time, string name)
         {
             Game = game;
@@ -255,20 +251,19 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         INDEXADOR           -----//
         //---------------------------------------//
 
-        /// <summary>Retorna um Sprite contido na propriedade Sprites através de um index.</summary>
+        /// <summary>Obtém ou define um Sprite contido na propriedade Sprites através de um index.</summary>
         /// <param name="index">Posição na lista a ser acessada.</param>  
         public Sprite this[int index]
         {
             get => Sprites[index];        
-            set => Sprites[index] = value;
+            set => Sprites[index] = value;            
         }
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
 
-        /// <summary>Atualiza a animação.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        /// <inheritdoc />
         public virtual void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
@@ -435,8 +430,7 @@ namespace Microsoft.Xna.Framework.Graphics
             UpdateBounds();
         }
 
-        /// <summary>Método de desenho.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        /// <inheritdoc />
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible ||        //Se a animação está em modo visível
@@ -539,8 +533,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//
-
-        /// <summary>Libera os recursos dessa instância.</summary>
+        
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);

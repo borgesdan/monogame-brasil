@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System.Collections.Generic;
 using System;
@@ -10,7 +6,7 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe que representa uma tela de jogo com suas entidades e camadas.</summary>
-    public class LayeredScreen : Screen
+    public class LayeredScreen : Screen, IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -292,11 +288,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 e.Screen = this;
                 FrontStaticEntities.Add(e);
             }
-        }         
+        }
 
         //---------------------------------------//
         //-----         DISPOSE             -----//
-        //---------------------------------------//                
+        //---------------------------------------// 
 
         protected override void Dispose(bool disposing)
         {

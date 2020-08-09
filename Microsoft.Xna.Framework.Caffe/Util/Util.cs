@@ -1,54 +1,12 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
-using System;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Microsoft.Xna.Framework.Graphics
+namespace Microsoft.Xna.Framework
 {
     /// <summary>Classe de auxílio.</summary>
     public static class Util
     {
-        //---------------------------------------//
-        //-----         EXTENSÃO            -----//
-        //---------------------------------------//
-
-        /// <summary>
-        /// Obtém a metade da largura de um retângulo.
-        /// </summary>
-        public static int GetHalfW(this Rectangle rectangle)
-        {
-            if (rectangle.Width != 0)
-                return rectangle.Width / 2;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Obtém a metade da altura de um retângulo.
-        /// </summary>
-        public static int GetHalfH(this Rectangle rectangle)
-        {
-            if (rectangle.Height != 0)
-                return rectangle.Height / 2;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Obtém a metade do tamanho de um retângulo.
-        /// </summary>
-        public static Point GetHalf(this Rectangle rectangle)
-        {
-            return new Point(rectangle.GetHalfW(), rectangle.GetHalfH());
-        }
-
-        //---------------------------------------//
-        //-----         UTILIDADE           -----//
-        //---------------------------------------//
-
         /// <summary>Obtém o tamanho de de um objeto Point multiplicado por uma escala.</summary>
         /// <param name="size">O tamanho da entidade.</param>
         /// <param name="scale">A escala da entidade.</param>
@@ -178,54 +136,5 @@ namespace Microsoft.Xna.Framework.Graphics
 
             return tempPosition;
         } 
-    }    
-
-    //---------------------------------------//
-    //-----         DELEGATES           -----//
-    //---------------------------------------// 
-
-    /// <summary>
-    /// Encapsula um método que tem os seguintes parâmetros definidos para o resultado de uma colisão entre entidades.
-    /// </summary>
-    /// <param name="source">A entidade que implementa este delegate</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    /// <param name="intersection">A área de intersecção entre as duas entidades.</param>
-    /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
-    public delegate void CollisionAction(Entity2D source, GameTime gameTime, CollisionResult result, Entity2D collidedEntity);
-
-    /// <summary>
-    /// Encapsula um método que tem os seguintes parâmetros definidos como resultado de uma colisão entre boxes.
-    /// </summary>
-    /// <param name="source">A entidade que implementa este delegate</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    /// <param name="boxes">As caixas recorrentes da colisão.</param>
-    /// <param name="result">O resultado da colisão entre os boxes.</param>
-    /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
-    public delegate void BoxCollisionAction<T1, T2>(Entity2D source, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result, Entity2D collidedEntity) where T1 : struct where T2 : struct;
-
-    /// <summary>
-    /// Encapsula um metodo que tem os seguintes parâmetros definidos e que expõe o resultado final de uma ação.
-    /// </summary>
-    /// <typeparam name="T">O tipo do resultado.</typeparam>
-    /// <param name="source">A entidade que implementa este delegate</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    /// <param name="result">O resultado exposto da ação a ser exposto.</param>
-    public delegate void ResultAction<in T>(Entity2D source, GameTime gameTime, T result);
-
-    /// <summary>
-    /// Encapsula um método que tem os seguintes parâmetros definidos para ser uma entidade atualizável.
-    /// </summary>
-    /// <typeparam name="T">Um tipo que implementa este delegate.</typeparam>
-    /// <param name="source">Um tipo que implementa este delegate.</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    public delegate void UpdateAction<in T>(T source, GameTime gameTime);
-
-    /// <summary>
-    /// Encapsula um método que tem os seguintes parâmetros definidos para ser uma entidade desenhável.
-    /// </summary>
-    /// <typeparam name="T">Um tipo que implementa este delegate.</typeparam>
-    /// <param name="source">Um tipo que implementa este delegate.</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    /// <param name="spriteBatch">Um objeto SpriteBatch para desenho do jogo.</param>
-    public delegate void DrawAction<in T>(T source, GameTime gameTime, SpriteBatch spriteBatch);
+    }        
 }

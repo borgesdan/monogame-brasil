@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 using System.Text;
@@ -60,6 +56,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A entidade a ser copiada.</param>
         public TextEntity(TextEntity source) : base(source)
         {
+            //Para uma cópia profunda
+
             //var glyphs = source.Font.Glyphs;
             //List<Rectangle> gs = new List<Rectangle>();
             //List<Rectangle> cs = new List<Rectangle>();

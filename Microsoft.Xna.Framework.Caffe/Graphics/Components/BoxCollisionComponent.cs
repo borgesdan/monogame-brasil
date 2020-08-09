@@ -1,4 +1,4 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020.
 
 namespace Microsoft.Xna.Framework.Graphics
 {

@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 // PolygonCollision, IntervalDistance, ProjectPolygon by
 //
@@ -55,49 +51,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     //Cria o resultado da colisão entre retângulos.
                     RectangleCollisionResult rcr = new RectangleCollisionResult();
-                    rcr.Intersection = Rectangle.Intersect(entity.Bounds, other.Bounds);
-
-                    //O vetor de subtração a ser completado e adicionado.
-                    Vector2 sub = Vector2.Zero;
+                    rcr.Intersection = Rectangle.Intersect(entity.Bounds, other.Bounds);                    
 
                     var eb = entity.Bounds;
                     var ob = other.Bounds;
 
-                    //Lógica de colisão entre retângulos
-
-                    //Se na intersecção entre os retângulos
-                    //A altura é maior que a largura da intersecção,
-                    //Então significa que foi uma colisão lateral.
-                    if(rcr.Intersection.Height > rcr.Intersection.Width)
-                    {
-                        //Verificamos o limite.
-                        //Se a ponta direita é maior que a ponta esquerda do outro retângulo
-                        //e essa ponta está dentro do outro retângulo.
-                        //Então encontramos o valor de subtração.
-                        //A lógica serve para o restante.
-                        if (eb.Right > ob.Left && eb.Right < ob.Right)
-                        {
-                            sub.X -= eb.Right - ob.Left;
-                        }
-                        else if(eb.Left < ob.Right && eb.Left > ob.Left)
-                        {
-                            sub.X -= eb.Left - ob.Right;
-                        }
-                    }
-                    //O contrário é uma colisão vertical.
-                    if (rcr.Intersection.Width > rcr.Intersection.Height)
-                    {
-                        if (eb.Bottom > ob.Top && eb.Bottom < ob.Bottom)
-                        {
-                            sub.Y -= eb.Bottom - ob.Top;
-                        }
-                        else if(eb.Top < ob.Bottom && eb.Top > ob.Top)
-                        {
-                            sub.Y -= eb.Top - ob.Bottom;
-                        }
-                    }
-
-                    rcr.Subtract = sub;
+                    //O vetor de subtração a ser completado e adicionado.
+                    rcr.Subtract = IntersectionSubtract(eb, ob);
 
                     result.HasCollided = true;
                     result.Type = CollisionType.Rectangle;
@@ -134,7 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Retorna a subtração da intersecção entre dois retângulos
+        /// Retorna a subtração (o quanto é necessário para voltar a posição antes da colisão) da intersecção entre dois retângulos
         /// </summary>
         public static Vector2 IntersectionSubtract(Rectangle one, Rectangle two)
         {
@@ -183,14 +143,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="polygonA">O primeiro polígono.</param>
         /// <param name="polygonB">O segundo polígono.</param>
-        /// <param name="velocity">A sua velocidade.</param>
+        /// <param name="velocity">A velocidade do primeiro polígono.</param>
         // Check if polygon A is going to collide with polygon B for the given velocity
         public static PolygonCollisionResult PolygonCollision(Polygon polygonA, Polygon polygonB, Vector2 velocity)
         {
-            //Código base disponível em:
-            //https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
-            //Autor: Laurent Cozic
-
             PolygonCollisionResult result = new PolygonCollisionResult();
             result.Intersect = true;
             result.WillIntersect = true;

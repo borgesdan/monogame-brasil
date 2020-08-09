@@ -1,15 +1,11 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma entidade atualizável, com propriedades de transformação, e desenhável em tela.</summary>
-    public abstract class Entity2D : IUpdateDrawable, IBoundable, IDisposable
+    public abstract class Entity2D : IUpdateDrawable, IBoundsable, IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -19,11 +15,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a disponilidade de atualização e desenho da entidade.</summary>
         protected EnableGroup enable = EnableGroup.Available;
         private Vector2 percentage = Vector2.One;
+        protected Polygon poly = new Polygon();
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-        
+
         /// <summary>Obtém as propriedades de transformação.</summary>
         public TransformGroup Transform { get; protected set; }
         /// <summary>Obtém ou define a origem.</summary>
@@ -123,13 +120,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime)
         {
-            //Define a velocidade da entidade.
-            //if (Transform.Xv != 0)
-            //    Transform.X += Transform.Velocity.X;
-            //if (Transform.Yv != 0)
-            //    Transform.Y += Transform.Velocity.Y;
-
-            //Transform.Velocity += Transform.VResistance;
             Transform.Update();
 
             //Chama o evento.
@@ -150,18 +140,11 @@ namespace Microsoft.Xna.Framework.Graphics
             OnDraw?.Invoke(this, gameTime, spriteBatch);
             Components.Draw(gameTime, spriteBatch);
 
-            //if (DEBUG.IsEnabled && Screen != null)
-            //{ 
-            //    if (DEBUG.ShowBounds)
-            //    {
-            //        Screen.DebugPolygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
-            //    }
-            //}
-
             if (DEBUG.IsEnabled)
             {
                 if (DEBUG.ShowBounds)
                 {
+                    poly.Set(BoundsR);
                     DEBUG.Polygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
                 }
             }

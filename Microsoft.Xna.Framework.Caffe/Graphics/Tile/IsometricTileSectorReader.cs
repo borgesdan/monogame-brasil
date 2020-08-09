@@ -1,14 +1,20 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics.Tile
 {
-    public class IsometricTileSectorReader : IUpdateDrawable, IIsometricReader
+    /// <summary>
+    /// Representa um leitor de setores de tiles isometricos.
+    /// </summary>
+    public class IsometricTileSectorReader : IUpdateDrawable, IIsometricReader, IDisposable
     {
-        private List<short[]> total = new List<short[]>();
-        private IsometricTileSector[,] array = null;
-        private Screen _screen = null;
-        private short[,] map = null;
-        private Dictionary<Point, IsometricTileSector> point_sector = new Dictionary<Point, IsometricTileSector>();
+        short[,] map = null;
+        List<short[]> total = new List<short[]>();
+        IsometricTileSector[,] array = null;
+        Screen _screen = null;        
+        Dictionary<Point, IsometricTileSector> point_sector = new Dictionary<Point, IsometricTileSector>();
 
         /// <summary>Obtém a lista de tiles ordenados pelo método Read(). A chave Point representa a linha e a coluna onde se encontra o Tile.</summary>
         public Dictionary<Point, IsometricTile> Tiles { get; private set; } = new Dictionary<Point, IsometricTile>();
@@ -34,11 +40,10 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         /// Inicializa uma nova instância de SectorReader.
         /// </summary>
         /// <param name="sectors">Os setores a serem lidos.</param>
-        public IsometricTileSectorReader(Game game, IsometricTileSector[,] sectors)
+        public IsometricTileSectorReader(IsometricTileSector[,] sectors)
         {
             array = sectors;
         }
-
 
         /// <summary>
         /// Lê o array contido nos setores e ordena as posições dos tiles.
@@ -54,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
             for (int t = 0; t < total.Capacity; t++)
                 total.Add(null);
 
-            //Confero a linha
+            //Confere a linha
             for (int row = 0; row < d0; row++)
             {
                 //Confiro a coluna
@@ -164,7 +169,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         }
 
         /// <summary>
-        /// Obtém a coordenada de um ponto no mapa informando a linha e a coluna de um setor
+        /// Obtém a coordenada de um ponto no mapa geral informando a linha e a coluna de um setor.
         /// </summary>
         /// <param name="sector">O setor informado.</param>
         /// <param name="row">A linha desejada.</param>
@@ -178,14 +183,15 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         }
 
         /// <summary>
-        /// Obtém um Tile informando seu setor e sua posição no setor
+        /// Obtém um Tile informando sua posição no mapa. Retorna null se não for encontrado.
         /// </summary>
         /// <param name="sector">O setor.</param>
         /// <param name="row">A linha desejada.</param>
         /// <param name="column">A coluna desejada.</param>
         public IsometricTile GetTile(Point sector, int row, int column)
         {
-            return Tiles[GetPoint(sector, row, column)];
+            Point p = GetPoint(sector, row, column);
+            return GetTile(p.X, p.Y);
         }
 
         /// <summary>
@@ -201,24 +207,22 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
                 return null;
         }
 
+        /// <summary>
+        /// Obtém o mapa.
+        /// </summary>
         public short[,] GetMap()
         {
             return (short[,])map.Clone();
         }
 
-        /// <summary>
-        /// Atualiza os tiles.
-        /// </summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        /// <inheritdoc />
         public void Update(GameTime gameTime)
         {
             foreach (var t in Tiles.Values)
                 t.Update(gameTime);
         }
 
-        /// <summary>Desenha os tiles.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
+        /// <inheritdoc/>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (var t in Tiles)
@@ -235,6 +239,39 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
                     t.Value.Draw(gameTime, spriteBatch);
                 }                
             }
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.array = null;
+                this.map = null;
+                this.point_sector = null;
+                this.total.Clear();
+                this.total = null;
+                this._screen = null;
+                this.Tiles.Clear();
+                this.Tiles = null;                
+            }
+
+            disposed = true;
         }
     }
 }

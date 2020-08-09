@@ -1,12 +1,8 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Enumeração que representa o tipo de alinhamento na tela de uma entidade.</summary>
+    /// <summary>Enumeração que representa o tipo de alinhamento na tela de um objeto.</summary>
     public enum AlignType : byte
     {
         Center = 1,

@@ -1,4 +1,6 @@
-﻿using Microsoft.CSharp;
+﻿// Danilo Borges Santos, 2020.
+
+using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
 using System.Globalization;
@@ -7,14 +9,14 @@ using System.Reflection;
 namespace Microsoft.Xna.Framework.Compile
 {
     /// <summary>
-    /// Classe responsável por compilar código C#.
+    /// Classe responsável por compilar código C# de um arquivo externo.
     /// </summary>
     public static class Compiler
     {        
         /// <summary>
         /// Obtém os resultados da tentativa de compilação.
         /// </summary>
-        public static CompilerResults Results { get; private set; } = null;
+        public static CompilerResults Results { get; private set; } = new CompilerResults(new TempFileCollection());
 
         /// <summary>
         /// Compila o código C# e retorna uma instância do tipo especificado. Retorna null caso ocorra algum erro.

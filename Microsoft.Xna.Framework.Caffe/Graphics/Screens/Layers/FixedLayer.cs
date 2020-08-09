@@ -1,15 +1,11 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Classe que representa uma camada com uma posição fixa na tela, mas que pode
+    /// Classe que representa uma camada de uma tela com uma posição fixa, mas que pode
     /// se mover até um determinado limite.
     /// </summary>
     public class FixedLayer : Layer

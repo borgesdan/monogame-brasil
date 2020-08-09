@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 

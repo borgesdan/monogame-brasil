@@ -1,11 +1,6 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -201,6 +196,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 Game = null;
                 Manager = null;
                 Name = null;
+                SubManager = null;                
             }
 
             disposed = true;

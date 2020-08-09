@@ -198,7 +198,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     foreach(CollisionBox cb in CollisionBoxes)
                     {
-                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(new Polygon(cb.Bounds), DEBUG.CollisionBoxColor));
+                        poly.Set(cb.Bounds);
+                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(poly, DEBUG.CollisionBoxColor));
                     }
                 }
 
@@ -206,7 +207,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     foreach (AttackBox ab in AttackBoxes)
                     {
-                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(new Polygon(ab.Bounds), DEBUG.AttackBoxColor));
+                        poly.Set(ab.Bounds);
+                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(poly, DEBUG.AttackBoxColor));
                     }
                 }
             }            

@@ -47,11 +47,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMapReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSectorReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GamePadHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
@@ -61,6 +62,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Extension.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

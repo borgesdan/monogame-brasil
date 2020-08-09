@@ -1,15 +1,11 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Classe que representa uma camada que se repete ao infinito nos eixos X e Y.
+    /// Classe que representa uma camada de uma tela que se repete ao infinito nos eixos X e Y.
     /// </summary>
     class InfiniteLayer : Layer
     {

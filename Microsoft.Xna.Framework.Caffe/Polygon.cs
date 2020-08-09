@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 // Polygon class by
 //
@@ -93,12 +89,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="rectangle">Define os pontos do polígono através de um retângulo.</param>
         public Polygon(Rectangle rectangle)
         {
-            Points.Add(new Vector2(rectangle.Left, rectangle.Top));
-            Points.Add(new Vector2(rectangle.Right, rectangle.Top));
-            Points.Add(new Vector2(rectangle.Right, rectangle.Bottom));
-            Points.Add(new Vector2(rectangle.Left, rectangle.Bottom));
-
-            BuildEdges();
+            Set(rectangle);
         }
 
         /// <summary>
@@ -107,12 +98,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="points">Define os pontos do polígono.</param>
         public Polygon(params Vector2[] points)
         {
-            foreach(var p in points)
-            {
-                Points.Add(p);
-            }
-
-            BuildEdges();
+            Set(points);
         }
 
         //---------------------------------------//
@@ -172,6 +158,48 @@ namespace Microsoft.Xna.Framework
                 Vector2 p = Points[i];
                 Points[i] = new Vector2(p.X + x, p.Y + y);
             }
+        }
+
+        /// <summary>
+        /// Define os pontos do polígono.
+        /// </summary>
+        /// <param name="rectangle">Define os pontos do polígono através de um retângulo.</param>
+        public void Set(Rectangle rectangle)
+        {
+            Points.Clear();
+
+            Points.Add(new Vector2(rectangle.Left, rectangle.Top));
+            Points.Add(new Vector2(rectangle.Right, rectangle.Top));
+            Points.Add(new Vector2(rectangle.Right, rectangle.Bottom));
+            Points.Add(new Vector2(rectangle.Left, rectangle.Bottom));
+
+            BuildEdges();
+        }
+
+        /// <summary>
+        /// Define os pontos do polígono.
+        /// </summary>
+        /// <param name="points">A lista de pontos.</param>
+        public void Set(params Vector2[] points)
+        {
+            Points.Clear();
+
+            foreach (var p in points)
+            {
+                Points.Add(p);
+            }
+
+            BuildEdges();
+        }
+
+        /// <summary>
+        /// Define os pontos do polígono.
+        /// </summary>
+        /// <param name="polygon">O polígono a ser copiado</param>
+        public void Set(Polygon polygon)
+        {
+            Points = polygon.Points;
+            Edges = polygon.Edges;
         }
     }
 }

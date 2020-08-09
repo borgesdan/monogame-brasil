@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -12,7 +8,7 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Gerenciamento das telas do jogo.</summary>
-    public class ScreenManager : IManager
+    public class ScreenManager : IManager, IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIES          -----//
@@ -56,13 +52,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 
         /// <summary>Obtém uma tela informando seu nome.</summary>  
-        public Screen this[string name]
-        {
-            get
-            {
-                return Find(name);
-            }
-        }
+        public Screen this[string name] => Find(name);
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
@@ -260,12 +250,9 @@ namespace Microsoft.Xna.Framework.Graphics
             if (disposing)
             {
                 Game = null;
-
                 Screens.Clear();
                 Screens = null;
-
-                Active = null;
-                
+                Active = null;                
                 LoadingScreen = null;
             }                
 

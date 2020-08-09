@@ -1,9 +1,13 @@
-﻿namespace Microsoft.Xna.Framework.Graphics.Tile
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+
+namespace Microsoft.Xna.Framework.Graphics.Tile
 {
     /// <summary>
     /// Representa um tile isométrico.
     /// </summary>
-    public class IsometricTile : IUpdateDrawable
+    public class IsometricTile : IUpdateDrawable, IDisposable
     {
         private static bool defSize = false;
         private static int tWidth = 170;
@@ -40,14 +44,12 @@
         /// <summary>
         /// Inicializa uma nova instância de Tile.
         /// </summary>
-        public IsometricTile() 
-        {
-        }
+        public IsometricTile() { }
 
         /// <summary>
         /// Inicializa uma nova instância de Tile.
         /// </summary>
-        /// <param name="animation">Define a animação do topo do Tile</param>
+        /// <param name="animation">Define a animação do Tile</param>
         public IsometricTile(Animation animation)
         {
             Animation = animation;
@@ -58,7 +60,7 @@
         /// Inicializa uma nova instância de Tile.
         /// </summary>
         /// <param name="game">A instância corrente da classe Game.</param>
-        /// <param name="sprite">O objeto sprite a ser utilizado para a animação.</param>
+        /// <param name="sprite">O objeto sprite a ser utilizado para criar uma animação.</param>
         /// <param name="frames">Os frames do sprite.</param>
         public IsometricTile(Game game, Sprite sprite, params SpriteFrame[] frames)
         {
@@ -87,6 +89,11 @@
             }
         }
 
+        /// <summary>
+        /// Define o tamanho dos tiles para cálculos posteriores.
+        /// </summary>
+        /// <param name="width">A largura.</param>
+        /// <param name="height">A altura.</param>
         public static void SetTileSize(int width, int height)
         {
             TileWidth = width;
@@ -114,21 +121,42 @@
             Animation?.UpdateBounds();
         }
 
-        /// <summary>
-        /// Atualiza o tile.
-        /// </summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        ///<inheritdoc/>
         public void Update(GameTime gameTime)
         {
             Animation?.Update(gameTime);
         }
         
-        /// <summary>Desenha o tile.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
+        ///<inheritdoc/>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Animation?.Draw(gameTime, spriteBatch);
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.Animation = null;
+            }
+
+            disposed = true;
         }
     }
 }

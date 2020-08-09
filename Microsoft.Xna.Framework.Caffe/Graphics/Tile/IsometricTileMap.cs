@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics.Tile
 {
     /// <summary>
     /// Representa o mapa de tiles.
     /// </summary>
-    public class IsometricTileMap
+    public class IsometricTileMap : IDisposable
     {
         // O mapa com a numeração dos tiles.
-        private readonly short[,] mapArray = null;        
+        private short[,] mapArray = null;        
 
         /// <summary>
         /// Obtém ou define a tabela de índices com seus respectivos Tiles.
@@ -41,6 +44,34 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         public short[,] GetMap()
         {
             return (short[,])mapArray.Clone();
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.mapArray = null;
+                this.Table.Clear();
+                this.Table = null;
+            }
+
+            disposed = true;
         }
     }
 }

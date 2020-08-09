@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 // PolygonCollisionResult by
 //
@@ -36,19 +32,13 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Enumera os tipos de colisão.
     /// </summary>
-    public enum CollisionType
+    public enum CollisionType : byte
     {
-        /// <summary>
-        /// Não houve colisão ou não é possível estabelecer o tipo dela.
-        /// </summary>
+        /// <summary>Não houve colisão ou não é possível estabelecer o tipo dela.</summary>
         None,
-        /// <summary>
-        /// Colisão entre retângulos nas rotacionados.
-        /// </summary>
+        /// <summary>Colisão entre retângulos nas rotacionados.</summary>
         Rectangle,
-        /// <summary>
-        /// Colisão entre polígonos (caso algum dos retângulos esteja rotacionado).
-        /// </summary>
+        /// <summary>Colisão entre polígonos (caso algum dos retângulos esteja rotacionado).</summary>
         Polygon
     }
 
@@ -72,7 +62,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Vector2 Subtract;
 
         /// <summary>
-        /// Cria uma nova instância de RectangleCollisionResult.
+        /// Cria um objeto de RectangleCollisionResult.
         /// </summary>
         /// <param name="intersection">A intersecção da colisão entre retângulos.</param>
         /// <param name="distance">O quanto um retângulo intersectou o outro.</param>
@@ -129,7 +119,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Vector2 Subtract; //MinimumTranslationVector
 
         /// <summary>
-        /// Cria uma nova instância de PolygonCollisionResult.
+        /// Cria um objeto de PolygonCollisionResult.
         /// </summary>
         /// <param name="willIntersect">Define se o polígono está previsto a colidir baseado em sua velocidade.</param>
         /// <param name="intersect">Define se o polígono estpa intersectando outro polígono (Colidiu).</param>
@@ -174,7 +164,7 @@ namespace Microsoft.Xna.Framework.Graphics
     }
 
     //---------------------------------------//
-    //-----         COLISÃO           -----//
+    //-----         COLISÃO             -----//
     //---------------------------------------//
 
     /// <summary>
@@ -187,7 +177,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public bool HasCollided;
         /// <summary>
-        /// O tipo da colisão (Retângulo ou polígonos (retângulo rotacionado)).
+        /// Obtém tipo da colisão (Retângulo ou polígonos (retângulo rotacionado)).
         /// </summary>
         public CollisionType Type;
 
@@ -202,7 +192,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public PolygonCollisionResult PolygonResult;
 
         /// <summary>
-        /// Cria uma nova instância de CollisionResult.
+        /// Cria um objeto de CollisionResult.
         /// </summary>
         /// <param name="result">True caso houve uma colisão.</param>
         /// <param name="type">True caso a colisão foi entre retângulos não rotacionados.</param>

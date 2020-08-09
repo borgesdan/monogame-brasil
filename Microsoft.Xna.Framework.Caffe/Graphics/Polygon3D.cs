@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Representa um polígono com vetores em coordenada 3D.
+    /// Representa um polígono com vetores em uma projeção 3D.
     /// </summary>
-    public class Polygon3D
+    public class Polygon3D : IDisposable
     {
         GraphicsDevice graphics = null;        
         VertexPositionColor[] vertices = null;
         Polygon _poly = new Polygon();
 
+        /// <summary>
+        /// Obtém ou define a cor das bordas do polígono.
+        /// </summary>
         public Color Color { get; set; } = Color.White;
 
         /// <summary>
-        /// Obtém ou define o objeto Effect para desenho.
+        /// Obtém ou define o objeto BasicEffect para desenho.
         /// </summary>
         public BasicEffect Effect { get; set; } 
         
@@ -34,18 +40,16 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Inicializa uma nova instância de DebugPolygon.
+        /// Inicializa uma nova instância de Polygon3D.
         /// </summary>
-        /// <param name="game">A instância atual da classe Game.</param>
+        /// <param name="game">A instância da classe Game.</param>
         /// <param name="polygon">O polígono de referência</param>
-        /// <param name="color">A cor do polígono.</param>
+        /// <param name="color">A cor da borda do polígono.</param>
         public Polygon3D(Game game, Polygon polygon, Color color)
         {
             graphics = game.GraphicsDevice;
-            Color = color;
-            
+            Color = color;            
             Poly = polygon;
-
             InitializeBasicEffect();
         }
 
@@ -80,6 +84,33 @@ namespace Microsoft.Xna.Framework.Graphics
                 pass.Apply();
                 graphics.DrawUserPrimitives(PrimitiveType.LineStrip, vertices, 0, vertices.Length - 1);                
             }
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.Effect = null;
+                this._poly = null;
+                this.graphics = null;
+            }
+
+            disposed = true;
         }
     }
 }

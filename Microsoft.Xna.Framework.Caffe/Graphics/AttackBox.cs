@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+    /// <summary>
+    /// Representa um retângulo relativo a um SpriteFrame de um Sprite para colisões que envolvam ataques.
+    /// </summary>
     public struct AttackBox : IEquatable<AttackBox>
     {
         /// <summary>O index relativo ao frame do sprite.</summary>
@@ -45,12 +48,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Define uma valor que pode ser recuperado futuramente na tag 12.</summary>
         public byte T12;
 
-        /// <summary>Obtém um retângulo com a posição e tamanho do frame dentro do SpriteSheet.</summary>
+        /// <summary>Obtém um retângulo com a posição e tamanho do box dentro do Sprite.</summary>
         public Rectangle Bounds
         {
             get => new Rectangle(X, Y, Width, Height);
         }
 
+        /// <summary>
+        /// Cria um objeto AttackBox.
+        /// </summary>
+        /// <param name="index">O index relativo ao frame do Sprite.</param>
+        /// <param name="power">O valor de força do ataque.</param>
+        /// <param name="rectangle">O retângulo que representa a posição e o tamanho do box.</param>
+        /// <param name="tags">Os valores das tags.</param>
         public AttackBox(int index, int power, Rectangle rectangle, params byte[] tags)
         {
             Index = index;
@@ -105,12 +115,12 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Obtém a posição relativa da caixa no frame independente da escala deste.
+        /// Obtém a posição relativa da caixa no SpriteFrame independente da escala deste.
         /// </summary>
-        /// <param name="frame">O frame que o mesmo index do box.</param>
+        /// <param name="frame">O frame referente ao index do box.</param>
         /// <param name="target">O frame do mesmo index mas com o tamanho final para o calculo.</param>
-        /// <param name="scale">O tamanho da escala do target.</param>
-        /// <param name="flip">O SpriteEffect pertencente ao estado atual da entidade.</param>
+        /// <param name="scale">O tamanho da escala do target (default Vector.One).</param>
+        /// <param name="flip">O SpriteEffect pertencente ao estado atual da entidade (default SpriteEffects.None).</param>
         public AttackBox GetRelativePosition(Rectangle frame, Rectangle target, Vector2 scale, SpriteEffects flip)
         {
             int x = frame.X - this.X;

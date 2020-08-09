@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics.Tile
 {
     /// <summary>
     /// Representa um setor de um mapa de tiles.
     /// </summary>
-    public class IsometricTileSector
+    public class IsometricTileSector : IDisposable
     {
         short[,] array = null;
 
@@ -45,6 +48,34 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         public short[,] GetMap()
         {
             return (short[,])array.Clone();
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.array = null;
+                this.Table.Clear();
+                this.Table = null;
+            }
+
+            disposed = true;
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Classe que representa uma camada que não sofre modificação em sua posição e tamanho,
+    /// Classe que representa uma camada de uma tela que não sofre modificação em sua posição e tamanho,
     /// e não é afetada pela posição da câmera da tela associada.
     /// </summary>
     public class StaticLayer : Layer
@@ -77,9 +73,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (!Enable.IsVisible)
                 return;
-
-            //Resetamos a view pois a visão é estática.
-            //SetDefaultView();
 
             GraphicsDevice device = Screen.Game.GraphicsDevice;
             Viewport oldView = device.Viewport;

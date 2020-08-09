@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 using System.Collections.Generic;
@@ -11,12 +7,11 @@ using Microsoft.Xna.Framework.Input;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Gerencia telas que se encontram dentro de uma tela principal.</summary>
-    public class SubScreenManager : IManager
+    public class SubScreenManager : IManager, IDisposable
     {
         //---------------------------------------//
         //-----         VARIÁVEIES          -----//
-        //---------------------------------------//  
-
+        //---------------------------------------// 
         private bool disposed = false;
 
         //----------------------------------------//
@@ -46,13 +41,8 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Obtém uma tela informando seu nome.</summary>  
-        public Screen this[string name]
-        {
-            get
-            {
-                return SubScreens.Find(x => x.Name.Equals(name));
-            }
-        }
+        /// <param name="name">O nome da tela.</param>
+        public Screen this[string name] => SubScreens.Find(x => x.Name.Equals(name));
 
         /// <summary>
         /// Define uma cena carregada ao seu estado inicial.

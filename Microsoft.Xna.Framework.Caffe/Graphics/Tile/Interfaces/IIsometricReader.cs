@@ -1,5 +1,8 @@
 ﻿namespace Microsoft.Xna.Framework.Graphics.Tile
 {
+    /// <summary>
+    /// Representa um leitor de tiles isometricos.
+    /// </summary>
     public interface IIsometricReader
     {
         /// <summary>

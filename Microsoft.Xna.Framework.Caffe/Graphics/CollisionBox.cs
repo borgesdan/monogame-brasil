@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -54,11 +53,25 @@ namespace Microsoft.Xna.Framework.Graphics
         public Rectangle Bounds
         {
             get => new Rectangle(X, Y, Width, Height);
-        }        
+        }
 
+        /// <summary>
+        /// Cria um novo objeto CollisionBox.
+        /// </summary>
+        /// <param name="index">O index relativo ao SpriteFrame.</param>
+        /// <param name="rectangle">O retângulo que representa a posição e o tamanho do box.</param>
         public CollisionBox(int index, Rectangle rectangle) : this(index, rectangle, true, true, 1f) 
         { }
 
+        /// <summary>
+        /// Cria um novo objeto CollisionBox.
+        /// </summary>
+        /// <param name="index">O index relativo ao SpriteFrame.</param>
+        /// <param name="rectangle">O retângulo que representa a posição e o tamanho do box.</param>
+        /// <param name="canCollide">True se o box deve está habilitado para colisão.</param>
+        /// <param name="canTakeDamage">True se o box deve receber dano.</param>
+        /// <param name="damagePercentage">O valor em porcentagem para a colisão.</param>
+        /// <param name="tags">Os valores das tags.</param>
         public CollisionBox(int index, Rectangle rectangle, bool canCollide, bool canTakeDamage, float damagePercentage, params byte[] tags)
         {
             Index = index;

@@ -1,15 +1,11 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe que guarda uma textura e seus frames.</summary>
+    /// <summary>Classe que armazena uma Texture2D e seus frames.</summary>
     public class Sprite : IDisposable
     {
         //---------------------------------------//
@@ -23,10 +19,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Obtém a textura para desenho.</summary>
         public Texture2D Texture { get; private set; } = null;
-
         /// <summary>Obtém ou define a lista de frames da textura.</summary>
         public List<SpriteFrame> Frames { get; set; } = new List<SpriteFrame>();
-
         /// <summary>Obtém ou define a lista de caixas de colisão.</summary>
         public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
         /// <summary>Obtém ou define a lista de caixas de ataque.</summary>
@@ -38,7 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Inicia uma nova instância da classe Sprite.</summary>
         /// <param name="game">Instância atual da classe Game.</param>
-        /// <param name="sourceName">O caminho do arquivo de textura na pasta Content.</param>
+        /// <param name="sourceName">O caminho do arquivo da textura na pasta Content.</param>
         public Sprite(Game game, string sourceName) : this(game.Content.Load<Texture2D>(sourceName)) { }
 
         /// <summary>Inicia uma nova instância da classe Sprite.</summary>
@@ -46,23 +40,23 @@ namespace Microsoft.Xna.Framework.Graphics
         public Sprite(Texture2D texture) : this(texture, false) { }
 
         /// <summary>
-        /// Inicia uma nova instância da classe Sprite informando o caminho da textura 
-        /// e se um frame do tamanho da textura será adicionado a propriedade Frames.
+        /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="game">Instância da classe Game.</param>
         /// <param name="sourceName">O caminho do arquivo de textura na pasta Content.</param>
-        /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da textura na lista de Frames.</param>
+        /// <param name="addSingleFrame">
+        /// Defina True para adicionar um SpriteFrame do tamanho da Texture2D na propriedade Frames.
+        /// </param>
         public Sprite(Game game, string sourceName, bool addSingleFrame) : this(game.Content.Load<Texture2D>(sourceName), addSingleFrame) { }
 
         /// <summary>
-        /// Inicia uma nova instância da classe Sprite informando a textura 
-        /// e se um frame do tamanho da textura será adicionado a propriedade Frames.
+        /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="texture">Um objeto da classe Texture2D.</param>        
-        /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da textura na lista de Frames.</param>
+        /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da Texture2D na lista de Frames.</param>
         public Sprite(Texture2D texture, bool addSingleFrame)
         {
-            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            Texture = texture;
 
             if (addSingleFrame)
             {
@@ -74,24 +68,26 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância da classe Sprite como cópida de outra instância.
         /// </summary>
-        /// <param name="source">A instância a ser copiada.</param>
+        /// <param name="source">A instância a ser copiada. A propriedade Texture será refereciada.</param>
         public Sprite(Sprite source)
-        {
-            this.Frames = new List<SpriteFrame>(source.Frames);
-            //this.Texture = game.Content.Load<Texture2D>(source.Texture.Name);
+        {            
+            source.Frames.ForEach(f => Frames.Add(f));
+            source.CollisionBoxes.ForEach(c => CollisionBoxes.Add(c));
+            source.AttackBoxes.ForEach(a => AttackBoxes.Add(a));
+            
             this.Texture = source.Texture;
+
+            //Para uma cópia profunda de Texture2D é necessário esse código:
+            //this.Texture = game.Content.Load<Texture2D>(source.Texture.Name);
         }
 
         //---------------------------------------//
         //-----         INDEXADOR           -----//
         //---------------------------------------//
 
-        /// <summary>Retorna um SpriteFrame contido na propriedade TextureFrames através de um index.</summary>
+        /// <summary>Retorna um SpriteFrame contido na propriedade Frames através de um index.</summary>
         /// <param name="index">Posição na lista a ser acessada.</param>        
-        public SpriteFrame this[int index]
-        {
-            get => Frames[index];
-        }
+        public SpriteFrame this[int index] => Frames[index];
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
@@ -125,13 +121,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Cria um nova instância da classe Sprite com uma textura retangular preenchida com a cor definida.
         /// </summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        /// <param name="size">O tamanho do retângulo</param>
+        /// <param name="game">A instância da classe Game.</param>
+        /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor definida.</param>
         public static Sprite GetRectangle(Game game, Point size, Color color)
         {            
             Color[] data;
-            Texture2D texture;
+            Texture2D texture;            
 
             //Inicializa a textura com o tamanho definido no retângulo.
             texture = new Texture2D(game.GraphicsDevice, size.X, size.Y);
@@ -193,8 +189,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//
-
-        /// <summary>Libera os recursos da classe.</summary>
+        
         public void Dispose()
         {
             Dispose(true);
@@ -212,6 +207,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 Frames.Clear();
                 Frames = null;
+
+                CollisionBoxes.Clear();
+                CollisionBoxes = null;
+
+                AttackBoxes.Clear();
+                AttackBoxes = null;
             }                
 
             disposed = true;

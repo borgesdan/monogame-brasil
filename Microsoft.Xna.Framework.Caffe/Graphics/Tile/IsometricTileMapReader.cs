@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics.Tile
 {
     /// <summary>
     /// Representa um leitor de mapas de tiles que os desenha na tela.
     /// </summary>
-    public class IsometricTileMapReader : IUpdateDrawable, IIsometricReader
+    public class IsometricTileMapReader : IUpdateDrawable, IIsometricReader, IDisposable
     {
         private short[,] array = null;
         private Screen _screen = null;
@@ -44,7 +47,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         /// Inicializa uma nova instância de MapReader.
         /// </summary>
         /// <param name="map">O mapa de tiles a ser lido.</param>
-        public IsometricTileMapReader(Game game, IsometricTileMap map)
+        public IsometricTileMapReader(IsometricTileMap map)
         {
             Map = map;
         }
@@ -143,6 +146,36 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
                     t.Value.Draw(gameTime, spriteBatch);
                 }
             }
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed = false;
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.array = null;
+                this.Map = null;
+                this.Tiles.Clear();
+                this.Tiles = null;
+                this._screen = null;
+            }
+
+            disposed = true;
         }
     }
 }
