@@ -52,7 +52,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GamePadHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\InputCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
