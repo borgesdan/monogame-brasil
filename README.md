@@ -1,4 +1,4 @@
-# MonoGame.Caffe
+# MonoGame Caffe
 
 Conjunto de classes para auxiliar no desenvolvimento de jogos 2D como a biblioteca C# MonoGame.
 
