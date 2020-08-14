@@ -33,7 +33,7 @@ namespace Microsoft.Xna.Framework.Input
         
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
-        /// <summary>Obtém ou define o tempo para reconhecimento de um duplo clique.</summary>
+        /// <summary>Obtém ou define o tempo para reconhecimento de um duplo clique em milisegundos.</summary>
         public int DoubleClickDelay { get; set; } = 900;
         /// <summary>Obtém o estado atual do mouse.</summary>
         public MouseState State { get; private set; }

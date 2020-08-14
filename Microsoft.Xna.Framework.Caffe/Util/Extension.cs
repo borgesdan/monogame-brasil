@@ -2,6 +2,9 @@
 
 namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Classe que expõe funções de extensão.
+    /// </summary>
     public static class Extension
     {
         /// <summary>

@@ -2,6 +2,7 @@
 
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -57,25 +58,33 @@ namespace Microsoft.Xna.Framework.Graphics
         public TextEntity(TextEntity source) : base(source)
         {
             //Para uma cópia profunda
-
-            //var glyphs = source.Font.Glyphs;
-            //List<Rectangle> gs = new List<Rectangle>();
-            //List<Rectangle> cs = new List<Rectangle>();
-            //List<Vector3> ks = new List<Vector3>();
-            //List<char> chars = new List<char>();
-            //foreach (var g in glyphs)
-            //{
-            //    chars.Add(g.Character);
-            //    gs.Add(g.BoundsInTexture);
-            //    cs.Add(g.Cropping);
-            //    ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
-            //}
-
-            //SpriteFont font = new SpriteFont(source.Font.Texture, gs, cs, chars, source.Font.LineSpacing, source.Font.Spacing, ks, source.Font.DefaultCharacter);
-
+            //Font = GetDeeepCopy(source.Font);
             
             Font = source.Font;
             TextBuilder = new StringBuilder(source.TextBuilder.ToString());
+        }
+
+        /// <summary>
+        /// Obtém uma nova instância de um SpriteFont através de um cópia profunda.
+        /// </summary>
+        /// <param name="source">A origem para cópia.</param>
+        public SpriteFont GetDeeepCopy(SpriteFont source)
+        {
+            var glyphs = source.Glyphs;
+            List<Rectangle> gs = new List<Rectangle>();
+            List<Rectangle> cs = new List<Rectangle>();
+            List<Vector3> ks = new List<Vector3>();
+            List<char> chars = new List<char>();
+            foreach (var g in glyphs)
+            {
+                chars.Add(g.Character);
+                gs.Add(g.BoundsInTexture);
+                cs.Add(g.Cropping);
+                ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
+            }
+
+            SpriteFont font = new SpriteFont(source.Texture, gs, cs, chars, source.LineSpacing, source.Spacing, ks, source.DefaultCharacter);
+            return font;
         }
 
         /// <summary>

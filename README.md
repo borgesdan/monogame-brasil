@@ -1,24 +1,18 @@
 # MonoGame Caffe
 
-Conjunto de classes para auxiliar no desenvolvimento de jogos 2D como a biblioteca C# MonoGame.
+Conjunto de classes e estruturas em C# para auxiliar no desenvolvimento de jogos 2D com a biblioteca MonoGame.
 
 ## Início
 
-A solução tem um projeto do tipo Shared nomeado Microsoft.Xna.Framework.Caffe para uso em seus projeto ao referenciá-lo.
+Ao referenciar o arquivo Microsoft.Xna.Framework.Caffe.shproj ou adicionar qualquer arquivo ao seu projeto é dado acesso a funcionalidades para o desenvolvimento dos seus jogos.
 
 Como destaques podemos citar:
 
-1º) ScreenManager (gerenciador de telas): recebe instâncias da classe Screen (telas do jogo). Você pode trocar de telas ao invocar o método ScreenManager.Change(string: name) onde o argumento 'name' é o nome da tela. Também é possível carregar uma tela em paralelo utilizando o conceito de "load screen".
+1º) ScreenManager: Gerencia as telas do jogo. Você pode fazer transições ao invocar o método ScreenManager.Change(string: name) onde o parâmetro 'name' é o nome da tela que se deseja ativar. É possível também fazer "load screens" para carregamento de telas em paralalo
 
-2º)InputManager: que expõe os GamePad's, o teclado e o mouse de maneira acessíveis para facilitar a verifcação de entradas do usuário.
+2º) InputManager: Expõe os GamePad's, o teclado e o mouse de maneira acessíveis para facilitar a verifcação de entradas do usuário.
 
-3º)Entity2D: são entidades a serem usadas na tela do jogo.
-
-Entre outras funcionalidades.
-
-### Pré-requisitos
-
-Por ser um projeto C# do tipo Shared, os requisitos necessários é seu projeto suportar a linguagem e sua compatibilidade com as instruções da biblioteca. Basicamente, referencie o projeto 'Microsoft.Xna.Framework.Caffe' ao seu e faça os ajustes necessários.
+3º) Entity2D: são os atores dos seus jogos. As entidades fornecem acesso a animações, texto, e rápido acesso a transformações: rotação, escala e posição.
 
 
 ## Exemplos
@@ -27,16 +21,16 @@ O projeto trabalha com o conceito de entidades (Entity2D), telas (Screen), geren
 
 ### ScreenManager e 'loading screen'
 
-Você pode fazer, através do gerenciador de telas (ScreenManager), uma tela de carregamento. Para isso criamos uma instância dela e chamamos o método.
+Você pode fazer, através do gerenciador de telas (ScreenManager), uma tela de carregamento paralela. Para isso criamos uma instância dela e chamamos o método.
 
 ```
 ScreenManager manager = new ScreenManger(game);
 manager.LoadAsyc(string name, bool callWhenIsFinished);
 ```
 
-onde os argumentos 'name' e 'callWhenIsFinished' no método LoadAsync são respectivamente: o nome da tela a ser carredada de modo assíncrono e se a tela será chamada automaticamente ao fim do carregamento.
+onde os parâmetros 'name' e 'callWhenIsFinished' no método LoadAsync são respectivamente: o nome da tela a ser carredada de modo assíncrono e se a tela será chamada automaticamente ao fim do carregamento.
 
-ScreenManager também expõe outros métodos para gerenciamento de telas e você pode usá-lo na sua classe principal, normalmente 'Game1', chamando seu método Update e Draw nos respectivos lugares.
+ScreenManager também expõe outros métodos para gerenciamento de telas e você pode usá-lo na sua classe principal, normalmente 'Game1', ao chamar o método Update e Draw nos respectivos lugares.
 
 ```
 public class Game1...
@@ -50,7 +44,6 @@ manager = new ScreenManager(this);
 manager.Update(gameTime);
 
 //in draw
-
 spriteBatch.Begin();
 manager.Draw(gameTime, spriteBatch);
 spriteBatch.End();
@@ -59,7 +52,7 @@ spriteBatch.End();
 
 ### Telas e Entidades
 
-Hierarquicamente, temos o gerenciador de telas (ScreenManager), que recebe as telas (Screen) e dentro das telas temos as entidade (Entity2D).
+Hierarquicamente, temos o gerenciador de telas (ScreenManager), que recebe as telas (Screen) e dentro destas temos as entidade (Entity2D).
 
 ```
 ScreenManager manager = new ScreenManager(game)
@@ -78,7 +71,7 @@ Recomenda-se criar uma classe herdada de Screen e criar sua própria tela a part
 ```
 public class MinhaTela : Screen
 {
-	pubblic override void Load() { LoadState = ScreenLoadState.Loading; }
+	public override void Load() { LoadState = ScreenLoadState.Loading; }
 }
 
 ```
@@ -90,8 +83,8 @@ Temos também o InputManager, que expõe os acessos ao GamePad, Keyboard e Mouse
 ```
 InputManager input = new InputManager(game);
 if(input.Keyboard.IsPress(Keys.Right))
-//andar para frente...
-
+	entity.Transform.Move(-5,0) //andar para esquerda...
+	
 ```
 
 Entre outras funcionalidades.
@@ -103,11 +96,8 @@ Entre outras funcionalidades.
 
 ## Versão
 
-Versão 1.0 (Conillon) (29/03/2020)
-
-Versão 0.5 (Alho-Poró)
-
-O projeto Monogame.Caffe está em desenvolvimento. Todavia, a partir daqui já é possível construir projetos. Sinta-se a vontade para isso, e principalmente para envios de sugestões.
+Versão:............... 1.0 (Conillon)
+Última atualização:... (13/08/2020)
 
 ## Autor
 

@@ -7,14 +7,14 @@ using System;
 namespace Microsoft.Xna.Framework
 {
     /// <summary>
-    /// Classe que representa um modo de visualização do desenvolvedor.
+    /// Representa um modo de visualização do desenvolvedor.
     /// </summary>
     public static class DEBUG
     {
         private static Polygon3D poly = null;
-        public static List<Tuple<Polygon, Color>> Polygons { get; set; } = new List<Tuple<Polygon, Color>>();
-
-        public static Color BoundsColor { get; set; } = Color.DarkBlue;
+        public static List<Tuple<Polygon, Color>> Polygons { get; set; } = new List<Tuple<Polygon, Color>>();        
+        
+        public static Color BoundsColor { get; set; } = Color.DarkBlue;        
         public static Color CollisionBoxColor { get; set; } = Color.Green;
         public static Color AttackBoxColor { get; set; } = Color.Red;
 
@@ -22,13 +22,14 @@ namespace Microsoft.Xna.Framework
         public static bool ShowBounds { get; set; } = true;
         public static bool ShowCollisionBox { get; set; } = true;
         public static bool ShowAttackBox { get; set; } = true;
+        public static bool ShowText { get; set; } = true;        
 
         public static void EnableDebug(bool value)
         {
             IsEnabled = value;
         }
 
-        public static void Draw(Game game)
+        public static void Draw(Game game, SpriteBatch spriteBatch)
         {
             if (poly == null)
                 poly = new Polygon3D(game, new Polygon(), Color.White);

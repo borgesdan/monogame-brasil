@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Microsoft.Xna.Framework
 {
     /// <summary>
-    /// Descreve um retângulo 2D rotacionado.
+    /// Descreve um retângulo rotacionado.
     /// </summary>
     public struct RotatedRectangle : IEquatable<RotatedRectangle>
     {
@@ -30,13 +30,13 @@ namespace Microsoft.Xna.Framework
         //---------------------------------------//
 
         /// <summary>
-        /// Cria uma nova instância de RotatedRectangle com suas posições rotacionadas.
+        /// Cria uma novo objeto de RotatedRectangle.
         /// </summary>
         /// <param name="p1">O valor da coordenada Top-Left.</param>
         /// <param name="p2">O valor da coordenada Top-right.</param>
         /// <param name="p3">O valor da coordenada Bottom-Right.</param>
         /// <param name="p4">O valor da coordenada Bottom-Left.</param>
-        /// <param name="center">O valor do centor do retângulo.</param>
+        /// <param name="center">O valor do centro do retângulo.</param>
         public RotatedRectangle(Point p1, Point p2, Point p3, Point p4, Point center)
         {
             P1 = p1;
@@ -47,25 +47,21 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Cria uma nova instância de RotatedRectangle com suas posições rotacionadas.
+        /// Cria um novo objeto de RotatedRectangle informando os argumentos para uma rotação de um Rectangle.
         /// </summary>
-        /// <param name="rectangle">O retângulo.</param>
+        /// <param name="rectangle">O retângulo a ser rotacionado.</param>
         /// <param name="origin">A origem da rotação.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
-        public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees) : this(Rotation.GetRotation(rectangle, origin, degrees)) { }        
-
-        /// <summary>
-        /// Cria uma nova instância de RotatedRectangle como cópia de outro RotatedRectangle.
-        /// </summary>
-        /// <param name="source">O retângulo para cópia.</param>
-        public RotatedRectangle(RotatedRectangle source)
+        public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees)
         {
-            P1 = source.P1;
-            P2 = source.P2;
-            P3 = source.P3;
-            P4 = source.P4;
-            Center = source.Center;
-        }
+            RotatedRectangle r = Rotation.GetRotation(rectangle, origin, degrees);
+
+            P1 = r.P1;
+            P2 = r.P2;
+            P3 = r.P3;
+            P4 = r.P4;
+            Center = r.Center;
+        }        
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//

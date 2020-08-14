@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Microsoft.Xna.Framework
 {
-    /// <summary>Classe de auxílio.</summary>
+    /// <summary>Classe que expõe funções de auxílio.</summary>
     public static class Util
     {
-        /// <summary>Obtém o tamanho de de um objeto Point multiplicado por uma escala.</summary>
+        /// <summary>Obtém o tamanho de uma entidade multiplicado por uma escala.</summary>
         /// <param name="size">O tamanho da entidade.</param>
         /// <param name="scale">A escala da entidade.</param>
         public static Vector2 GetScaledSize(Point size, Vector2 scale)
@@ -20,7 +20,7 @@ namespace Microsoft.Xna.Framework
         /// Calcula se os limites de uma entidade em uma viewport se encontra no espaço de desenho da janela de jogo.
         /// </summary>
         /// <param name="game">A instância atual classe Game.</param>
-        /// <param name="viewport">A viewport em que se encontra a entidade.</param>
+        /// <param name="camera">O objeto câmera a ser usado para os devidos cálculos.</param>
         /// <param name="bounds">Os limites da entidade.</param>
         public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
         {
@@ -70,8 +70,11 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Calcula o BoundsR no UpdateBounds na classe Entity.
+        /// Calcula o BoundsR (os limites de um retângulo rotacionado) de uma entidade.
         /// </summary>
+        /// <param name="e">A entidade para os cálculos.</param>
+        /// <param name="totalOrigin">A origem para efeitos de cálculos.</param>
+        /// <param name="bounds">Os limites da entidade.</param>
         public static void CreateBoundsR(Entity2D e, Vector2 totalOrigin, Rectangle bounds)
         {
             var transform = e.Transform;
@@ -90,10 +93,10 @@ namespace Microsoft.Xna.Framework
             boundsR.BuildEdges();
         }
 
-        /// <summary>Define a posição do ator relativa a um retângulo.</summary>   
+        /// <summary>Define a posição do ator relativo aos limites de um retângulo.</summary>   
         /// <param name="view">O retângulo para alinhamento.</param>
-        /// <param name="actorScaledSize">O tamanho total do ator.</param>
-        /// <param name="align">O tipo de alinhamento da tela.</param>
+        /// <param name="actorScaledSize">O tamanho final do ator.</param>
+        /// <param name="align">O tipo de alinhamento.</param>
         public static Vector2 AlignActor(Rectangle rectangle, Vector2 actorScaledSize, AlignType align)
         {
             int w = rectangle.Width;

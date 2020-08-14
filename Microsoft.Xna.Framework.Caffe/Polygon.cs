@@ -42,7 +42,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public List<Vector2> Points { get; set; } = new List<Vector2>();
         /// <summary>
-        /// Obtém ou define as bordas do polígono.
+        /// Obtém as bordas do polígono.
         /// </summary>
         public List<Vector2> Edges { get; private set; } = new List<Vector2>();
 
@@ -79,8 +79,8 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public Polygon(Polygon source)
         {
-            Points = source.Points;
-            Edges = source.Edges;
+            source.Points.ForEach(p => Points.Add(p));
+            BuildEdges();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Microsoft.Xna.Framework
         //---------------------------------------//
 
         /// <summary>
-        /// Verifica e Calcula as bordas.
+        /// Verifica e calcula as bordas.
         /// </summary>
         public void BuildEdges()
         {
@@ -163,7 +163,7 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Define os pontos do polígono.
         /// </summary>
-        /// <param name="rectangle">Define os pontos do polígono através de um retângulo.</param>
+        /// <param name="rectangle">Define os pontos através de um retângulo.</param>
         public void Set(Rectangle rectangle)
         {
             Points.Clear();
@@ -179,7 +179,7 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Define os pontos do polígono.
         /// </summary>
-        /// <param name="points">A lista de pontos.</param>
+        /// <param name="points">Define os pontos através de uma lista de pontos.</param>
         public void Set(params Vector2[] points)
         {
             Points.Clear();
@@ -195,7 +195,7 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Define os pontos do polígono.
         /// </summary>
-        /// <param name="polygon">O polígono a ser copiado</param>
+        /// <param name="polygon">Define os pontos atráves de uma cópia de um polígono.</param>
         public void Set(Polygon polygon)
         {
             Points = polygon.Points;

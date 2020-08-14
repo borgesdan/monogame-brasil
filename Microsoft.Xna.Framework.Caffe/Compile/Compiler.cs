@@ -19,7 +19,7 @@ namespace Microsoft.Xna.Framework.Compile
         public static CompilerResults Results { get; private set; } = new CompilerResults(new TempFileCollection());
 
         /// <summary>
-        /// Compila o código C# e retorna uma instância do tipo especificado. Retorna null caso ocorra algum erro.
+        /// Compila um código C# e retorna uma instância do tipo especificado. Retorna null caso ocorra algum erro.
         /// </summary>
         /// <typeparam name="T">O tipo da instância.</typeparam>
         /// <param name="sourceFile">O caminho do arquivo C#.</param>
