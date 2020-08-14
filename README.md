@@ -96,8 +96,8 @@ Entre outras funcionalidades.
 
 ## Versão
 
-Versão:............... 1.0 (Conillon)
-Última atualização:... (13/08/2020)
+* Versão:............... 1.0 (Conillon)
+* Última atualização:... (13/08/2020)
 
 ## Autor
 
