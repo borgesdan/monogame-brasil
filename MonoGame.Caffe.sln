@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe", "Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe.Tiles", "Microsoft.Xna.Framework.Graphics.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.shproj", "{551E2BA2-C009-422D-9E43-CF4AC542AC5E}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe.Tiles", "Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.shproj", "{551E2BA2-C009-422D-9E43-CF4AC542AC5E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Microsoft.Xna.Framework.Graphics.Tiles\Microsoft.Xna.Framework.Graphics.Tiles.projitems*{551e2ba2-c009-422d-9e43-cf4ac542ac5e}*SharedItemsImports = 13
+		Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.projitems*{551e2ba2-c009-422d-9e43-cf4ac542ac5e}*SharedItemsImports = 13
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
