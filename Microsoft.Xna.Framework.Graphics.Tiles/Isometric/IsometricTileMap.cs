@@ -3,19 +3,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Xna.Framework.Graphics.Tile
+namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Representa um setor de um mapa de tiles.
+    /// Representa o mapa de tiles.
     /// </summary>
-    public class IsometricTileSector : IDisposable
+    public class IsometricTileMap : IDisposable
     {
-        short[,] array = null;
-
-        /// <summary>
-        /// Obtém ou define o valor que representa simultaneamente a quantidade de linhas e de colunas de qualquer setor.
-        /// </summary>
-        public static int Length { get; set; } = 20;
+        // O mapa com a numeração dos tiles.
+        private short[,] mapArray = null;        
 
         /// <summary>
         /// Obtém ou define a tabela de índices com seus respectivos Tiles.
@@ -23,22 +19,22 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         public Dictionary<short, IsometricTile> Table { get; set; } = new Dictionary<short, IsometricTile>();
 
         /// <summary>
-        /// Inicializa uma nova instância de Setor.
+        /// Inicializa uma nova instância de Map.
         /// </summary>
-        /// <param name="_array">Um array com a mesma quantidade de linhas e colunas da propriedade Length desta classe.</param>
-        public IsometricTileSector(short[,] _array)
+        /// <param name="array">O array com a numeração de tiles do mapa</param>
+        public IsometricTileMap(short[,] array)
         {
-            array = _array;
+            mapArray = array;
         }
 
         /// <summary>
-        /// Inicializa uma nova instância de Setor.
+        /// Inicializa uma nova instância de Map.
         /// </summary>
-        /// <param name="_array">Um array com a mesma quantidade de linhas e colunas da propriedade Length desta classe.</param>
-        /// <param name="table">Define a tabela de índices com seus respectivos Tiles.</param>
-        public IsometricTileSector(short[,] _array, Dictionary<short, IsometricTile> table)
+        /// <param name="array">O array com a numeração de tiles do mapa</param>
+        /// <param name="table">A tabela de índices com seus respectivos Tiles.</param>
+        public IsometricTileMap(short[,] array, Dictionary<short, IsometricTile> table)
         {
-            array = _array;
+            mapArray = array;
             Table = table;
         }
 
@@ -47,7 +43,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         /// </summary>
         public short[,] GetMap()
         {
-            return (short[,])array.Clone();
+            return (short[,])mapArray.Clone();
         }
 
         //---------------------------------------//
@@ -70,7 +66,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
 
             if (disposing)
             {
-                this.array = null;
+                this.mapArray = null;
                 this.Table.Clear();
                 this.Table = null;
             }

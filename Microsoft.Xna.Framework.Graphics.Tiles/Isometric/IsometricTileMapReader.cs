@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Xna.Framework.Graphics.Tile
+namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Representa um leitor de mapas de tiles que os desenha na tela.

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Xna.Framework.Graphics.Tile
+namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Representa um tile isométrico.
@@ -39,7 +39,7 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         /// <summary>Obtém ou define onde o tile se encontra no mapa.</summary>
         public Point MapPoint { get; set; } = Point.Zero;
         /// <summary>Obtém ou define um valor para o Tile.</summary>
-        public short Value { get; set; } = 0;
+        public short Value { get; set; } = 0;        
 
         /// <summary>
         /// Inicializa uma nova instância de Tile.
@@ -116,9 +116,18 @@ namespace Microsoft.Xna.Framework.Graphics.Tile
         /// <summary>
         /// Atualiza o tamanho da animação.
         /// </summary>
-        public void UpdateBounds()
+        public Rectangle UpdateBounds()
         {
             Animation?.UpdateBounds();
+            return Animation.Bounds;
+        }
+
+        /// <summary>
+        /// Retorna os limites atuais da animação.
+        /// </summary>
+        public Rectangle GetBounds()
+        {
+            return Animation.Bounds;
         }
 
         ///<inheritdoc/>

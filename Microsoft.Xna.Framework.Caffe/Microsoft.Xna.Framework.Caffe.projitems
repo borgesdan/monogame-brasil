@@ -41,12 +41,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\Interfaces\IIsometricReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileMapReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Tile\IsometricTileSectorReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
@@ -66,9 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Tile\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
