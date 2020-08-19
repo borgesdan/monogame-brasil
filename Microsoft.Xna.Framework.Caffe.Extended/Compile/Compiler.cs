@@ -6,7 +6,10 @@ using System.CodeDom.Compiler;
 using System.Globalization;
 using System.Reflection;
 
-namespace Microsoft.Xna.Framework.Compile
+//.NET Core
+//<PackageReference Include="System.CodeDom" Version="4.4.0" />
+
+namespace Microsoft.Xna.Framework
 {
     /// <summary>
     /// Classe responsável por compilar código C# de um arquivo externo.

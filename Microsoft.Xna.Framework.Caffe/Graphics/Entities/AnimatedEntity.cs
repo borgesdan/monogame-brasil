@@ -281,12 +281,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="color">A cor do retângulo</param>
         public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color)
         {
-            Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
+            Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), Color.White).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
             animation.AddSprites(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
+            animatedEntity.Transform.Color = color;
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
@@ -302,12 +303,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="borderColor">A cor da borda.</param>
         public static AnimatedEntity CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
         {
-            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
+            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, Color.White).Texture;
             Sprite sprite = new Sprite(texture, true);
             Animation animation = new Animation(game, 0, "default");
             animation.AddSprites(sprite);
 
             AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
+            animatedEntity.Transform.Color = borderColor;
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;

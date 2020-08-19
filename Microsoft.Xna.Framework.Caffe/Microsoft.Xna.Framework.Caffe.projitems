@@ -9,7 +9,6 @@
     <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Compile\Compiler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DEBUG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
@@ -62,6 +61,26 @@
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\bin\DesktopGL\Content\default.xnb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Content\default.xnb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\bin\Windows\default.xnb" />
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\default.spritefont" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\DesktopGL\Content\.mgcontent" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\DesktopGL\Content\.mgstats" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\DesktopGL\Content\default.mgcontent" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\.mgcontent" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\.mgstats" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\Content\.mgcontent" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\Content\.mgstats" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\Content\default.mgcontent" />
+    <None Include="$(MSBuildThisFileDirectory)Content\obj\Windows\default.mgcontent" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\bin\DesktopGL\Content\Roboto-Regular.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Content\Roboto-Regular.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Roboto-Regular.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Roboto License.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Roboto-Regular.ttf" />
   </ItemGroup>
 </Project>

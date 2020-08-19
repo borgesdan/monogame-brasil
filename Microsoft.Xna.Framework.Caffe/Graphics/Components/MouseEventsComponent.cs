@@ -65,7 +65,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Update(GameTime gameTime)
         {
             Rectangle bounds = Entity.Bounds;
-            LayeredScreen screen = Entity.Screen;
+            Screen screen = Entity.Screen;
             var state = Mouse.GetState();
             bool isVisible;
             

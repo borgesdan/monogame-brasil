@@ -44,7 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
         public bool UpdateOutOfView { get; set; } = true;
         /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
-        public LayeredScreen Screen { get; set; } = null;
+        public Screen Screen { get; set; } = null;
         /// <summary>Obtém ou define a lista de componentes da entidade.</summary>
         public ComponentGroup Components { get; private set; } = null;
         /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
@@ -148,10 +148,25 @@ namespace Microsoft.Xna.Framework.Graphics
                     DEBUG.Polygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
                 }
             }
-        }        
+        }                
 
         /// <summary>Atualiza os limites da entidade.</summary>
-        public virtual void UpdateBounds() { }
+        public virtual void UpdateBounds() { }        
+
+        /// <summary>
+        /// Gera uma nova entidade copiada e com uma determinada posição.
+        /// </summary>
+        /// <typeparam name="T">O tipo da entidade.</typeparam>
+        /// <param name="entity">A entidade a ser a origem da cópia.</param>
+        /// <param name="position">A posição da entidade.</param>
+        public static T Spawn<T>(T entity, Vector2 position) where T : Entity2D
+        {
+            T spawnEntity = entity.Clone(entity);
+            spawnEntity.Transform.SetPosition(position);
+            spawnEntity.UpdateBounds();
+
+            return spawnEntity;
+        }
         
         /// <summary>Libera os recursos dessa instância.</summary>
         public void Dispose()

@@ -1,16 +1,21 @@
 ﻿// Danilo Borges Santos, 2020.
 
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que verifica uma colisão simples entre entidades. 
+    /// Componente que verifica uma colisão entre entidades. 
     /// </summary>
     public class CollisionComponent : EntityComponent
     {   
         /// <summary>Define através deste evento a ação necessária que deve ocorrer ao acontecer uma colisão.</summary>
         public event CollisionAction OnCollision;
+        /// <summary>Obtém ou define se o componente deve utilizar a tela corrente (caso LayeredScreen) para busca das entidades para colisão.</summary>
+        public bool UseCurrentScreen { get; set; } = true;
+        /// <summary>Obtém ou define as entidades a serem utilizadas caso UseCurrentScreen seja falso.</summary>
+        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -41,6 +46,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public CollisionComponent(Entity2D destination, CollisionComponent source): base(destination, source)
         {
             OnCollision = source.OnCollision;
+            UseCurrentScreen = source.UseCurrentScreen;
+            Entities = source.Entities;
         }
 
         //---------------------------------------//
@@ -68,27 +75,46 @@ namespace Microsoft.Xna.Framework.Graphics
             //Recebe a tela em que a entidade está associada.
             var screen = Entity.Screen;
 
-            if (screen == null)
-                return;
-            
-            //Busca todas as entidades vísiveis da tela.
-            foreach(var other in screen.DrawableEntities)
+            if(UseCurrentScreen)
             {
-                // Prossegue se a entidade atual é diferente da entidade da lista.
-                if (!Entity.Equals(other))
+                if(screen != null && screen is LayeredScreen ls)
                 {
-                    //Checa a colisão
-                    var result = Collision.EntityCollision(Entity, other);
-
-                    if(result.HasCollided)
+                    //Busca todas as entidades vísiveis da tela.
+                    foreach (var other in ls.DrawableEntities)
                     {
-                        //O que fazer sobre a colisão será definido pelo usuário.
-                        OnCollision?.Invoke(Entity, gameTime, result, other);
+                        // Prossegue se a entidade atual é diferente da entidade da lista.
+                        if (!Entity.Equals(other))
+                        {
+                            Check(other, gameTime);
+                        }
+                    }
+                }                
+            }
+            else
+            {
+                foreach(var other in Entities)
+                {
+                    // Prossegue se a entidade atual é diferente da entidade da lista.
+                    if (!Entity.Equals(other))
+                    {
+                        Check(other, gameTime);
                     }
                 }
-            }
+            }            
 
             base.Update(gameTime);
+        }
+
+        private void Check(Entity2D other, GameTime gameTime)
+        {
+            //Checa a colisão
+            var result = Collision.EntityCollision(Entity, other);
+
+            if (result.HasCollided)
+            {
+                //O que fazer sobre a colisão será definido pelo usuário.
+                OnCollision?.Invoke(Entity, gameTime, result, other);
+            }
         }
 
         protected override void Dispose(bool disposing)

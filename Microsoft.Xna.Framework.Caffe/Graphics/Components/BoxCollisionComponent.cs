@@ -1,6 +1,7 @@
 ﻿// Danilo Borges Santos, 2020.
 
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -9,6 +10,11 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public class BoxCollisionComponent : EntityComponent
     {
+        /// <summary>Obtém ou define se o componente deve utilizar a tela corrente (caso LayeredScreen) para busca das entidades para colisão.</summary>
+        public bool UseCurrentScreen { get; set; } = true;
+        /// <summary>Obtém ou define as entidades a serem utilizadas caso UseCurrentScreen seja falso.</summary>
+        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
+
         /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre CollisionBoxes.</summary>
         public BoxCollisionAction<CollisionBox, CollisionBox> CxCCollision;
         /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um AttackBox.</summary>
@@ -61,103 +67,127 @@ namespace Microsoft.Xna.Framework.Graphics
             //Recebe a tela em que a entidade está associada.
             var screen = Entity.Screen;
 
-            if (screen == null)
-                return;
-
-            //Busca todas as entidades vísiveis da tela.
-            foreach (var other in screen.DrawableEntities)
+            if(UseCurrentScreen)
             {
-                // Prossegue se a entidade atual é diferente da entidade da lista.
-                if (!Entity.Equals(other))
+                if (screen != null && screen is LayeredScreen ls)
                 {
-                    //Checa a colisão
-                    var e = (AnimatedEntity)Entity;
-                    var o = (AnimatedEntity)other;
-                    RectangleCollisionResult result = new RectangleCollisionResult();
-
-                    //Procura todos os CollisionBox da entidade
-                    for(int i = 0; i < e.CollisionBoxes.Count; i++)
+                    //Busca todas as entidades vísiveis da tela.
+                    foreach (var other in ls.DrawableEntities)
                     {
-                        CollisionBox ecb = e.CollisionBoxes[i];
-
-                        for(int j = 0; j < o.CollisionBoxes.Count; j++)
+                        // Prossegue se a entidade atual é diferente da entidade da lista.
+                        if (!Entity.Equals(other))
                         {
-                            CollisionBox ocb = o.CollisionBoxes[j];
+                            //Checa a colisão
+                            var e = (AnimatedEntity)Entity;
+                            var o = (AnimatedEntity)other;
 
-                            if(Collision.BoundsCollision(ecb.Bounds, ocb.Bounds))
-                            {
-                                result.Intersection = Rectangle.Intersect(ecb.Bounds, ocb.Bounds);
-                                result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, ocb.Bounds);
-
-                                CxCCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, CollisionBox>(ecb, ocb), result, other);
-                            }
-                        }
-
-                        for (int j = 0; j < o.AttackBoxes.Count; j++)
-                        {
-                            AttackBox oab = o.AttackBoxes[j];
-
-                            if (Collision.BoundsCollision(ecb.Bounds, oab.Bounds))
-                            {
-                                result.Intersection = Rectangle.Intersect(ecb.Bounds, oab.Bounds);
-                                result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, oab.Bounds);
-
-                                CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ecb, oab), result, other);
-                            }   
-                        }
-
-                        if (Collision.BoundsCollision(e.CollisionBoxes[i].Bounds, other.Bounds))
-                        {
-                            result.Intersection = Rectangle.Intersect(ecb.Bounds, other.Bounds);
-                            result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, other.Bounds);
-
-                            CxBCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, Rectangle>(ecb, other.Bounds), result, other);
+                            Check(e, o, gameTime);
                         }
                     }
-
-                    //Procura todos os AttackBox da entidade
-                    for (int i = 0; i < e.AttackBoxes.Count; i++)
+                }                
+            }
+            else
+            {
+                foreach (var other in Entities)
+                {
+                    // Prossegue se a entidade atual é diferente da entidade da lista.
+                    if (!Entity.Equals(other))
                     {
-                        AttackBox eab = e.AttackBoxes[i];
+                        //Checa a colisão
+                        var e = (AnimatedEntity)Entity;
+                        var o = (AnimatedEntity)other;
 
-                        for (int j = 0; j < o.CollisionBoxes.Count; j++)
-                        {
-                            CollisionBox ocb = o.CollisionBoxes[j];
-
-                            if(Collision.BoundsCollision(eab.Bounds, ocb.Bounds))
-                            {
-                                result.Intersection = Rectangle.Intersect(eab.Bounds, ocb.Bounds);
-                                result.Subtract = Collision.IntersectionSubtract(eab.Bounds, ocb.Bounds);
-
-                                CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ocb, eab), result, other);
-                            }
-                        }
-
-                        for (int j = 0; j < o.AttackBoxes.Count; j++)
-                        {
-                            AttackBox oab = o.AttackBoxes[j];
-
-                            if (Collision.BoundsCollision(eab.Bounds, oab.Bounds))
-                            {
-                                result.Intersection = Rectangle.Intersect(eab.Bounds, oab.Bounds);
-                                result.Subtract = Collision.IntersectionSubtract(eab.Bounds, oab.Bounds);
-
-                                AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(eab, oab), result, other);
-                            }
-                        }                        
-
-                        if (Collision.BoundsCollision(e.AttackBoxes[i].Bounds, other.Bounds))
-                        {
-                            result.Intersection = Rectangle.Intersect(eab.Bounds, other.Bounds);
-                            result.Subtract = Collision.IntersectionSubtract(eab.Bounds, other.Bounds);
-
-                            AxBCollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, Rectangle>(eab, other.Bounds), result, other);
-                        }
+                        Check(e, o, gameTime);
                     }
                 }
             }
 
             base.Update(gameTime);
+        }
+
+        private void Check(AnimatedEntity e, AnimatedEntity o, GameTime gameTime)
+        {
+            RectangleCollisionResult result = new RectangleCollisionResult();
+
+            //Procura todos os CollisionBox da entidade
+            for (int i = 0; i < e.CollisionBoxes.Count; i++)
+            {
+                CollisionBox ecb = e.CollisionBoxes[i];
+
+                for (int j = 0; j < o.CollisionBoxes.Count; j++)
+                {
+                    CollisionBox ocb = o.CollisionBoxes[j];
+
+                    if (Collision.BoundsCollision(ecb.Bounds, ocb.Bounds))
+                    {
+                        result.Intersection = Rectangle.Intersect(ecb.Bounds, ocb.Bounds);
+                        result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, ocb.Bounds);
+
+                        CxCCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, CollisionBox>(ecb, ocb), result, o);
+                    }
+                }
+
+                for (int j = 0; j < o.AttackBoxes.Count; j++)
+                {
+                    AttackBox oab = o.AttackBoxes[j];
+
+                    if (Collision.BoundsCollision(ecb.Bounds, oab.Bounds))
+                    {
+                        result.Intersection = Rectangle.Intersect(ecb.Bounds, oab.Bounds);
+                        result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, oab.Bounds);
+
+                        CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ecb, oab), result, o);
+                    }
+                }
+
+                if (Collision.BoundsCollision(e.CollisionBoxes[i].Bounds, o.Bounds))
+                {
+                    result.Intersection = Rectangle.Intersect(ecb.Bounds, o.Bounds);
+                    result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, o.Bounds);
+
+                    CxBCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, Rectangle>(ecb, o.Bounds), result, o);
+                }
+            }
+
+            //Procura todos os AttackBox da entidade
+            for (int i = 0; i < e.AttackBoxes.Count; i++)
+            {
+                AttackBox eab = e.AttackBoxes[i];
+
+                for (int j = 0; j < o.CollisionBoxes.Count; j++)
+                {
+                    CollisionBox ocb = o.CollisionBoxes[j];
+
+                    if (Collision.BoundsCollision(eab.Bounds, ocb.Bounds))
+                    {
+                        result.Intersection = Rectangle.Intersect(eab.Bounds, ocb.Bounds);
+                        result.Subtract = Collision.IntersectionSubtract(eab.Bounds, ocb.Bounds);
+
+                        CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ocb, eab), result, o);
+                    }
+                }
+
+                for (int j = 0; j < o.AttackBoxes.Count; j++)
+                {
+                    AttackBox oab = o.AttackBoxes[j];
+
+                    if (Collision.BoundsCollision(eab.Bounds, oab.Bounds))
+                    {
+                        result.Intersection = Rectangle.Intersect(eab.Bounds, oab.Bounds);
+                        result.Subtract = Collision.IntersectionSubtract(eab.Bounds, oab.Bounds);
+
+                        AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(eab, oab), result, o);
+                    }
+                }
+
+                if (Collision.BoundsCollision(e.AttackBoxes[i].Bounds, o.Bounds))
+                {
+                    result.Intersection = Rectangle.Intersect(eab.Bounds, o.Bounds);
+                    result.Subtract = Collision.IntersectionSubtract(eab.Bounds, o.Bounds);
+
+                    AxBCollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, Rectangle>(eab, o.Bounds), result, o);
+                }
+            }
         }
     }
 }

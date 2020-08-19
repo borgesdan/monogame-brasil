@@ -16,6 +16,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public Color FinalColor { get; set; } = Color.White;
         /// <summary>Obtém ou define o tempo em milisegundos a ser atrasada para cada mudança de cor (default = 0).</summary>
         public float Delay { get; set; } = 0;
+        /// <summary>Encapsula um método que será chamado quando a cor final for alcançada.</summary>
+        public Action<GameTime> OnChangeColor;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -26,7 +28,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public ColorComponent() : base()
         {
-            Enable = EnableGroup.Unavailable;
+            Enable = EnableGroup.Available;
             Name = nameof(ColorComponent);
         }
 
@@ -39,6 +41,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Delay = source.Delay;
             FinalColor = source.FinalColor;
+            OnChangeColor = source.OnChangeColor;
         }
 
         //---------------------------------------//
@@ -95,8 +98,13 @@ namespace Microsoft.Xna.Framework.Graphics
                     Entity.Transform.Color = active;                    
                 }
 
+                if (active == final)
+                {
+                    OnChangeColor?.Invoke(gameTime);
+                }
+
                 elapsedTime = 0;
-            }
+            }            
 
             base.Update(gameTime);
         }
