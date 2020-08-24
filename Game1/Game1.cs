@@ -1,5 +1,7 @@
 ﻿// Danilo Borges Santos, 2020.
 
+//HELLO WORLD
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,11 +14,16 @@ namespace Game1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+		//Texto a ser exibido
         TextEntity textEntity;
+		//Retângulo de funto
         AnimatedEntity rectangleEntity;
-        AnimatedEntity backEntity;
+        //Retângulo somente com bordas
+		AnimatedEntity backEntity;
 
+		//Valor a ser adicionado na escala do texto
         float textScale = 0.005f;
+		//A ser usado para recuperar uma cor aleatória
         Random randomColor = new Random();
 
         public Game1()

@@ -1,9 +1,11 @@
 ﻿// Danilo Borges Santos, 2020.
 
+using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Microsoft.Xna.Framework.Input
-{
+{   
     /// <summary>Define um mapa do teclado em referência aos botões do GamePad.</summary>
     public class KeyboardMap
     {
@@ -41,7 +43,7 @@ namespace Microsoft.Xna.Framework.Input
         public Keys? BigButton { get; set; } = null;
 
         /// <summary>Inicializa uma nova instância de KeyboardMap.</summary>
-        public KeyboardMap() { }
+        public KeyboardMap() { }        
 
         /// <summary>
         /// Inicializa uma nova instância de KeyboardMap definindo o mapa do teclado. Valores podem ser nulos.
@@ -165,11 +167,11 @@ namespace Microsoft.Xna.Framework.Input
         /// <summary>
         /// Define o mapa do direcional analógico direito.
         /// </summary>
-        /// <param name="rightstick"></param>
-        /// <param name="rightthumbstickup"></param>
-        /// <param name="rightthumbstickdown"></param>
-        /// <param name="rightthumbstickright"></param>
-        /// <param name="rightthumbstickleft"></param>
+        /// <param name="rightstick">Analógico direito.</param>
+        /// <param name="rightthumbstickup">Analógico direito para cima.</param>
+        /// <param name="rightthumbstickdown">Analógico direito para baixo.</param>
+        /// <param name="rightthumbstickright">Analógico direito para direita.</param>
+        /// <param name="rightthumbstickleft">Analógico direito para esquerda.</param>
         public void SetRightStick(Keys? rightstick, Keys? rightthumbstickup, Keys? rightthumbstickdown, Keys? rightthumbstickright, Keys? rightthumbstickleft)
         {
             RightStick = rightstick;
@@ -247,6 +249,139 @@ namespace Microsoft.Xna.Framework.Input
             };
 
             return dictionary;
+        }
+
+        /// <summary>
+        /// Salva o mapeamento em arquivo no formato XML.
+        /// </summary>
+        /// <param name="path">O caminho com o nome do arquivo (.xml) a ser salvo.</param>
+        public void Save(string path)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;            
+
+            using(XmlWriter writer = XmlWriter.Create(path, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("asset");
+                writer.WriteStartElement("input");
+                
+                writer.WriteElementString("DPadUp", GetString(DPadUp));
+                writer.WriteElementString("DPadDown", GetString(DPadDown));
+                writer.WriteElementString("DPadRight", GetString(DPadRight));
+                writer.WriteElementString("DPadLeft", GetString(DPadLeft));
+
+                writer.WriteElementString("X", GetString(X));
+                writer.WriteElementString("Y", GetString(Y));
+                writer.WriteElementString("A", GetString(A));
+                writer.WriteElementString("B", GetString(B));
+
+                writer.WriteElementString("LeftTrigger", GetString(LeftTrigger));
+                writer.WriteElementString("RightTrigger", GetString(RightTrigger));
+                writer.WriteElementString("LeftShoulder", GetString(LeftShoulder));
+                writer.WriteElementString("RightShoulder", GetString(RightShoulder));
+
+                writer.WriteElementString("RightStick", GetString(RightStick));
+                writer.WriteElementString("RightThumbStickUp", GetString(RightThumbStickUp));
+                writer.WriteElementString("RightThumbStickDown", GetString(RightThumbStickDown));
+                writer.WriteElementString("RightThumbStickRight", GetString(RightThumbStickRight));
+                writer.WriteElementString("RightThumbStickLeft", GetString(RightThumbStickLeft));
+
+                writer.WriteElementString("LeftStick", GetString(LeftStick));
+                writer.WriteElementString("LeftThumbStickUp", GetString(LeftThumbStickUp));
+                writer.WriteElementString("LeftThumbStickDown", GetString(RightThumbStickDown));
+                writer.WriteElementString("LeftThumbStickRight", GetString(LeftThumbStickRight));
+                writer.WriteElementString("LeftThumbStickLeft", GetString(LeftThumbStickLeft));
+
+                writer.WriteElementString("Start", GetString(Start));
+                writer.WriteElementString("Back", GetString(Back));
+                writer.WriteElementString("BigButton", GetString(BigButton));
+
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
         }        
+        
+        private string GetString(Keys? key)
+        {
+            string s = key.HasValue ? ((int)key).ToString() : "null";
+            return s;
+        }
+        
+        private Keys? GetKey(string s)
+        {
+            Keys? k = null;
+
+            if (!s.Equals("null"))
+            {
+                int i = int.Parse(s);
+                k = (Keys)i;
+            }
+
+            return k;
+        }
+
+        /// <summary>
+        /// Carrega um arquivo XML com o mapeamento salvo pelo método Save().
+        /// </summary>
+        /// <param name="path">O caminho do arquivo (.xml).</param>
+        public void Load(string path)
+        {
+            XmlDocument document = new XmlDocument();
+            document.Load(path);
+
+            XmlNode dpup = document.SelectSingleNode("//DPadUp");
+            XmlNode dpdw = document.SelectSingleNode("//DPadDown");
+            XmlNode dpdr = document.SelectSingleNode("//DPadRight");
+            XmlNode dpdl = document.SelectSingleNode("//DPadLeft");
+            XmlNode x = document.SelectSingleNode("//X");
+            XmlNode y = document.SelectSingleNode("//Y");
+            XmlNode a = document.SelectSingleNode("//A");
+            XmlNode b = document.SelectSingleNode("//B");
+            XmlNode lt = document.SelectSingleNode("//LeftTrigger");
+            XmlNode rt = document.SelectSingleNode("//RightTrigger");
+            XmlNode ls = document.SelectSingleNode("//LeftShoulder");
+            XmlNode rs = document.SelectSingleNode("//RightShoulder");            
+            XmlNode rts = document.SelectSingleNode("//RightStick");
+            XmlNode rtsu = document.SelectSingleNode("//RightThumbStickUp");
+            XmlNode rtsd = document.SelectSingleNode("//RightThumbStickDown");
+            XmlNode rtsr = document.SelectSingleNode("//RightThumbStickRight");
+            XmlNode rtsl = document.SelectSingleNode("//RightThumbStickLeft");
+            XmlNode lts = document.SelectSingleNode("//LeftStick");
+            XmlNode ltsu = document.SelectSingleNode("//LeftThumbStickUp");
+            XmlNode ltsd = document.SelectSingleNode("//LeftThumbStickDown");
+            XmlNode ltsr = document.SelectSingleNode("//LeftThumbStickRight");
+            XmlNode ltsl = document.SelectSingleNode("//LeftThumbStickLeft");
+            XmlNode st = document.SelectSingleNode("//Start");
+            XmlNode bk = document.SelectSingleNode("//Back");
+            XmlNode bb = document.SelectSingleNode("//BigButton");
+
+            DPadUp = GetKey(dpup.InnerText);
+            DPadDown = GetKey(dpdw.InnerText);
+            DPadRight = GetKey(dpdr.InnerText);
+            DPadLeft = GetKey(dpdl.InnerText);
+            X = GetKey(x.InnerText);
+            Y = GetKey(y.InnerText);
+            A = GetKey(a.InnerText);
+            B = GetKey(b.InnerText);
+            LeftTrigger = GetKey(lt.InnerText);
+            RightTrigger = GetKey(rt.InnerText);
+            LeftShoulder = GetKey(ls.InnerText);
+            RightShoulder = GetKey(rs.InnerText);
+            RightStick = GetKey(rts.InnerText);
+            RightThumbStickUp = GetKey(rtsu.InnerText);
+            RightThumbStickDown = GetKey(rtsd.InnerText);
+            RightThumbStickRight = GetKey(rtsr.InnerText);
+            RightThumbStickLeft = GetKey(rtsl.InnerText);
+            LeftStick = GetKey(lts.InnerText);
+            LeftThumbStickUp = GetKey(ltsu.InnerText);
+            LeftThumbStickDown = GetKey(ltsd.InnerText);
+            LeftThumbStickRight = GetKey(ltsr.InnerText);
+            LeftThumbStickLeft = GetKey(ltsl.InnerText);
+            Start = GetKey(st.InnerText);
+            Back = GetKey(bk.InnerText);
+            BigButton = GetKey(bb.InnerText);
+        }
     }
 }

@@ -7,8 +7,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caf
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe.Tiles", "Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.shproj", "{551E2BA2-C009-422D-9E43-CF4AC542AC5E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game1", "Game1\Game1.csproj", "{F7247AA0-65B3-401A-8823-7B2A30C874B9}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xna.Framework.Caffe.Extended", "Microsoft.Xna.Framework.Caffe.Extended\Microsoft.Xna.Framework.Caffe.Extended.shproj", "{52AABCB6-AEBC-4E00-89E0-FD601F3E1A4A}"
 EndProject
 Global
@@ -16,23 +14,12 @@ Global
 		Microsoft.Xna.Framework.Caffe.Extended\Microsoft.Xna.Framework.Caffe.Extended.projitems*{52aabcb6-aebc-4e00-89e0-fd601f3e1a4a}*SharedItemsImports = 13
 		Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.projitems*{551e2ba2-c009-422d-9e43-cf4ac542ac5e}*SharedItemsImports = 13
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
-		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{f7247aa0-65b3-401a-8823-7b2a30c874b9}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Debug|x86.Build.0 = Debug|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Release|x86.ActiveCfg = Release|Any CPU
-		{F7247AA0-65B3-401A-8823-7B2A30C874B9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,2 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/default.spritefont","C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/bin/Windows/default.xnb","FontDescriptionProcessor","SpriteFontContent",2021,21521,0,4840363
+"C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/default.spritefont","C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/bin/Windows/default.xnb","FontDescriptionProcessor","SpriteFontContent",2021,21521,0,3800287
+"C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/KeysMap.xml","C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/bin/Windows\KeysMap.xml","CopyItem","File",944,944,0,0030008
+"C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/Roboto-Regular.ttf","C:/Users/borge/source/repos/MonoGameDevelop/Microsoft.Xna.Framework.Caffe/Content/bin/Windows\Roboto-Regular.ttf","CopyItem","File",171272,171272,0,0020005

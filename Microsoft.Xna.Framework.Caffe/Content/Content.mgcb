@@ -20,6 +20,9 @@
 /processorParam:TextureFormat=Compressed
 /build:default.spritefont
 
+#begin KeysMap.xml
+/copy:KeysMap.xml
+
 #begin Roboto-Regular.ttf
 /copy:Roboto-Regular.ttf
 

@@ -1,8 +1,6 @@
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\obj\Debug\netcoreapp3.1\Game1.AssemblyInfoInputs.cache
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\obj\Debug\netcoreapp3.1\Game1.AssemblyInfo.cs
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\obj\Debug\netcoreapp3.1\Game1.csproj.CoreCompileInputs.cache
-C:\Users\borge\source\repos\MonoGameDevelop\Game1\bin\Debug\netcoreapp3.1\Content\default.xnb
-C:\Users\borge\source\repos\MonoGameDevelop\Game1\bin\Debug\netcoreapp3.1\Content\Roboto-Regular.ttf
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\bin\Debug\netcoreapp3.1\Game1.exe
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\bin\Debug\netcoreapp3.1\Game1.deps.json
 C:\Users\borge\source\repos\MonoGameDevelop\Game1\bin\Debug\netcoreapp3.1\Game1.runtimeconfig.json

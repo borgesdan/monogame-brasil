@@ -7,21 +7,21 @@ namespace Microsoft.Xna.Framework.Input
     /// <summary>Classe que gerencia e auxilia nas entradas do usuário com o GamePad.</summary>
     public class GamePadHelper
     {
-        private KeyboardState keyboardState;
-        private KeyboardState lastKeyboardState;
+        private KeyboardState keyboardState = new KeyboardState();
+        private KeyboardState lastKeyboardState = new KeyboardState();
 
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>Obtém o estado atual do GamePad.</summary>
-        public GamePadState State { get; private set; }
+        public GamePadState State { get; private set; } = new GamePadState();
         /// <summary>Obtém o estado anterior do GamePad antes da atualização.</summary>
-        public GamePadState OldState { get; private set; }
+        public GamePadState OldState { get; private set; } = new GamePadState();
 
         /// <summary>Obtém o index do GamePad.</summary>
-        public PlayerIndex Index { get; private set; }
+        public PlayerIndex Index { get; private set; } = PlayerIndex.One;
         /// <summary>Obtém ou define o mapeamento de teclas para botões do GamePad.</summary>
-        public Dictionary<Buttons, Keys?> KeyboardMap { get; set; }
+        public Dictionary<Buttons, Keys?> KeyboardMap { get; set; } = new Dictionary<Buttons, Keys?>();
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//

@@ -17,15 +17,11 @@ namespace Microsoft.Xna.Framework.Input
     {
         //---------------------------------------//
         //-----         VARIAVEIS           -----//
-        //---------------------------------------//       
-        
-        private int clickTimeL = 0;
-        private byte clickCountL = 0;
-        private bool hasDoubleClickL = false;
-        
-        private int clickTimeR = 0;
-        private byte clickCountR = 0;
-        private bool hasDoubleClickR = false;        
+        //---------------------------------------//   
+
+        private int clickTime = 0;
+        private byte clicks = 0;
+        private bool hasDoubleClick = false;               
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -35,6 +31,8 @@ namespace Microsoft.Xna.Framework.Input
         public bool IsEnabled { get; set; } = true;
         /// <summary>Obtém ou define o tempo para reconhecimento de um duplo clique em milisegundos.</summary>
         public int DoubleClickDelay { get; set; } = 900;
+        /// <summary>Obtém ou define o botão a ser verificado o duplo clique.</summary>
+        public MouseButtons DoubleClickButton { get; set; } = MouseButtons.Left;
         /// <summary>Obtém o estado atual do mouse.</summary>
         public MouseState State { get; private set; }
         /// <summary>Obtém estado anterior do mouse.</summary>
@@ -64,58 +62,38 @@ namespace Microsoft.Xna.Framework.Input
             OldState = State;
             State = Mouse.GetState();
 
-            //Verifica o duplo clique no botão esquerdo e direito
-            
-            //botão esquerdo
-            hasDoubleClickL = false;
-            clickTimeL += gameTime.ElapsedGameTime.Milliseconds;            
+            //Verifica o duplo clique
+            CheckDoubleClick(gameTime);
+        }
 
-            if (IsPress(MouseButtons.Left))
+        //Verifica o duplo clique do botão definido
+        private void CheckDoubleClick(GameTime gameTime)
+        {
+            hasDoubleClick = false;
+            clickTime += gameTime.ElapsedGameTime.Milliseconds;
+            bool isLeftPress = IsPress(DoubleClickButton);
+
+            if (isLeftPress)
             {
-                if(clickTimeL <= DoubleClickDelay)
+                if (clickTime <= DoubleClickDelay)
                 {
-                    clickCountL++;
-                    
-                    if (clickCountL == 2)
+                    clicks++;
+
+                    if (clicks == 2)
                     {
-                        clickCountL = 0;
-                        clickTimeL = 0;
-                        hasDoubleClickL = true;
+                        clicks = 0;
+                        clickTime = 0;
+                        hasDoubleClick = true;
                     }
                 }
                 else
                 {
-                    clickCountL = 0;
-                    clickTimeL = 0;
+                    clicks = 0;
+                    clickTime = 0;
+                    hasDoubleClick = false;
                 }
             }
-
-            //botão direito
-
-            hasDoubleClickR = false;
-            clickTimeR += gameTime.ElapsedGameTime.Milliseconds;
-
-            if (IsPress(MouseButtons.Right))
-            {
-                if (clickTimeR <= DoubleClickDelay)
-                {
-                    clickCountR++;
-
-                    if (clickCountR == 2)
-                    {
-                        clickCountR = 0;
-                        clickTimeR = 0;
-                        hasDoubleClickR = true;
-                    }
-                }
-                else
-                {
-                    clickCountR = 0;
-                    clickTimeR = 0;
-                }
-            }
-
-        }        
+        }
 
         /// <summary>Define o estado do mouse.</summary>
         /// <param name="state">O estado do mouse a ser definido.</param>
@@ -126,16 +104,7 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         /// <summary>Verifica se houve duplo clique no botão direito.</summary>
-        public bool CheckLefDoubleClick()
-        {
-            return hasDoubleClickL;
-        }
-
-        /// <summary>Verifica se houve duplo clique no botão esquerdo.</summary>
-        public bool CheckRightDoubleClick()
-        {
-            return hasDoubleClickR;
-        }
+        public bool CheckDoubleClick() => hasDoubleClick;
 
         /// <summary>Checa se o botão do mouse está pressionado.</summary>
         /// <param name="button">O botão do mouse a ser checado.</param>

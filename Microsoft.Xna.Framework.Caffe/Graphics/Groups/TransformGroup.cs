@@ -1,5 +1,7 @@
 ﻿// Danilo Borges Santos, 2020.
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Expõe acesso as transformações da entidade, como posição, velocidade, rotação, entre outros.</summary>
@@ -300,6 +302,26 @@ namespace Microsoft.Xna.Framework.Graphics
             Entity.UpdateBounds();
         }
 
+        /// <summary>Define a posição da entidade relativa a Viewport.</summary>   
+        /// <param name="align">O tipo de alinhamento da tela.</param>
+        public void SetPosition(AlignType align)
+        {
+            Entity.UpdateBounds();
+
+            var view = Entity.Game.GraphicsDevice.Viewport;
+            SetPosition(view.X, view.Y);
+
+            Vector2 tempPosition = Util.AlignActor(view.Bounds, ScaledSize, align);
+
+            tempPosition.X += Entity.Origin.X;
+            tempPosition.Y += Entity.Origin.Y;
+
+            _oldPosition = tempPosition;
+            _position = tempPosition;
+
+            Entity.UpdateBounds();
+        }
+
         /// <summary>
         /// Incrementa a posição da entidade.
         /// </summary>
@@ -364,6 +386,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="degrees">O grau da rotação</param>
         public void RotateR(float radians) => Rotation += radians;
 
+        [Obsolete("This method is obsolete. Call SetPosition(AlignType) instead.", false)]
         /// <summary>Define a posição da entidade relativa a Viewport.</summary>   
         /// <param name="alignType">O tipo de alinhamento da tela.</param>
         public void SetViewPosition(AlignType alignType)

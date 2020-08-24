@@ -17,5 +17,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Compile\Compiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pipeline\XmlContent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Readme.txt" />
   </ItemGroup>
 </Project>
