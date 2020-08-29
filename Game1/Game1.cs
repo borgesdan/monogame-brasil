@@ -54,12 +54,12 @@ namespace Game1
             textEntity.UpdateBounds();
             //Define a origem para desenho no centro do texto
             textEntity.Origin = new Vector2(textEntity.Transform.Width / 2, textEntity.Transform.Height / 2);
-            textEntity.Transform.SetViewPosition(AlignType.Center);
+            textEntity.Transform.SetPosition(AlignType.Center);
 
             //FILLED RECTANGLE
             rectangleEntity = AnimatedEntity.CreateRectangle(this, "filledRectangle", new Point(200, 200), Color.DarkBlue);
             rectangleEntity.Origin = new Vector2(rectangleEntity.Transform.Width / 2, rectangleEntity.Transform.Height / 2);
-            rectangleEntity.Transform.SetViewPosition(AlignType.Center);
+            rectangleEntity.Transform.SetPosition(AlignType.Center);
 
             //Componente para trocar a cor do retângulo
             ColorComponent colorComponent = new ColorComponent();
@@ -80,7 +80,7 @@ namespace Game1
             //BACK RECTANGLE
             backEntity = AnimatedEntity.CreateRectangle2(this, "backRectangle", new Point(400, 400), 2, Color.Black);
             backEntity.Origin = new Vector2(backEntity.Transform.Width / 2, backEntity.Transform.Height / 2);
-            backEntity.Transform.SetViewPosition(AlignType.Center);            
+            backEntity.Transform.SetPosition(AlignType.Center); 
         }
 
         protected override void Update(GameTime gameTime)

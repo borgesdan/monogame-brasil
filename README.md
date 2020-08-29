@@ -2,19 +2,6 @@
 
 Conjunto de classes e estruturas em C# para auxiliar no desenvolvimento de jogos 2D com a biblioteca MonoGame.
 
-## Início
-
-Ao referenciar o arquivo Microsoft.Xna.Framework.Caffe.shproj ou adicionar qualquer arquivo ao seu projeto é dado acesso a funcionalidades para o desenvolvimento dos seus jogos.
-
-Como destaques podemos citar:
-
-1º) ScreenManager: Gerencia as telas do jogo. Você pode fazer transições ao invocar o método ScreenManager.Change(string: name) onde o parâmetro 'name' é o nome da tela que se deseja ativar. É possível também fazer "load screens" para carregamento de telas em paralalo
-
-2º) InputManager: Expõe os GamePad's, o teclado e o mouse de maneira acessíveis para facilitar a verifcação de entradas do usuário.
-
-3º) Entity2D: são os atores dos seus jogos. As entidades fornecem acesso a animações, texto, e rápido acesso a transformações: rotação, escala e posição.
-
-
 ## Exemplos
 
 O projeto trabalha com o conceito de entidades (Entity2D), telas (Screen), gerenciador de telas (ScreenManager), e gerenciamento de entradas do usuário (InputManager)

@@ -7,33 +7,8 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um tile isométrico.
     /// </summary>
-    public class IsometricTile : IUpdateDrawable, IDisposable
+    public class IsoTile : IUpdateDrawable, IDisposable
     {
-        private static bool defSize = false;
-        private static int tWidth = 170;
-        private static int tHeight = 85;
-
-        /// <summary>Obtém ou define a largura dos tiles para cálculos posteriores.</summary>
-        public static int TileWidth 
-        { 
-            get => tWidth; 
-            set
-            {
-                tWidth = value;
-                defSize = true;
-            }
-        }
-        /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
-        public static int TileHeight 
-        { 
-            get => tHeight; 
-            set
-            {
-                tHeight = value;
-                defSize = true;
-            }
-        } 
-
         /// <summary>Obtém ou define a animação do topo do Tile.</summary>
         public Animation Animation { get; set; } = null;
         /// <summary>Obtém ou define onde o tile se encontra no mapa.</summary>
@@ -42,27 +17,26 @@ namespace Microsoft.Xna.Framework.Graphics
         public short Value { get; set; } = 0;        
 
         /// <summary>
-        /// Inicializa uma nova instância de Tile.
+        /// Inicializa uma nova instância de IsoTile.
         /// </summary>
-        public IsometricTile() { }
+        public IsoTile() { }
 
         /// <summary>
-        /// Inicializa uma nova instância de Tile.
+        /// Inicializa uma nova instância de IsoTile.
         /// </summary>
         /// <param name="animation">Define a animação do Tile</param>
-        public IsometricTile(Animation animation)
+        public IsoTile(Animation animation)
         {
             Animation = animation;
-            SetSize();               
         }
 
         /// <summary>
-        /// Inicializa uma nova instância de Tile.
+        /// Inicializa uma nova instância de IsoTile.
         /// </summary>
         /// <param name="game">A instância corrente da classe Game.</param>
         /// <param name="sprite">O objeto sprite a ser utilizado para criar uma animação.</param>
         /// <param name="frames">Os frames do sprite.</param>
-        public IsometricTile(Game game, Sprite sprite, params SpriteFrame[] frames)
+        public IsoTile(Game game, Sprite sprite, params SpriteFrame[] frames)
         {
             Animation anm = new Animation(game, 0, "default");
 
@@ -72,39 +46,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 anm.AddSprites(sprite);
 
             Animation = anm;
-
-            SetSize();
-        }
-
-        private void SetSize()
-        {
-            if (!defSize)
-            {
-                Animation.UpdateBounds();
-
-                TileWidth = Animation.Width;
-                TileHeight = Animation.Height;
-
-                defSize = true;
-            }
-        }
-
-        /// <summary>
-        /// Define o tamanho dos tiles para cálculos posteriores.
-        /// </summary>
-        /// <param name="width">A largura.</param>
-        /// <param name="height">A altura.</param>
-        public static void SetTileSize(int width, int height)
-        {
-            TileWidth = width;
-            TileHeight = height;
-        }
+        }        
 
         /// <summary>
         /// Inicializa uma nova instância de Tile como cópia de outra instância de Tile.
         /// </summary>
         /// <param name="source">A instância de origem.</param>
-        public IsometricTile(IsometricTile source)
+        public IsoTile(IsoTile source)
         {
             if(source.Animation != null)
                 Animation = new Animation(source.Animation);

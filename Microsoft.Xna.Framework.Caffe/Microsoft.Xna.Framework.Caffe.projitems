@@ -26,8 +26,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\AnimatedEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\Entity2D.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\ComponentGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\EnableGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\ComponentGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnableGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IUpdateDrawable.cs" />
@@ -49,7 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\TransformGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\TransformGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />

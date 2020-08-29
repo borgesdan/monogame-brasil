@@ -120,7 +120,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Transform.SetPosition(Transform.Position);
 
             //Seta as propriedades
-            SetActiveProperties();
+            SetCurrentProperties();
 
             //Update da animação ativa.
             CurrentAnimation?.Update(gameTime);            
@@ -128,9 +128,17 @@ namespace Microsoft.Xna.Framework.Graphics
             base.Update(gameTime);
         }
 
-        private void SetActiveProperties()
+        //Define as propridades da entidade para as propriedades da animação corrente.
+        private void SetCurrentProperties()
         {
-            CurrentAnimation.SetProperties(this);
+            CurrentAnimation.Color = Transform.Color;
+            CurrentAnimation.SpriteEffect = Transform.SpriteEffect;
+            CurrentAnimation.Rotation = Transform.Rotation;
+            CurrentAnimation.Scale = Transform.Scale;
+            CurrentAnimation.Position = Transform.Position;
+            CurrentAnimation.LayerDepth = LayerDepth;
+            CurrentAnimation.Origin = Origin;
+            CurrentAnimation.DrawPercentage = DrawPercentage;
         }
 
         /// <summary>Desenha a entidade.</summary>
@@ -253,7 +261,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 CurrentAnimation?.Reset();
 
             CurrentAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
-            SetActiveProperties();
+            SetCurrentProperties();
 
             UpdateBounds();
         }
@@ -353,7 +361,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (CurrentAnimation != null && CurrentAnimation.CurrentSprite != null)
             {
-                s_f_oc = CurrentAnimation.CurrentSprite.Frames[CurrentAnimation.FrameIndex].OriginCorrection;
+                s_f_oc = CurrentAnimation.CurrentSprite.Frames[CurrentAnimation.FrameIndex].Align;
             }
             else
             {
@@ -366,7 +374,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
 
-            Bounds = new Rectangle(recX, recY, w, h);
+            Bounds = new Rectangle(recX, recY, w, h);            
             
             //Adição dos boxes de colisão e ataque
             CollisionBoxes.Clear();

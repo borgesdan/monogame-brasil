@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Classe que armazena uma Texture2D e seus frames.</summary>
+    /// <summary>Armazena uma instância da classe Texture2D e seus frames.</summary>
     public class Sprite : IDisposable
     {
         //---------------------------------------//
@@ -28,39 +28,32 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
-        //-----------------------------------------//
-
-        /// <summary>Inicia uma nova instância da classe Sprite.</summary>
-        /// <param name="game">Instância atual da classe Game.</param>
-        /// <param name="sourceName">O caminho do arquivo da textura na pasta Content.</param>
-        public Sprite(Game game, string sourceName) : this(game.Content.Load<Texture2D>(sourceName)) { }
-
-        /// <summary>Inicia uma nova instância da classe Sprite.</summary>
-        /// <param name="texture">Um objeto da classe Texture2D.</param>
-        public Sprite(Texture2D texture) : this(texture, false) { }
+        //-----------------------------------------//        
 
         /// <summary>
         /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="game">Instância da classe Game.</param>
         /// <param name="sourceName">O caminho do arquivo de textura na pasta Content.</param>
-        /// <param name="addSingleFrame">
-        /// Defina True para adicionar um SpriteFrame do tamanho da Texture2D na propriedade Frames.
+        /// <param name="isSingleFrame">
+        /// Defina True para informar que o Texture2D não é uma no estilo spritesheet para ser adicionado um SpriteFrame do tamanho da textura.
         /// </param>
-        public Sprite(Game game, string sourceName, bool addSingleFrame) : this(game.Content.Load<Texture2D>(sourceName), addSingleFrame) { }
+        public Sprite(Game game, string sourceName, bool isSingleFrame) : this(game.Content.Load<Texture2D>(sourceName), isSingleFrame) { }
 
         /// <summary>
         /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="texture">Um objeto da classe Texture2D.</param>        
-        /// <param name="addSingleFrame">Defina True para adicionar um frame do tamanho da Texture2D na lista de Frames.</param>
-        public Sprite(Texture2D texture, bool addSingleFrame)
+        /// <param name="isSingleFrame">
+        /// Defina True para informar que o Texture2D não é uma no estilo spritesheet para ser adicionado um SpriteFrame do tamanho da textura.
+        /// </param>
+        public Sprite(Texture2D texture, bool isSingleFrame)
         {
             Texture = texture;
 
-            if (addSingleFrame)
+            if (isSingleFrame)
             {
-                SpriteFrame defaultFrame = new SpriteFrame(texture.Bounds);
+                SpriteFrame defaultFrame = SpriteFrame.Create(texture.Bounds, Vector2.Zero);
                 Frames.Add(defaultFrame);
             }            
         }
@@ -87,22 +80,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Retorna um SpriteFrame contido na propriedade Frames através de um index.</summary>
         /// <param name="index">Posição na lista a ser acessada.</param>        
-        public SpriteFrame this[int index] => Frames[index];
+        public SpriteFrame this[int index]
+        {
+            get => Frames[index];
+            set => Frames[index] = value;
+        }
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
         /// <summary>
-        /// Adiciona retângulos que representam partes (recortes) em uma textura.
+        /// Adiciona objetos SpriteFrame na lista de Frames.
         /// </summary>
         /// <param name="frames">Frames a serem adicionados.</param>
         public void AddFrame(params SpriteFrame[] frames)
         {
-            foreach(var f in frames)
-            {
-                Frames.Add(f);
-            }            
+            foreach(var f in frames) Frames.Add(f);
         }
 
         /// <summary>

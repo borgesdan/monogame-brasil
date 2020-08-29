@@ -19,7 +19,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define a disponibilidade do componente.
         /// </summary>
-        public EnableGroup Enable { get; set; } = EnableGroup.Available;
+        public EnableGroup Enable { get; set; } = new EnableGroup();
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -29,7 +29,7 @@ namespace Microsoft.Xna.Framework.Graphics
         protected EntityComponent(Entity2D destination, EntityComponent source) 
         {
             Entity = destination;
-            Enable = source.Enable;
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             Name = source.Name;
         }
 

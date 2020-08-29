@@ -8,39 +8,45 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um leitor de setores de tiles isometricos.
     /// </summary>
-    public class IsometricTileSectorReader : IUpdateDrawable, IIsometricReader, IDisposable
+    public class IsoTileSectorReader : IUpdateDrawable, IIsoReader, IDisposable
     {
         short[,] map = null;
         List<short[]> total = new List<short[]>();
-        IsometricTileSector[,] array = null;
+        IsoTileSector[,] array = null;
         Screen _screen = null;        
-        Dictionary<Point, IsometricTileSector> point_sector = new Dictionary<Point, IsometricTileSector>();
+        Dictionary<Point, IsoTileSector> point_sector = new Dictionary<Point, IsoTileSector>();
 
         /// <summary>Obtém a lista de tiles ordenados pelo método Read(). A chave Point representa a linha e a coluna onde se encontra o Tile.</summary>
-        public Dictionary<Point, IsometricTile> Tiles { get; private set; } = new Dictionary<Point, IsometricTile>();
-
+        public Dictionary<Point, IsoTile> Tiles { get; private set; } = new Dictionary<Point, IsoTile>();
         /// <summary>Obtém se o método Read() leu todo seu conteúdo e chegou ao fim.</summary>
         public bool IsRead { get; private set; } = false;
-
         /// <summary>Obtém ou define a posição inicial para o cálculo de ordenação dos tiles.</summary>
         public Vector2 StartPosition { get; set; } = Vector2.Zero;
+        /// <summary>Obtém ou define a largura dos tiles para cálculos posteriores.</summary>
+        public int TileWidth { get; set; }
+        /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
+        public int TileHeight { get; set; }
 
         /// <summary>
         /// Inicializa uma nova instância de SectorReader.
         /// </summary>
         /// <param name="screen">A tela a ser associada.</param>
         /// <param name="sectors">Os setores a serem lidos.</param>
-        public IsometricTileSectorReader(Screen screen, IsometricTileSector[,] sectors)
+        /// <param name="tileWidth">A largura dos tiles.</param>
+        /// <param name="tileHeight">A altura dos tiles.</param>
+        public IsoTileSectorReader(Screen screen, IsoTileSector[,] sectors, int tileWidth, int tileHeight)
         {
             _screen = screen;
             array = sectors;
+            TileWidth = tileWidth;
+            TileHeight = tileHeight;
         }
 
         /// <summary>
         /// Inicializa uma nova instância de SectorReader.
         /// </summary>
         /// <param name="sectors">Os setores a serem lidos.</param>
-        public IsometricTileSectorReader(IsometricTileSector[,] sectors)
+        public IsoTileSectorReader(IsoTileSector[,] sectors)
         {
             array = sectors;
         }
@@ -54,7 +60,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int d0 = array.GetLength(0);
             int d1 = array.GetLength(1);
 
-            total = new List<short[]>(d0 * IsometricTileSector.Length);
+            total = new List<short[]>(d0 * IsoTileSector.Length);
 
             for (int t = 0; t < total.Capacity; t++)
                 total.Add(null);
@@ -66,7 +72,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 for (int col = 0; col < d1; col++)
                 {
                     //busco o setor na linha e coluna selecionada
-                    IsometricTileSector s = array[row, col];
+                    IsoTileSector s = array[row, col];
                     //recebo o mapa do setor
                     short[,] _map = s.GetMap();
 
@@ -76,7 +82,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     //confiro a linha e a coluna do mapa
                     for (int sr = 0; sr < lr; sr++)
                     {
-                        short[] numbers = new short[IsometricTileSector.Length];
+                        short[] numbers = new short[IsoTileSector.Length];
 
                         //faço a busca pelos números
                         for (int sc = 0; sc < lc; sc++)
@@ -138,17 +144,17 @@ namespace Microsoft.Xna.Framework.Graphics
                     //O valor da posição no array
                     short index = map[row, col];
                     //Recebe o Tile da tabela
-                    Dictionary<short, IsometricTile> table = point_sector[new Point(row, col)].Table;
+                    Dictionary<short, IsoTile> table = point_sector[new Point(row, col)].Table;
 
                     if (table.ContainsKey(index))
                     {
-                        IsometricTile tile = new IsometricTile(table[index]);                                                
+                        IsoTile tile = new IsoTile(table[index]);
 
                         //largura e altura para cálculo
                         //int w = tile.Animation.Bounds.Width;
                         //int h = tile.Animation.Bounds.Height;
-                        int w = IsometricTile.TileWidth;
-                        int h = IsometricTile.TileHeight;
+                        int w = TileWidth;
+                        int h = TileHeight;
                         float sx = StartPosition.X;
                         float sy = StartPosition.Y;
 
@@ -176,8 +182,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="column">A coluna desejada.</param>
         public Point GetPoint(Point sector, int row, int column)
         {
-            int r = (IsometricTileSector.Length * sector.X) + row;
-            int c = (IsometricTileSector.Length * sector.Y) + column;
+            int r = (IsoTileSector.Length * sector.X) + row;
+            int c = (IsoTileSector.Length * sector.Y) + column;
 
             return new Point(r, c);
         }
@@ -188,7 +194,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="sector">O setor.</param>
         /// <param name="row">A linha desejada.</param>
         /// <param name="column">A coluna desejada.</param>
-        public IsometricTile GetTile(Point sector, int row, int column)
+        public IsoTile GetTile(Point sector, int row, int column)
         {
             Point p = GetPoint(sector, row, column);
             return GetTile(p.X, p.Y);
@@ -199,7 +205,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="row">A linha desejada.</param>
         /// <param name="column">A coluna desejada.</param>
-        public IsometricTile GetTile(int row, int column)
+        public IsoTile GetTile(int row, int column)
         {
             if (Tiles.ContainsKey(new Point(row, column)))
                 return Tiles[new Point(row, column)];

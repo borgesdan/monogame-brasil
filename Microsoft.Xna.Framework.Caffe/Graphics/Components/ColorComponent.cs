@@ -24,11 +24,10 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>
-        /// Inicializa uma nova instância de ColorComponent. A propriedade Enable é setada como EnableGroup.Unavailable.
+        /// Inicializa uma nova instância de ColorComponent.
         /// </summary>
         public ColorComponent() : base()
         {
-            Enable = EnableGroup.Available;
             Name = nameof(ColorComponent);
         }
 

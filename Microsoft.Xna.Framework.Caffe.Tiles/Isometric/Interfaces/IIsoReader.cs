@@ -5,7 +5,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um leitor de tiles isometricos.
     /// </summary>
-    public interface IIsometricReader
+    public interface IIsoReader
     {
         /// <summary>
         /// Obtém se o método Read() leu todo seu conteúdo e chegou ao fim.

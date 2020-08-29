@@ -8,7 +8,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Representa uma animação de sprites.</summary>
     public class Animation : IDisposable, IUpdateDrawable, IBoundsable
     {
-        #region CAMPOS
+        #region CAMPOS E PROPRIEDADES
 
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -232,7 +232,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Color = source.Color;
             LayerDepth = source.LayerDepth;
             SpriteEffect = source.SpriteEffect;
-            Enable = source.Enable;
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
 
             int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);
            
@@ -334,7 +334,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private void UpdateOrigin()
         {
-            Vector2 f_o = CurrentSprite.Frames[FrameIndex].OriginCorrection;
+            Vector2 f_o = CurrentSprite.Frames[FrameIndex].Align;
             
             origin = Origin + f_o;
         }
@@ -389,23 +389,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 OnEndAnimation?.Invoke(this);
             }
-        }
-
-        /// <summary>
-        /// Importa os valores das propriedades da entidade e as define na animação.
-        /// </summary>
-        /// <param name="entity"></param>
-        public void SetProperties(Entity2D entity)
-        {
-            Color = entity.Transform.Color;
-            SpriteEffect = entity.Transform.SpriteEffect;
-            Rotation = entity.Transform.Rotation;
-            Scale = entity.Transform.Scale;
-            Position = entity.Transform.Position;
-            LayerDepth = entity.LayerDepth;
-            Origin = entity.Origin;
-            DrawPercentage = entity.DrawPercentage;
-        }
+        }        
 
         /// <summary>Avança um sprite da animação.</summary>
         public void ForwardIndex()
@@ -466,7 +450,7 @@ namespace Microsoft.Xna.Framework.Graphics
             elapsedGameTime = 0;
         }
 
-        /// <summary>Adiciona uma quantidade desejada de objetos a lista de Sprites.</summary>
+        /// <summary>Adiciona sprites a animação.</summary>
         /// <param name="source">Lista contendo os caminhos das texturas na pasta Content.</param>
         public void AddSprites(params string[] sources)
         {
@@ -520,7 +504,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="frames">A lista de frames no sprite.</param>
         public void AddSprite(string source, params SpriteFrame[] frames)
         {
-            Sprite sprite = new Sprite(Game, source);
+            Sprite sprite = new Sprite(Game, source, false);
 
             foreach (var f in frames)
             {

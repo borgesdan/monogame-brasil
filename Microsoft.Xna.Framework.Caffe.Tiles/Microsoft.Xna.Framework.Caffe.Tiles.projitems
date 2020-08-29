@@ -12,12 +12,12 @@
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\Interfaces\IIsometricReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsometricTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsometricTileMap.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsometricTileMapReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsometricTileSector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsometricTileSectorReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\Interfaces\IIsoReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileMapReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileSector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileSectorReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

@@ -13,7 +13,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
         protected bool disposed = false;
         /// <summary>Obtém ou define a disponilidade de atualização e desenho da entidade.</summary>
-        protected EnableGroup enable = EnableGroup.Available;
         private Vector2 percentage = Vector2.One;
         protected Polygon poly = new Polygon();
 
@@ -38,7 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém a instância atual da classe Game.</summary>
         public Game Game { get; set; } = null;
         /// <summary>Obtém ou define a disponibilidade de atualização e desenho da entidade.</summary>
-        public EnableGroup Enable { get => enable; set => enable = value; }
+        public EnableGroup Enable { get; set; } = new EnableGroup();
         /// <summary>Obtém ou define o nome da entidade.</summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
@@ -94,7 +93,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Origin = source.Origin;
             Bounds = source.Bounds;
-            Enable = new EnableGroup(true, true);
+            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             Game = source.Game;
             Transform = new TransformGroup(this, source.Transform);
             Name = source.Name;
