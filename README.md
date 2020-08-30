@@ -1,4 +1,4 @@
-![MonoGame.Caffe Logo](Logos/logo_800.png)
+![MonoGame.Caffe Logo](Logos/banner_800.png)
 
 # MonoGame Caffe
 
