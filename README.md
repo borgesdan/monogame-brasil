@@ -1,3 +1,5 @@
+![MonoGame.Caffe Logo](Logos/logo_800.png)
+
 # MonoGame Caffe
 
 Conjunto de classes e estruturas em C# para auxiliar no desenvolvimento de jogos 2D com a biblioteca MonoGame.
