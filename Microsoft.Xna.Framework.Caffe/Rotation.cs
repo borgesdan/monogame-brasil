@@ -6,11 +6,11 @@ namespace Microsoft.Xna.Framework
 {
     /// <summary>
     /// Classe de auxílio para cálculos de rotação.
-    /// </summary>
+    /// </summary>    
     public static class Rotation
     {
         /// <summary>
-        /// Obtém a posição de um ponto rotacionado ao informar a origem e o grau de rotação.
+        /// Obtém a posição de um ponto rotacionado ao informar a origem e o grau de rotação.        
         /// </summary>
         /// <param name="point">A posição do ponto na tela.</param>
         /// <param name="origin">A origem da rotação.</param>
