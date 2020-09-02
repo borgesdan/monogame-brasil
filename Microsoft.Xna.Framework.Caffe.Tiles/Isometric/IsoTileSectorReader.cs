@@ -8,13 +8,13 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um leitor de setores de tiles isometricos.
     /// </summary>
-    public class IsoTileSectorReader : IUpdateDrawable, IIsoReader, IDisposable
+    public class IsoTileSectorReader<T> : IUpdateDrawable, IIsoReader, IDisposable where T : struct
     {
-        short[,] map = null;
-        List<short[]> total = new List<short[]>();
-        IsoTileSector[,] array = null;
+        T[,] map = null;
+        List<T[]> total = new List<T[]>();
+        IsoTileSector<T>[,] array = null;
         Screen _screen = null;        
-        Dictionary<Point, IsoTileSector> point_sector = new Dictionary<Point, IsoTileSector>();
+        Dictionary<Point, IsoTileSector<T>> point_sector = new Dictionary<Point, IsoTileSector<T>>();
 
         /// <summary>Obtém a lista de tiles ordenados pelo método Read(). A chave Point representa a linha e a coluna onde se encontra o Tile.</summary>
         public Dictionary<Point, IsoTile> Tiles { get; private set; } = new Dictionary<Point, IsoTile>();
@@ -26,6 +26,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public int TileWidth { get; set; }
         /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
         public int TileHeight { get; set; }
+        /// <summary>Obtém ou define o valor que representa simultaneamente a quantidade de linhas e de colunas de todos os setores.</summary>
+        public static int Length { get; set; } = 20;
 
         /// <summary>
         /// Inicializa uma nova instância de SectorReader.
@@ -34,19 +36,20 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="sectors">Os setores a serem lidos.</param>
         /// <param name="tileWidth">A largura dos tiles.</param>
         /// <param name="tileHeight">A altura dos tiles.</param>
-        public IsoTileSectorReader(Screen screen, IsoTileSector[,] sectors, int tileWidth, int tileHeight)
+        public IsoTileSectorReader(Screen screen, IsoTileSector<T>[,] sectors, int tileWidth, int tileHeight, int length)
         {
             _screen = screen;
             array = sectors;
             TileWidth = tileWidth;
             TileHeight = tileHeight;
+            Length = length;
         }
 
         /// <summary>
         /// Inicializa uma nova instância de SectorReader.
         /// </summary>
         /// <param name="sectors">Os setores a serem lidos.</param>
-        public IsoTileSectorReader(IsoTileSector[,] sectors)
+        public IsoTileSectorReader(IsoTileSector<T>[,] sectors)
         {
             array = sectors;
         }
@@ -60,7 +63,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int d0 = array.GetLength(0);
             int d1 = array.GetLength(1);
 
-            total = new List<short[]>(d0 * IsoTileSector.Length);
+            total = new List<T[]>(d0 * Length);
 
             for (int t = 0; t < total.Capacity; t++)
                 total.Add(null);
@@ -72,9 +75,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 for (int col = 0; col < d1; col++)
                 {
                     //busco o setor na linha e coluna selecionada
-                    IsoTileSector s = array[row, col];
+                    IsoTileSector<T> s = array[row, col];
                     //recebo o mapa do setor
-                    short[,] _map = s.GetMap();
+                    T[,] _map = s.GetMap();
 
                     int lr = _map.GetLength(0);
                     int lc = _map.GetLength(1);
@@ -82,7 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     //confiro a linha e a coluna do mapa
                     for (int sr = 0; sr < lr; sr++)
                     {
-                        short[] numbers = new short[IsoTileSector.Length];
+                        T[] numbers = new T[Length];
 
                         //faço a busca pelos números
                         for (int sc = 0; sc < lc; sc++)
@@ -95,13 +98,13 @@ namespace Microsoft.Xna.Framework.Graphics
                         //insiro a linha no array total
                         int ins = sr + (row * lr);
 
-                        short[] index = total[ins];
+                        T[] index = total[ins];
 
                         if (index == null)
                             total[ins] = numbers;
                         else
                         {
-                            List<short> n = new List<short>();
+                            List<T> n = new List<T>();
                             n.AddRange(index);
 
                             foreach (var j in numbers)
@@ -113,11 +116,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
 
-            map = new short[total.Count, total[01].GetLength(0)];
+            map = new T[total.Count, total[01].GetLength(0)];
 
             for (int i = 0; i < total.Count; i++)
             {
-                short[] row = total[i];
+                T[] row = total[i];
 
                 for (int j = 0; j < row.GetLength(0); j++)
                 {
@@ -142,9 +145,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 for (int col = 0; col < d1; col++)
                 {
                     //O valor da posição no array
-                    short index = map[row, col];
+                    T index = map[row, col];
                     //Recebe o Tile da tabela
-                    Dictionary<short, IsoTile> table = point_sector[new Point(row, col)].Table;
+                    Dictionary<T, IsoTile> table = point_sector[new Point(row, col)].Table;
 
                     if (table.ContainsKey(index))
                     {
@@ -182,8 +185,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="column">A coluna desejada.</param>
         public Point GetPoint(Point sector, int row, int column)
         {
-            int r = (IsoTileSector.Length * sector.X) + row;
-            int c = (IsoTileSector.Length * sector.Y) + column;
+            int r = (Length * sector.X) + row;
+            int c = (Length * sector.Y) + column;
 
             return new Point(r, c);
         }

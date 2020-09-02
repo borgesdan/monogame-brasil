@@ -16,7 +16,6 @@ Global
 		Microsoft.Xna.Framework.Caffe.Extended\Microsoft.Xna.Framework.Caffe.Extended.projitems*{52aabcb6-aebc-4e00-89e0-fd601f3e1a4a}*SharedItemsImports = 13
 		Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.projitems*{551e2ba2-c009-422d-9e43-cf4ac542ac5e}*SharedItemsImports = 13
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{a0cdbd0e-3a41-42b7-9425-a838bc2c7383}*SharedItemsImports = 13
-		Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.projitems*{d1a946eb-2e91-4e6a-82c9-e1a4e9e87339}*SharedItemsImports = 5
 		Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems*{d1a946eb-2e91-4e6a-82c9-e1a4e9e87339}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

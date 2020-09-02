@@ -21,7 +21,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Action<Entity2D, MouseState> MouseEnter;
         /// <summary>Ocorre quando o ponteiro do mouse estava dentro e saiu nos limites da entidade.</summary>
         public Action<Entity2D, MouseState> MouseLeave;
-        /// <summary>Ocorre quando o ponteiro do mouse se encontra dentro doslimites da entidade.</summary>
+        /// <summary>Ocorre quando o ponteiro do mouse se encontra dentro dos limites da entidade.</summary>
         public Action<Entity2D, MouseState> MouseOn;
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         || old.MiddleButton == ButtonState.Pressed && state.MiddleButton == ButtonState.Released)
                     {
                         MouseUp?.Invoke(Entity, state);
-                    }
+                    }                    
 
                     old = state;
                 }

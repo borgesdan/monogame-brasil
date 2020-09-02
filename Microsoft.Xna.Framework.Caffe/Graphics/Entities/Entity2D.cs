@@ -139,12 +139,12 @@ namespace Microsoft.Xna.Framework.Graphics
             OnDraw?.Invoke(this, gameTime, spriteBatch);
             Components.Draw(gameTime, spriteBatch);
 
-            if (DEBUG.IsEnabled)
+            if (Debug.IsEnabled)
             {
-                if (DEBUG.ShowBounds)
+                if (Debug.ShowBounds)
                 {
                     poly.Set(BoundsR);
-                    DEBUG.Polygons.Add(new Tuple<Polygon, Color>(BoundsR, DEBUG.BoundsColor));
+                    Debug.Polygons.Add(new Tuple<Polygon, Color>(BoundsR, Debug.BoundsColor));
                 }
             }
         }                

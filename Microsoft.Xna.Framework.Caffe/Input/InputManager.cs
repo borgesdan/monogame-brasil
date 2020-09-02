@@ -5,7 +5,7 @@ namespace Microsoft.Xna.Framework.Input
     /// <summary>
     /// Classe de gerenciamento de entradas do usuário.
     /// </summary>
-    public class InputManager 
+    public class InputManager : IUpdate
     {
         /// <summary>Obtém ou define o GamePad do Player 1.</summary>
         public GamePadHelper One { get; set; }

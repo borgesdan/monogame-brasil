@@ -9,7 +9,7 @@ namespace Microsoft.Xna.Framework
     /// <summary>
     /// Representa um modo de visualização do desenvolvedor.
     /// </summary>
-    public static class DEBUG
+    public static class Debug
     {
         private static Polygon3D poly = null;
         public static List<Tuple<Polygon, Color>> Polygons { get; set; } = new List<Tuple<Polygon, Color>>();        

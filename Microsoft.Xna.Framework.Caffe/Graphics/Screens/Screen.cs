@@ -1,5 +1,6 @@
 ﻿// Danilo Borges Santos, 2020.
 
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -20,6 +21,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         protected bool disposed = false;
         protected Camera camera = Camera.Create();
+        private InputManager input = null;
+        private bool needInputUpdate = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -43,6 +46,30 @@ namespace Microsoft.Xna.Framework.Graphics
         public Viewport Viewport { get; set; }
         /// <summary>Obtém ou define a câmera da tela.</summary>
         public Camera Camera { get => camera; set => camera = value; }
+        /// <summary>
+        /// Obtém o acesso ao InputManager do ScreenManager ou SubManager em que a tela é associada, 
+        /// ou a um objeto InputManager independente caso não se tenha resultado nessas tentativas.
+        /// </summary>
+        public InputManager Input
+        {
+            get
+            {
+                if(input == null)
+                {
+                    if (Manager != null)
+                        input = Manager.Input;
+                    else if (SubManager != null)
+                        input = SubManager.Input;
+                    else
+                    {
+                        input = new InputManager();
+                        needInputUpdate = true;
+                    }                        
+                }
+
+                return input;
+            }
+        }
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//
@@ -151,6 +178,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (!Enable.IsEnabled)
                 return;
+
+            if (needInputUpdate)
+                Input.Update(gameTime);
             
             //Chama OnEndUpdate
             OnUpdate?.Invoke(this, gameTime);

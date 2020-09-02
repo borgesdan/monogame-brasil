@@ -171,8 +171,7 @@ namespace Microsoft.Xna.Framework.Graphics
                    T09 == box.T09 &&
                    T10 == box.T10 &&
                    T11 == box.T11 &&
-                   T12 == box.T12 &&
-                   Bounds.Equals(box.Bounds);
+                   T12 == box.T12;
         }
 
         public override int GetHashCode()

@@ -3,7 +3,7 @@
 namespace Microsoft.Xna.Framework.Input
 {
     /// <summary>Classe que gerencia e auxilia nas entradas do jogador com um teclado.</summary>
-    public class KeyboardHelper
+    public class KeyboardHelper : IUpdate
     {
         /// <sumary>Obtém ou define se esta instância está disponível para ser atualizada.</sumary>
         public bool IsEnabled { get; set; } = true;

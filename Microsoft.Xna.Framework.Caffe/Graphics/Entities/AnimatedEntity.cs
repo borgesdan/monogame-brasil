@@ -200,23 +200,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
             base.Draw(gameTime, spriteBatch);
 
-            if (DEBUG.IsEnabled)
+            if (Debug.IsEnabled)
             {
-                if(DEBUG.ShowCollisionBox)
+                if(Debug.ShowCollisionBox)
                 {
                     foreach(CollisionBox cb in CollisionBoxes)
                     {
                         poly.Set(cb.Bounds);
-                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(poly, DEBUG.CollisionBoxColor));
+                        Debug.Polygons.Add(new Tuple<Polygon, Color>(poly, Debug.CollisionBoxColor));
                     }
                 }
 
-                if (DEBUG.ShowAttackBox)
+                if (Debug.ShowAttackBox)
                 {
                     foreach (AttackBox ab in AttackBoxes)
                     {
                         poly.Set(ab.Bounds);
-                        DEBUG.Polygons.Add(new Tuple<Polygon, Color>(poly, DEBUG.AttackBoxColor));
+                        Debug.Polygons.Add(new Tuple<Polygon, Color>(poly, Debug.AttackBoxColor));
                     }
                 }
             }            

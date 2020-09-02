@@ -2,12 +2,12 @@
 
 namespace Microsoft.Xna.Framework
 {
-    /// <summary>Classe que agrupa propriedades para disponibilidade da entidade.</summary>
+    /// <summary>Classe que agrupa propriedades para disponibilidade de um objeto.</summary>
     public class EnableGroup
     {
-        /// <summary>Obtém ou define se a entidade está ativa.</summary>
+        /// <summary>Obtém ou define se o objeto está ativo.</summary>
         public bool IsEnabled { get; set; } = true;
-        /// <summary>Obtém ou define se a entidade é visível.</summary>
+        /// <summary>Obtém ou define se o objeto é visível.</summary>
         public bool IsVisible { get; set; } = true;
 
         /// <summary>Inicia uma nova instância da classe EnableGroup com suas preferências</summary>
@@ -20,7 +20,7 @@ namespace Microsoft.Xna.Framework
         {
             IsEnabled = enabled;
             IsVisible = visible;
-        }
+        }        
     }
 
     ///// <summary>Classe que agrupa propriedades para disponibilidade da entidade.</summary>

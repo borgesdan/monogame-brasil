@@ -9,7 +9,7 @@
     <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)DEBUG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
@@ -79,5 +80,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\bin\DesktopGL\Content\Roboto-Regular.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Content\Roboto-Regular.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Roboto-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />
   </ItemGroup>
 </Project>

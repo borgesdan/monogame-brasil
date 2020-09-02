@@ -8,21 +8,21 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa o mapa de tiles.
     /// </summary>
-    public class IsoTileMap : IDisposable
+    public class IsoTileMap<T> : IDisposable where T : struct
     {
         // O mapa com a numeração dos tiles.
-        private short[,] mapArray = null;        
+        private T[,] mapArray = null;        
 
         /// <summary>
         /// Obtém ou define a tabela de índices com seus respectivos Tiles.
         /// </summary>
-        public Dictionary<short, IsoTile> Table { get; set; } = new Dictionary<short, IsoTile>();
+        public Dictionary<T, IsoTile> Table { get; set; } = new Dictionary<T, IsoTile>();
 
         /// <summary>
         /// Inicializa uma nova instância de IsoTileMap.
         /// </summary>
         /// <param name="array">O array com a numeração de tiles do mapa</param>
-        public IsoTileMap(short[,] array)
+        public IsoTileMap(T[,] array)
         {
             mapArray = array;
         }
@@ -32,7 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="array">O array com a numeração de tiles do mapa</param>
         /// <param name="table">A tabela de índices com seus respectivos Tiles.</param>
-        public IsoTileMap(short[,] array, Dictionary<short, IsoTile> table)
+        public IsoTileMap(T[,] array, Dictionary<T, IsoTile> table)
         {
             mapArray = array;
             Table = table;
@@ -41,9 +41,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém o mapa com a numeração dos tiles.
         /// </summary>
-        public short[,] GetMap()
+        public T[,] GetMap()
         {
-            return (short[,])mapArray.Clone();
+            return (T[,])mapArray.Clone();
         }
 
         //---------------------------------------//

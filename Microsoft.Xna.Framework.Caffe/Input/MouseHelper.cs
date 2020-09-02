@@ -13,7 +13,7 @@ namespace Microsoft.Xna.Framework.Input
     }
 
     /// <summary>Classe que auxilia no gerenciamento de entradas do mouse.</summary>
-    public class MouseHelper
+    public class MouseHelper : IUpdate
     {
         //---------------------------------------//
         //-----         VARIAVEIS           -----//

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Microsoft.Xna.Framework.Input
 {
     /// <summary>Classe que gerencia e auxilia nas entradas do usuário com o GamePad.</summary>
-    public class GamePadHelper
+    public class GamePadHelper : IUpdate
     {
         private KeyboardState keyboardState = new KeyboardState();
         private KeyboardState lastKeyboardState = new KeyboardState();
@@ -65,6 +65,15 @@ namespace Microsoft.Xna.Framework.Input
 
             OldState = State;
             State = GamePad.GetState(Index);
+        }
+
+        /// <summary>
+        /// <summary>Define o mapeamento de teclas para botões do GamePad.</summary>
+        /// </summary>
+        /// <param name="keyboardMap">o mapeamento de teclas para botões do GamePad.</param>
+        public void SetMap(KeyboardMap keyboardMap)
+        {
+            KeyboardMap = keyboardMap.GetKeyboardMap();
         }
 
         /// <summary>Verifica se o botão selecionado está pressionado.</summary>

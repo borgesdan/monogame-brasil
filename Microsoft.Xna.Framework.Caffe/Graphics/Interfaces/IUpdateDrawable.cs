@@ -2,13 +2,6 @@
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    public interface IUpdate
-    {
-        /// <summary>Atualiza o objeto.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        void Update(GameTime gameTime);
-    }
-
     public interface IDraw
     {
         /// <summary>Desenha o objeto.</summary>

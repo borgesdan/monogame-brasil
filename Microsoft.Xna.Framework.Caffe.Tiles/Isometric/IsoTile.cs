@@ -11,7 +11,7 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         /// <summary>Obtém ou define a animação do topo do Tile.</summary>
         public Animation Animation { get; set; } = null;
-        /// <summary>Obtém ou define onde o tile se encontra no mapa.</summary>
+        /// <summary>Obtém ou define onde o tile se encontra em um mapa.</summary>
         public Point MapPoint { get; set; } = Point.Zero;
         /// <summary>Obtém ou define um valor para o Tile.</summary>
         public short Value { get; set; } = 0;        

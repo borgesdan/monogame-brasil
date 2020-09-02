@@ -27,5 +27,4 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />    
   </ItemGroup>
   <Import Project="..\Microsoft.Xna.Framework.Caffe\Microsoft.Xna.Framework.Caffe.projitems" Label="Shared" />
-  <Import Project="..\Microsoft.Xna.Framework.Caffe.Tiles\Microsoft.Xna.Framework.Caffe.Tiles.projitems" Label="Shared" />
 </Project>

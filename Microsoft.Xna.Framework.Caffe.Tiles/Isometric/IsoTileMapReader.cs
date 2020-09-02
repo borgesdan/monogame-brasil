@@ -8,9 +8,9 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um leitor de mapas de tiles que os desenha na tela.
     /// </summary>
-    public class IsoTileMapReader : IUpdateDrawable, IIsoReader, IDisposable
+    public class IsoTileMapReader<T> : IUpdateDrawable, IIsoReader, IDisposable where T : struct
     {
-        private short[,] array = null;
+        private T[,] array = null;
         private Screen _screen = null;        
 
         //---------------------------------------//
@@ -18,7 +18,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Obtém ou define o mapa de tiles.</summary>
-        public IsoTileMap Map { get; set; } = null;
+        public IsoTileMap<T> Map { get; set; } = null;
         /// <summary>Obtém a lista de tiles ordenados pelo método Read(). Point representa a linha e a coluna onde se encontra o Tile.</summary>
         public Dictionary<Point, IsoTile> Tiles { get; private set; } = new Dictionary<Point, IsoTile>();
         /// <summary>Obtém se o método Read() leu todo seu conteúdo e chegou ao fim.</summary>
@@ -41,7 +41,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="map">O mapa de tiles a ser lido.</param>
         /// <param name="tileWidth">A largura dos tiles.</param>
         /// <param name="tileHeight">A altura dos tiles.</param>
-        public IsoTileMapReader(Screen screen, IsoTileMap map, int tileWidth, int tileHeight) 
+        public IsoTileMapReader(Screen screen, IsoTileMap<T> map, int tileWidth, int tileHeight) 
         {
             _screen = screen;
             Map = map;
@@ -72,7 +72,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 for (int col = 0; col < d1; col++)
                 {
                     //O valor da posição no array
-                    short index = array[row, col];
+                    T index = array[row, col];
                     
                     //Recebe o Tile da tabela
                     if(Map.Table.ContainsKey(index))
