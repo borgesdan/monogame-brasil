@@ -2,7 +2,7 @@
 
 # MonoGame Caffe
 
-Set of classes, structures and tools in C # to facilitate the development of 2D games with the library [MonoGame](http://www.monogame.net/).
+Set of classes, structures and tools to facilitate the development of 2D games with [MonoGame](http://www.monogame.net/).
 
 
 ## Version

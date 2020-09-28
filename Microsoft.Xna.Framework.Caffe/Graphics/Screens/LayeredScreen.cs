@@ -6,97 +6,72 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Classe que representa uma tela de jogo com suas entidades e camadas.</summary>
-    public class LayeredScreen : Screen, IDisposable
+    public class LayeredScreen : Screen
     {
         //---------------------------------------//
-        //-----         VARIÁVEIS           -----//
-        //---------------------------------------//
-        private Viewport staticView = new Viewport();
-
-        //---------------------------------------//
         //-----         PROPRIEDADES        -----//
-        //---------------------------------------//
-        /// <summary>Obtém ou define a lista de entidades disponíveis na tela.</summary>
-        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
-        /// <summary>Obtém ou define a lista de entidades que serão desenhadas atrás de DrawableEntities e que não serão afetadas pela câmera e nem pela Viewport.</summary>
-        public List<Entity2D> BackStaticEntities { get; set; } = new List<Entity2D>();
-        /// <summary>Obtém ou define a lista de entidades que serão desenhadas a frente de DrawableEntities e que não serão afetadas pela câmera e nem pela Viewport.</summary>
-        public List<Entity2D> FrontStaticEntities { get; set; } = new List<Entity2D>();
-        /// <summary>Obtém a lista de entidades que serão desenhadas.</summary>
-        public List<Entity2D> DrawableEntities { get; private set; } = new List<Entity2D>();
+        //---------------------------------------//        
+        /// <summary>Obtém ou define a lista de atores que serão desenhadas atrás de DrawableEntities e que não serão afetadas pela câmera e nem pela Viewport.</summary>
+        public List<Actor> BackStaticActors { get; set; } = new List<Actor>();
+        /// <summary>Obtém ou define a lista de atores que serão desenhadas a frente de DrawableEntities e que não serão afetadas pela câmera e nem pela Viewport.</summary>
+        public List<Actor> FrontStaticActors { get; set; } = new List<Actor>();
+        /// <summary>Obtém a lista de atores que serão desenhadas.</summary>
+        public List<Actor> DrawableActors { get; private set; } = new List<Actor>();
         
         /// <summary>Obtém ou define a lista de camadas traseiras.</summary>
-        public List<Layer> BackLayers { get; set; } = new List<Layer>();
+        public List<ScreenLayer> BackLayers { get; set; } = new List<ScreenLayer>();
         /// <summary>Obtém ou define a lista de camadas frontais.</summary>
-        public List<Layer> FrontLayers { get; set; } = new List<Layer>();
+        public List<ScreenLayer> FrontLayers { get; set; } = new List<ScreenLayer>();
         
-        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades traseiras que não são afetadas pela Viewport da tela.</summary>
-        public SpriteBatchBeginConfig BackStaticEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
-        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades frontais que não são afetadas pela Viewport da tela.</summary>
-        public SpriteBatchBeginConfig FrontStaticEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
-        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para as entidades que serão desenhadas na Viewport da tela. (TransformMatrix será ignorado)</summary>
-        public SpriteBatchBeginConfig DrawableEntitiesConfig { get; set; } = new SpriteBatchBeginConfig();
+        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores traseiros que não são afetados pela Camera da tela.</summary>
+        public SpriteBatchBeginConfig BackStaticConfig { get; set; } = new SpriteBatchBeginConfig();
+        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores frontais que não são afetados pela Camera da tela.</summary>
+        public SpriteBatchBeginConfig FrontStaticConfig { get; set; } = new SpriteBatchBeginConfig();
+        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores que serão desenhadas normalmente.</summary>
+        public SpriteBatchBeginConfig DrawableConfig { get; set; } = new SpriteBatchBeginConfig();
                 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
-        //-----------------------------------------//
-        /// <summary>Inicializa uma nova instância da classe Screen.</summary>
-        /// <param name="game">A instância da classe Game.</param>
-        /// <param name="name">O nome da tela.</param>
-        public LayeredScreen(Game game, string name) : base(game, name, true) { }
+        //-----------------------------------------//       
 
-        /// <summary>
-        /// Inicializa uma nova instância da classe Screen.
-        /// </summary>
-        /// <param name="manager">O gerenciador de telas atual.</param>
-        /// <param name="name">O nome da tela.</param>
-        /// <param name="loadScreen">True se a tela será carregada.</param>
-        public LayeredScreen(ScreenManager manager, string name, bool loadScreen) : base(manager, name, loadScreen) { }
-
-        /// <summary>
-        /// Inicializa uma nova instância da classe Screen.
-        /// </summary>
-        /// <param name="subManager">O subgerenciador de telas associado a uma tela administradora.</param>
-        /// <param name="name">O nome da tela.</param>
-        /// <param name="loadScreen">True se a tela será carregada.</param>
-        public LayeredScreen(SubScreenManager subManager, string name, bool loadScreen) : base(subManager, name, loadScreen) { }        
 
         /// <summary>Inicializa uma nova instância da classe Screen.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
+        /// <param name="manager">O gerenciador de telas atual.</param>
         /// <param name="name">Nome da tela.</param>
         /// <param name="loadScene">True se a tela será carregada.</param>
-        public LayeredScreen(Game game, string name, bool loadScreen) :base(game, name, loadScreen) { }
+        public LayeredScreen(Game game, ScreenManager manager, string name, bool loadScreen) :base(game, manager, name, loadScreen) { }
 
         /// <summary>
-        /// Inicializa uma nova instância da classe Screen copiando uma outra tela. 
+        /// Inicializa uma nova instância da classe LayredScreen copiando uma outra tela. 
         /// </summary>
         /// <param name="source">A tela a ser copiada.</param>
         public LayeredScreen(LayeredScreen source) : base(source)
         {
-            foreach (var bse in source.BackStaticEntities)
-                this.BackStaticEntities.Add(bse.Clone(bse));            
+            foreach (var bse in source.BackStaticActors)
+                this.BackStaticActors.Add(bse);
 
             foreach (var bl in source.BackLayers)
-                this.BackLayers.Add(bl.Clone(bl));
+                this.BackLayers.Add(bl);
 
-            foreach (var e in source.Entities)
-                this.Entities.Add(e.Clone(e));
+            foreach (var e in source.Actors)
+                this.Actors.Add(e);
 
-            foreach (var de in source.DrawableEntities)
+            foreach (var de in source.DrawableActors)
             {
-                var index = source.DrawableEntities.IndexOf(de);
-                this.DrawableEntities.Add(this.Entities[index]);
+                var index = source.DrawableActors.IndexOf(de);
+                this.DrawableActors.Add(this.Actors[index]);
             }
 
             foreach (var fl in source.FrontLayers)
-                this.FrontLayers.Add(fl.Clone(fl));
+                this.FrontLayers.Add(fl);
 
-            foreach (var fse in source.FrontStaticEntities)
-                this.FrontStaticEntities.Add(fse.Clone(fse));            
+            foreach (var fse in source.FrontStaticActors)
+                this.FrontStaticActors.Add(fse);            
 
-            this.BackStaticEntitiesConfig = source.BackStaticEntitiesConfig;
-            this.FrontStaticEntitiesConfig = source.FrontStaticEntitiesConfig;
-            this.DrawableEntitiesConfig = source.DrawableEntitiesConfig;
+            this.BackStaticConfig = source.BackStaticConfig;
+            this.FrontStaticConfig = source.FrontStaticConfig;
+            this.DrawableConfig = source.DrawableConfig;
         }
 
         //---------------------------------------//
@@ -108,11 +83,9 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
-                return;
+                return;                    
 
-            staticView = new Viewport(0, 0, Game.Window.ClientBounds.Width, Game.Window.ClientBounds.Height);            
-
-            DrawableEntities.Clear();
+            DrawableActors.Clear();
 
             //Atualiza as entidades.
             UpdateEntities(gameTime);
@@ -123,22 +96,14 @@ namespace Microsoft.Xna.Framework.Graphics
         //Atualiza as entidades.
         private void UpdateEntities(GameTime gameTime)
         {
-            foreach (var e in Entities)
+            foreach (var a in Actors)
             {
-                e.Screen = this;
-
                 //Se a entidade é visível em tela.
-                if (Util.CheckFieldOfView(Game, Camera, e.Bounds))
+                if (Util.CheckFieldOfView(Game, Camera, a.Bounds))
                 {
                     //Adiciona-a a lista de entidades desenháveis.
-                    DrawableEntities.Add(e);
+                    DrawableActors.Add(a);
                 }
-            }
-            
-            for(int e = 0; e < Entities.Count; e++)
-            {
-                if(Entities[e].Enable.IsEnabled)
-                    Entities[e].Update(gameTime);
             }
             
             for (int e = 0; e < BackLayers.Count; e++)
@@ -153,16 +118,16 @@ namespace Microsoft.Xna.Framework.Graphics
                     FrontLayers[e].Update(gameTime);
             }
             
-            for (int e = 0; e < BackStaticEntities.Count; e++)
+            for (int e = 0; e < BackStaticActors.Count; e++)
             {
-                if (BackStaticEntities[e].Enable.IsEnabled)
-                    BackStaticEntities[e].Update(gameTime);
+                if (BackStaticActors[e].Enable.IsEnabled)
+                    BackStaticActors[e].Update(gameTime);
             }
             
-            for (int e = 0; e < FrontStaticEntities.Count; e++)
+            for (int e = 0; e < FrontStaticActors.Count; e++)
             {
-                if (FrontStaticEntities[e].Enable.IsEnabled)
-                    FrontStaticEntities[e].Update(gameTime);
+                if (FrontStaticActors[e].Enable.IsEnabled)
+                    FrontStaticActors[e].Update(gameTime);
             }
         }
 
@@ -179,45 +144,36 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if (bl.Enable.IsVisible)
                     bl.Draw(gameTime, spriteBatch);
-            }
-
-            //Define a view estática.
-            Game.GraphicsDevice.Viewport = staticView;
+            } 
 
             //Desenha as entidades não afetadas pela câmera.
-            spriteBatch.Begin(sortMode: BackStaticEntitiesConfig.SortMode, blendState: BackStaticEntitiesConfig.Blend, samplerState: BackStaticEntitiesConfig.Sampler,
-                depthStencilState: BackStaticEntitiesConfig.DepthStencil, rasterizerState: BackStaticEntitiesConfig.Rasterizer, effect: BackStaticEntitiesConfig.Effects,
-                transformMatrix: BackStaticEntitiesConfig.TransformMatrix);
-            foreach (var bse in BackStaticEntities)
+            spriteBatch.Begin(sortMode: BackStaticConfig.SortMode, blendState: BackStaticConfig.BlendState, samplerState: BackStaticConfig.Sampler,
+                depthStencilState: BackStaticConfig.DepthStencil, rasterizerState: BackStaticConfig.Rasterizer, effect: BackStaticConfig.Effect,
+                transformMatrix: BackStaticConfig.TransformMatrix);
+            foreach (var bse in BackStaticActors)
             {
                 if (bse.Enable.IsVisible)
                     bse.Draw(gameTime, spriteBatch);
             }
             spriteBatch.End();
-
-            //Define a view principal.
-            Game.GraphicsDevice.Viewport = Viewport;
-
+           
             //Inicia o spritebatch com a câmera.
-            spriteBatch.Begin(sortMode: DrawableEntitiesConfig.SortMode, blendState: DrawableEntitiesConfig.Blend, samplerState: DrawableEntitiesConfig.Sampler,
-                depthStencilState: DrawableEntitiesConfig.DepthStencil, rasterizerState: DrawableEntitiesConfig.Rasterizer, effect: DrawableEntitiesConfig.Effects,
+            spriteBatch.Begin(sortMode: DrawableConfig.SortMode, blendState: DrawableConfig.BlendState, samplerState: DrawableConfig.Sampler,
+                depthStencilState: DrawableConfig.DepthStencil, rasterizerState: DrawableConfig.Rasterizer, effect: DrawableConfig.Effect,
                 transformMatrix: Camera.GetTransform());
             //Desenhas a entidades e chama o evento.
-            foreach (var de in DrawableEntities)
+            foreach (var de in DrawableActors)
             {
                 if (de.Enable.IsVisible)
                     de.Draw(gameTime, spriteBatch);
             }
-            spriteBatch.End();
-
-            //Define a view estática.
-            Game.GraphicsDevice.Viewport = staticView;
+            spriteBatch.End();            
 
             //Desenhas as entidades não afetadas pela câmera [Frente].
-            spriteBatch.Begin(sortMode: FrontStaticEntitiesConfig.SortMode, blendState: FrontStaticEntitiesConfig.Blend, samplerState: FrontStaticEntitiesConfig.Sampler,
-                depthStencilState: FrontStaticEntitiesConfig.DepthStencil, rasterizerState: FrontStaticEntitiesConfig.Rasterizer, effect: FrontStaticEntitiesConfig.Effects,
-                transformMatrix: FrontStaticEntitiesConfig.TransformMatrix);
-            foreach (var fe in FrontStaticEntities)
+            spriteBatch.Begin(sortMode: FrontStaticConfig.SortMode, blendState: FrontStaticConfig.BlendState, samplerState: FrontStaticConfig.Sampler,
+                depthStencilState: FrontStaticConfig.DepthStencil, rasterizerState: FrontStaticConfig.Rasterizer, effect: FrontStaticConfig.Effect,
+                transformMatrix: FrontStaticConfig.TransformMatrix);
+            foreach (var fe in FrontStaticActors)
             {
                 if (fe.Enable.IsVisible)
                     fe.Draw(gameTime, spriteBatch);
@@ -229,28 +185,25 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if (fl.Enable.IsVisible)
                     fl.Draw(gameTime, spriteBatch);
-            }
-
-            //Define novamente a view.
-            Game.GraphicsDevice.Viewport = Viewport;
+            }           
 
             base.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Adiciona entidades a cena.</summary>
         /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddEntity(params Entity2D[] entities)
+        public void AddActor(params Entity2D[] entities)
         {
             foreach(var e in entities)
             {
                 e.Screen = this;
-                Entities.Add(e);
+                Actors.Add(e);
             }
         }
 
         /// <summary>Adiciona camadas traseiras a cena.</summary>
         /// <param name="entities">Lista de camadas a serem adicionada.</param>
-        public void AddBackLayer(params Layer[] backlayers)
+        public void AddBackLayer(params ScreenLayer[] backlayers)
         {
             foreach (var e in backlayers)
             {
@@ -260,7 +213,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona camadas frontais a cena.</summary>
         /// <param name="entities">Lista de camadas a serem adicionada.</param>
-        public void AddFrontLayer(params Layer[] frontLayers)
+        public void AddFrontLayer(params ScreenLayer[] frontLayers)
         {
             foreach (var e in frontLayers)
             {
@@ -270,29 +223,30 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
         /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddBackStaticEntity(params Entity2D[] backEntities)
+        public void AddBackStatic(params Entity2D[] backEntities)
         {
             foreach (var e in backEntities)
             {
                 e.Screen = this;
-                BackStaticEntities.Add(e);
+                BackStaticActors.Add(e);
             }
         }
 
         /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
         /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddFrontStaticEntity(params Entity2D[] frontEntities)
+        public void AddFrontStatic(params Entity2D[] frontEntities)
         {
             foreach (var e in frontEntities)
             {
                 e.Screen = this;
-                FrontStaticEntities.Add(e);
+                FrontStaticActors.Add(e);
             }
         }
 
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------// 
+        private bool disposed = false;
 
         protected override void Dispose(bool disposing)
         {
@@ -300,21 +254,19 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             if (disposing)
-            {
-                Entities.Clear();
-                Entities = null;                
-                DrawableEntities.Clear();
-                DrawableEntities = null;
+            {           
+                DrawableActors.Clear();
+                DrawableActors = null;
                 BackLayers.Clear();
                 BackLayers = null;
-                BackStaticEntities.Clear();
-                BackStaticEntities = null;
-                BackStaticEntitiesConfig = null;
+                BackStaticActors.Clear();
+                BackStaticActors = null;
+                BackStaticConfig = null;
                 FrontLayers.Clear();
                 FrontLayers = null;
-                FrontStaticEntities.Clear();
-                FrontStaticEntities = null;
-                FrontStaticEntitiesConfig = null;
+                FrontStaticActors.Clear();
+                FrontStaticActors = null;
+                FrontStaticConfig = null;
             }
 
             base.Dispose(disposing);

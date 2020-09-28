@@ -80,7 +80,7 @@ namespace Game1
             //BACK RECTANGLE
             backEntity = AnimatedEntity.CreateRectangle2(this, "backRectangle", new Point(400, 400), 2, Color.Black);
             backEntity.Origin = new Vector2(backEntity.Transform.Width / 2, backEntity.Transform.Height / 2);
-            backEntity.Transform.SetPosition(AlignType.Center);            
+            backEntity.Transform.SetPosition(AlignType.Center);                        
         }
 
         protected override void Update(GameTime gameTime)

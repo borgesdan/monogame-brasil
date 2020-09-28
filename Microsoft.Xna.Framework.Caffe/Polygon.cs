@@ -35,7 +35,7 @@ namespace Microsoft.Xna.Framework
     {
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
-        //---------------------------------------//
+        //---------------------------------------//        
 
         /// <summary>
         /// Obtém ou define os pontos do polígono.

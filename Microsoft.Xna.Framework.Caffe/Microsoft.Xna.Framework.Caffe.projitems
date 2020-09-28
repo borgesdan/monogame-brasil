@@ -9,25 +9,30 @@
     <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Debug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Actor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ActorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoundsComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IActor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundsR.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IDraw.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\ITransformable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\AttackBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\CollisionBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\CollisionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\AttackBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision\Collision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\BoxGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\CollisionBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision\CollisionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\CollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ColorComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\EntityComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoundsComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\FollowMouseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\MouseEventsComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\AnimatedEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\Entity2D.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\ComponentGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)EnableGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\ComponentGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Groups\EnableGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IUpdateDrawable.cs" />
@@ -39,19 +44,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\StaticLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SubScreenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Interfaces\ISpriteBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Triangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\SpriteFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\GamePadHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MouseHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\TransformGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\TransformGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Sprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
@@ -82,6 +88,10 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\bin\Windows\Roboto-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Collision\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Groups\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Groups\" />
   </ItemGroup>
 </Project>

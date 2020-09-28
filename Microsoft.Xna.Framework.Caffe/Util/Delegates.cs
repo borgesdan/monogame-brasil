@@ -12,17 +12,7 @@ namespace Microsoft.Xna.Framework
     /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
     /// <param name="intersection">A área de intersecção entre as duas entidades.</param>
     /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
-    public delegate void CollisionAction(Entity2D source, GameTime gameTime, CollisionResult result, Entity2D collidedEntity);
-
-    /// <summary>
-    /// Encapsula um método que tem os seguintes parâmetros definidos como resultado de uma colisão entre boxes.
-    /// </summary>
-    /// <param name="source">A entidade que implementa este delegate</param>
-    /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-    /// <param name="boxes">As caixas recorrentes da colisão.</param>
-    /// <param name="result">O resultado da colisão entre os boxes.</param>
-    /// <param name="collidedEntity">A entidade que recebeu a colisão.</param>
-    public delegate void BoxCollisionAction<T1, T2>(Entity2D source, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result, Entity2D collidedEntity) where T1 : struct where T2 : struct;
+    public delegate void CollisionAction(Entity2D source, GameTime gameTime, CollisionResult result, Entity2D collidedEntity);    
 
     /// <summary>
     /// Encapsula um metodo que tem os seguintes parâmetros definidos e que expõe o resultado final de uma ação.

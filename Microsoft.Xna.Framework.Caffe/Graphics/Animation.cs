@@ -5,8 +5,8 @@ using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Representa uma animação de sprites.</summary>
-    public class Animation : IDisposable, IUpdateDrawable, IBoundsable
+    /// <summary>Ator que representa uma animação de sprites.</summary>
+    public class Animation : Actor
     {
         #region CAMPOS E PROPRIEDADES
 
@@ -19,19 +19,14 @@ namespace Microsoft.Xna.Framework.Graphics
         int time = 0;
         int elapsedGameTime = 0;        
         bool useDestinationBounds = false;
-        bool disposed = false;
         Rectangle destinationBounds = Rectangle.Empty;
-        Vector2 origin = Vector2.Zero;
+        Vector2 drawOrigin = Vector2.Zero;
         Vector2 drawPercentage = Vector2.One;        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-
-        /// <summary>Obtém a instância da classe Game.</summary>
-        public Game Game { get; protected set; } = null;
-        ///<summary>Obtém ou define se a animaçãp é desenhável e atualizável.</summary>
-        public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
+        
         /// <summary>Obtém ou define a lista de sprites.</summary>
         public List<Sprite> Sprites { get; set; } = new List<Sprite>();
         /// <summary>Obtém ou define o tempo de exibição de cada frame do sprite.</summary>
@@ -43,8 +38,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 time = MathHelper.Clamp(value, 0, int.MaxValue);
             }
         }
-        /// <summary>Obtém a posição atual da animação</summary>
-        public int Index 
+        /// <summary>Obtém a posição atual do Sprite a ser utilizado.</summary>
+        public int SpriteIndex 
         {
             get => _index;
             protected set
@@ -53,7 +48,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 OnChangeIndex?.Invoke(this);
             }
         }
-        /// <summary>Obtém a posição do frame da sprite corrente.</summary>
+        /// <summary>Obtém a posição do frame do Sprite atual.</summary>
         public int FrameIndex 
         {
             get => _findex;
@@ -63,59 +58,15 @@ namespace Microsoft.Xna.Framework.Graphics
                 OnChangeFrameIndex?.Invoke(this);
             }
         }
-        /// <summary>Obtém ou define a posição na tela da animação</summary>
-        public Vector2 Position { get; set; } = Vector2.Zero;
-        /// <summary>Obtém ou define a posição no eixo X.</summary>
-        public float X { get => Position.X; set => Position = new Vector2(value, Y); }
-        /// <summary>Obtém ou define a posição no eixo Y.</summary>
-        public float Y { get => Position.Y; set => Position = new Vector2(X, value); }
-        /// <summary>Obtém ou define a origem para desenho de cada sprite.</summary>
-        public Vector2 Origin { get; set; } = Vector2.Zero;
-        /// <summary>Obtém ou define a origem no eixo X.</summary>
-        public float Xo { get => Origin.X; set => Origin = new Vector2(value, Yo); }
-        /// <summary>Obtém ou define a origem no eixo Y.</summary>
-        public float Yo { get => Origin.Y; set => Origin = new Vector2(Xo, value); }
-        /// <summary>Obtém o atual frame da animação.</summary>
-        public Rectangle Frame { get; protected set; }
-        /// <summary>Obtém os limites da animação. Sua largura e altura (com escala) e sua posição.</summary>
-        public virtual Rectangle Bounds 
-        {
-            get
-            {
-                Rectangle b = new Rectangle((int)Position.X, (int)Position.Y, (int)ScaledSize.X, (int)ScaledSize.Y);
-                return b;
-            }
-        }
-        /// <summary>Obtém o tamanho atual da animação</summary>
-        public Point Size { get; protected set; } = Point.Zero;
-        /// <summary>Obtém a largura da animação</summary>
-        public int Width { get => Size.X; }
-        /// <summary>Obtém a altura da animação</summary>
-        public int Height { get => Size.Y; }
-        /// <summary>Obtém o tamanho da Textura em relação a escala atual.</summary>
-        public Vector2 ScaledSize { get => Util.GetScaledSize(Size, Scale); }
-        /// <summary>Obtém ou define a rotação da sprite corrente ao ser desenhada.</summary>
-        public float Rotation { get; set; } = 0.0f;
-        /// <summary>Obtém ou define a escala da sprite quando ela for desenhada.</summary>
-        public Vector2 Scale { get; set; } = Vector2.One;
-        /// <summary>Obtém ou define a escala em X.</summary>
-        public float Xs { get => Scale.X; set => Scale = new Vector2(value, Ys); }
-        /// <summary>Obtém ou define a escala em Y.</summary>
-        public float Ys { get => Scale.Y; set => Scale = new Vector2(Xs, value); }
-        /// <summary>Obtém ou define a cor da sprite corrente ao ser desenhada.</summary>
-        public Color Color { get; set; } = Color.White;
-        /// <summary>Obtém ou define o LayerDepth do método Draw.</summary>
-        public float LayerDepth { get; set; } = 0;
-        /// <summary>Obtém ou define os efeitos da sprite corrente ao ser desenhada.</summary>
-        public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
+        
+        /// <summary>Obtém o frame atual da animação.</summary>
+        public SpriteFrame CurrentFrame { get; protected set; }
         /// <summary>Obtém o Sprite atual que está sendo trabalhado.</summary>
         public Sprite CurrentSprite { get; protected set; } = null;
         /// <summary>Obtém as caixas de colisão do atual frame.</summary>
         public List<CollisionBox> CollisionBoxesList { get; private set; } = new List<CollisionBox>();
         /// <summary>Obtém as caixas de ataque do atual frame.</summary>
-        public List<AttackBox> AttackBoxesList { get; private set; } = new List<AttackBox>();
-        /// <summary>Obtém ou define o nome da animação.</summary>
-        public string Name { get; set; } = string.Empty;
+        public List<AttackBox> AttackBoxesList { get; private set; } = new List<AttackBox>();        
 
         /// <summary>Retorna True se a animação chegou ao fim.</summary>
         public bool IsFinished
@@ -136,8 +87,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 int frames = 0;
 
                 foreach(var sf in Sprites)
-                {
-                    frames += sf.Frames.Count;
+                {                    
+                    frames += sf.Boxes.Count;
                 }
                 
                 int m = Time * frames;
@@ -151,11 +102,11 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 int count = 0;
 
-                for (int i = 0; i <= Index; i++)
+                for (int i = 0; i <= SpriteIndex; i++)
                 {
-                    for(int f = 0; f <= Sprites[i].Frames.Count - 1; f++)
+                    for(int f = 0; f <= Sprites[i].Boxes.Count - 1; f++)
                     {
-                        if (i == Index && f > FrameIndex)
+                        if (i == SpriteIndex && f > FrameIndex)
                             break;
 
                         count++;
@@ -207,40 +158,26 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="time">O tempo de cada quadro da animação.</param>
         /// <param name="name">O nome da animação.</param>
-        public Animation(Game game, int time, string name)
+        public Animation(Game game, int time, string name) : base(game)
         {
-            Game = game;
             Time = time;
             Name = name;
         }
 
         /// <summary>Inicializa uma nova instância da classe Animation como cópia de outro Animation.</summary>
         /// <param name="source">A animação a ser copiada.</param>
-        public Animation(Animation source)
+        public Animation(Animation source) : base(source)
         {
-            elapsedGameTime = source.elapsedGameTime;            
-            Game = source.Game;
-            Index = source.Index;
-            FrameIndex = source.FrameIndex;
-            Position = source.Position;
-            Origin = source.Origin;
-            
+            elapsedGameTime = source.elapsedGameTime;
+            SpriteIndex = source.SpriteIndex;
+            FrameIndex = source.FrameIndex;            
             source.Sprites.ForEach(s => Sprites.Add(new Sprite(s)));
-            
-            Rotation = source.Rotation;
-            Scale = source.Scale;
-            Color = source.Color;
-            LayerDepth = source.LayerDepth;
-            SpriteEffect = source.SpriteEffect;
-            Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
 
-            int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);
-           
+            int cs_index = source.Sprites.FindIndex(i => i == source.CurrentSprite);           
             CurrentSprite = Sprites[cs_index];
 
             Time = source.Time;
-            Frame = source.Frame;
-            Name = source.Name;
+            CurrentFrame = source.CurrentFrame;
             DrawPercentage = source.DrawPercentage;
 
             source.CollisionBoxesList.ForEach(cb => CollisionBoxesList.Add(cb));
@@ -251,7 +188,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         INDEXADOR           -----//
         //---------------------------------------//
 
-        /// <summary>Obtém ou define um Sprite contido na propriedade Sprites através de um index.</summary>
+        /// <summary>Obtém ou define um Sprite contido na lista Sprites através de um index.</summary>
         /// <param name="index">Posição na lista a ser acessada.</param>  
         public Sprite this[int index]
         {
@@ -261,10 +198,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
-        //---------------------------------------//
+        //---------------------------------------//        
 
-        /// <inheritdoc />
-        public virtual void Update(GameTime gameTime)
+        /// <summary>
+        /// Atualiza a animação.
+        /// </summary>
+        /// <param name="gameTime">Recebe os valores de tempo do jogo.</param>
+        public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
                 return;
@@ -275,8 +215,8 @@ namespace Microsoft.Xna.Framework.Graphics
             //Atualiza o tamanho da animação.
             UpdateBounds();
 
-            //Atualiza os valores para o desenho final.
-            UpdateOrigin();
+            //Atualiza o Transform
+            Transform.Update();
 
             //Atualiza as caixas de colisão.
             SetBoxes();
@@ -288,16 +228,18 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 useDestinationBounds = true;
 
-                int x = Frame.X;
-                int y = Frame.Y;
-                float w = Frame.Width * DrawPercentage.X;
-                float h = Frame.Height * DrawPercentage.Y;
+                int x = CurrentFrame.X;
+                int y = CurrentFrame.Y;
+                float w = CurrentFrame.Width * DrawPercentage.X;
+                float h = CurrentFrame.Height * DrawPercentage.Y;
 
                 destinationBounds = new Rectangle(x, y, (int)w, (int)h);
             }
 
             //Chama OnUpdate
             OnUpdate?.Invoke(this, gameTime);
+
+            base.Update(gameTime);
         }
         
         private void SetBoxes()
@@ -305,38 +247,35 @@ namespace Microsoft.Xna.Framework.Graphics
             CollisionBoxesList.Clear();
             AttackBoxesList.Clear();
 
-            foreach (CollisionBox cb in CurrentSprite.CollisionBoxes)
-            {
-                if (cb.Index == FrameIndex)
-                    CollisionBoxesList.Add(cb);
-            }
-
-            foreach (AttackBox ab in CurrentSprite.AttackBoxes)
-            {
-                if (ab.Index == FrameIndex)
-                    AttackBoxesList.Add(ab);
-            }
+            CollisionBoxesList = CurrentSprite.Boxes[FrameIndex].CollisionBoxes;
+            AttackBoxesList = CurrentSprite.Boxes[FrameIndex].AttackBoxes;
         }
 
         /// <summary>
         /// Atualiza os limites da animação.
         /// </summary>
-        public virtual void UpdateBounds()
+        public override void UpdateBounds()
         {
-            Rectangle currentFrame = Rectangle.Empty;
+            CurrentFrame = CurrentSprite != null ? CurrentSprite[FrameIndex] : SpriteFrame.Create(Rectangle.Empty, Vector2.Zero);
 
-            if (CurrentSprite != null)
-                currentFrame = CurrentSprite[FrameIndex].Bounds;                
+            Point size = CurrentFrame.Bounds.Size;
+            Transform.Size = size;
 
-            Size = currentFrame.Size;
-            Frame = currentFrame;
-        }
+            //O tamanho da entidade e sua posição.
+            int x = (int)Transform.X;
+            int y = (int)Transform.Y;
+            int w = (int)Transform.ScaledSize.X;
+            int h = (int)Transform.ScaledSize.Y;
 
-        private void UpdateOrigin()
-        {
-            Vector2 f_o = CurrentSprite.Frames[FrameIndex].Align;
-            
-            origin = Origin + f_o;
+            //A origem do frame.
+            Vector2 sa = CurrentSprite[FrameIndex].Align;
+            drawOrigin = ((Transform.Origin + sa) * Transform.Scale);
+
+            int recX = (int)(x - drawOrigin.X);
+            int recY = (int)(y - drawOrigin.Y);
+
+            Bounds = new Rectangle(recX, recY, w, h);
+            BoundsR = Util.CreateBoundsR(Transform, drawOrigin, Bounds);            
         }
 
         private void Animate(GameTime gameTime)
@@ -357,18 +296,18 @@ namespace Microsoft.Xna.Framework.Graphics
                 if (elapsedGameTime > Time)
                 {
                     //Verifica se o index do frame atual, é maior que a quantidade de frames do sprite ativo.
-                    if (FrameIndex >= Sprites[Index].Frames.Count - 1)
+                    if (FrameIndex >= Sprites[SpriteIndex].Boxes.Count - 1)
                     {
                         //Se sim, é hora de pular de sprite ou voltar para o primeiro frame,
                         //Caso só tenhamos uma sprite
 
-                        if (Index >= Sprites.Count - 1)
+                        if (SpriteIndex >= Sprites.Count - 1)
                         {
-                            Index = 0;
+                            SpriteIndex = 0;
                         }                            
                         else
                         {
-                            Index++;
+                            SpriteIndex++;
                         }                            
                         
                         FrameIndex = 0;
@@ -381,7 +320,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     //Reseta o tempo.
                     elapsedGameTime = 0;
                     //Atualiza o sprite atual.
-                    CurrentSprite = Sprites[Index];
+                    CurrentSprite = Sprites[SpriteIndex];
                 }
             }
 
@@ -394,12 +333,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Avança um sprite da animação.</summary>
         public void ForwardIndex()
         {
-            Index++;
+            SpriteIndex++;
 
-            if (Index >= Sprites.Count - 1)
-                Index = 0;
+            if (SpriteIndex >= Sprites.Count - 1)
+                SpriteIndex = 0;
 
-            CurrentSprite = Sprites[Index];
+            CurrentSprite = Sprites[SpriteIndex];
             UpdateBounds();
         }
 
@@ -408,34 +347,34 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             FrameIndex++;
 
-            if (FrameIndex >= Sprites[Index].Frames.Count - 1)
+            if (FrameIndex >= Sprites[SpriteIndex].Boxes.Count - 1)
                 FrameIndex = 0;
 
             UpdateBounds();
         }
 
         /// <inheritdoc />
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible ||        //Se a animação está em modo visível
                 CurrentSprite == null)    //Se existe um sprite ativo.
-                return;            
+                return;
 
-            Rectangle _bounds = Frame;
+            Rectangle _bounds = CurrentFrame.Bounds;
 
             if (useDestinationBounds)
                 _bounds = destinationBounds;
             
             spriteBatch.Draw(
                    texture: CurrentSprite.Texture,
-                   position: Position,
+                   position: Transform.Position,
                    sourceRectangle: _bounds,
-                   color: Color,
-                   rotation: Rotation,
-                   origin: origin,
-                   scale: Scale,
-                   effects: SpriteEffect,
-                   layerDepth: LayerDepth
+                   color: Transform.Color,
+                   rotation: Transform.Rotation,
+                   origin: drawOrigin,
+                   scale: Transform.Scale,
+                   effects: Transform.SpriteEffects,
+                   layerDepth: Transform.LayerDepth
                    );
 
             //chama OnDraw
@@ -445,7 +384,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
         public void Reset()
         {
-            Index = 0;
+            SpriteIndex = 0;
             FrameIndex = 0;
             elapsedGameTime = 0;
         }
@@ -458,7 +397,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             foreach(string s in sources)
             {
-                Sprite temp = new Sprite(Game.Content.Load<Texture2D>(s), true);
+                Sprite temp = new Sprite(Game, Game.Content.Load<Texture2D>(s), true);
                 tmpSprites.Add(temp);
             }
 
@@ -475,68 +414,39 @@ namespace Microsoft.Xna.Framework.Graphics
             if (CurrentSprite == null)
             {
                 CurrentSprite = Sprites[0];
-                Frame = CurrentSprite[FrameIndex].Bounds;
+                CurrentFrame = CurrentSprite[FrameIndex];
             }
         }
 
         /// <summary>
-        /// Adiciona um sprite e os frames desejados da ação.
+        /// Obtém o conteúdo de cores da textura ativa definida pelo SpriteFrame ativo.
+        /// Caso não houve mudança no SpriteFrame e no SpriteEffects retornará o último array Color.
         /// </summary>
-        /// <param name="source">O sprite a ser adicionado. A referêcia será copiada em uma nova instância</param>
-        /// <param name="frames">A lista de frames no sprite.</param>
-        public void AddSprite(Sprite source, params SpriteFrame[] frames)
+        public override Color[] GetData()
         {
-            Sprite sprite = new Sprite(source);
-            sprite.Frames.Clear();
-            
-            foreach(var f in frames) 
-            {
-                sprite.AddFrame(f);
-            }
+            SpriteFrame frame = CurrentFrame;
 
-            AddSprites(sprite);
-        }
+            Color[] colors = new Color[frame.Width * frame.Height];
+            CurrentSprite.Texture.GetData(0, frame.Bounds, colors, 0, colors.Length);
 
-        /// <summary>
-        /// Adiciona um sprite e os frames desejados da ação.
-        /// </summary>
-        /// <param name="source">O sprite a ser adicionado através de um arquivo na pasta Content.</param>
-        /// <param name="frames">A lista de frames no sprite.</param>
-        public void AddSprite(string source, params SpriteFrame[] frames)
-        {
-            Sprite sprite = new Sprite(Game, source, false);
-
-            foreach (var f in frames)
-            {
-                sprite.AddFrame(f);
-            }
-
-            AddSprites(sprite);
+            return GetDataHelper(frame.Bounds, colors);
         }
 
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//
+        bool disposed = false;
         
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposed)
                 return;
 
             if (disposing)
             {
-                Game = null;
                 Sprites.Clear();
                 Sprites = null;
-                CurrentSprite = null;
-                Name = null;
+                CurrentSprite = null;                
 
                 OnChangeFrameIndex = null;
                 OnChangeIndex = null;
@@ -546,6 +456,8 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             disposed = true;
+
+            base.Dispose(disposing);
         }
     }
 }

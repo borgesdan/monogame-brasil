@@ -12,8 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         //---------------------------------------//
         //-----         VARIÁVEIES          -----//
-        //---------------------------------------//        
-        private bool disposed = false;
+        //---------------------------------------//                
         private bool callLoadScreen = false;
         private Task taskLoading = null;
 
@@ -26,13 +25,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define a lista de telas.</summary>
         public List<Screen> Screens { get; set; } = new List<Screen>();
         /// <summary>Obtém a tela ativa.</summary>
-        public Screen Active { get; protected set; } = null;
+        public Screen Active { get; private set; } = null;
         /// <summary>Obtém ou define o gerenciador de eventos de entrada do usuário.</summary>
         public InputManager Input { get; set; } = null;
         /// <summary>Obtém a tela que está sendo carregada de modo assíncrono.</summary>
-        public Screen LoadingScreen { get; protected set; } = null;
+        public Screen LoadingScreen { get; private set; } = null;
         /// <summary>Obtém True se o gerenciador está carregando uma tela de modo assíncrono.</summary>
-        public bool IsLoadingAsync { get; protected set; } = false;
+        public bool IsLoadingAsync { get; private set; } = false;
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -139,11 +138,11 @@ namespace Microsoft.Xna.Framework.Graphics
             Screens.Remove(finder);
         }
 
-        /// <summary>Troca para a tela selecionada e preserva o estado da anterior.</summary>
+        /// <summary>Troca para a tela selecionada.</summary>
         /// <param name="name">O nome da tela que será ativada.</param>
         public void Change(string name) => Change(name, false);
 
-        /// <summary>Troca para a tela selecionada e preserva o estado da anterior.</summary>
+        /// <summary>Troca para a tela selecionada.</summary>
         /// <param name="name">O nome da tela que será ativada.</param>
         /// <param name="reset">True se deseja que o gerenciador chame o método Reset() da tela atual.</param>
         public void Change(string name, bool reset)
@@ -155,6 +154,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (reset)
                 old.Reset();
+
+            SCamera.SetScreen(Active);
         }
 
         /// <summary>
@@ -234,6 +235,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//
+        private bool disposed = false;
 
         /// <summary>Libera os recursos da classe.</summary>
         public void Dispose()

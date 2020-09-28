@@ -7,7 +7,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Classe que representa uma camada de uma tela que se repete ao infinito nos eixos X e Y.
     /// </summary>
-    class InfiniteLayer : Layer
+    class InfiniteLayer : ScreenLayer
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -28,7 +28,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-
+        /// <summary>Obtém ou define o ator a ser exibido.</summary>
+        public Actor Actor { get; set; } = null;
         /// <summary>Obtém ou define se a animação será repetida ao infinito no eixo X.</summary>
         public bool InfinityX { get; set; } = true;
         /// <summary>Obtém ou define se a animação será repetida ao infinito no eixo Y.</summary>
@@ -47,21 +48,15 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>
-        /// Inicializa uma nova instância da classe FixedLayer.
-        /// </summary>
-        /// <param name="screen">A tela em que a camada será associada.</param>        
-        public InfiniteLayer(Screen screen) : base(screen)
-        {
-        }
 
         /// <summary>
         /// Inicializa uma nova instância da classe InfiniteLayer.
         /// </summary>
         /// <param name="screen">A tela em que a camada será associada.</param>
-        /// <param name="animation">A animação a ser exibida na camada.</param>
-        public InfiniteLayer(Screen screen, Animation animation) : base(screen, animation)
+        /// <param name="actor">O ator a ser exibido na camada</param>
+        public InfiniteLayer(Screen screen, Actor actor) : base(screen)
         {
+            Actor = actor;
         }
 
         /// <summary>
@@ -70,6 +65,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A instância a ser copiada.</param>
         public InfiniteLayer(InfiniteLayer source) : base(source)
         {
+            this.Actor = source.Actor;
             this.Up = source.Up;
             this.Down = source.Down;
             this.Left = source.Left;
@@ -78,18 +74,9 @@ namespace Microsoft.Xna.Framework.Graphics
             this.InfinityY = source.InfinityY;
         }
 
-        /// <summary>
-        /// Cria uma nova instância da camada quando não for possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public override T Clone<T>(T source)
-        {
-            if (source is InfiniteLayer)
-                return (T)Activator.CreateInstance(typeof(InfiniteLayer), source);
-            else
-                throw new InvalidCastException();
-        }
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//
 
         public override void Update(GameTime gameTime)
         {
@@ -103,12 +90,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 //Só recebe o valor da posição da câmera no eixo X.
                 var pos = layerCamera.Position;
                 pos.X = Screen.Camera.Position.X * Parallax;
-                layerCamera.Position = pos;
+                layerCamera.SetPosition(pos);
 
                 //Recebe os valores para o cálculo.
                 Point v1 = new Point(max_x_viewport, 0);
                 Point v2 = layerCamera.Position.ToPoint();
-                int aw = Animation.Bounds.Width;
+                int aw = Actor.Bounds.Width;
 
                 //Cálculos
 
@@ -122,21 +109,21 @@ namespace Microsoft.Xna.Framework.Graphics
                 infPositionStartX = -ps;
 
                 if (!InfinityY)
-                    infPositionStartY = Animation.Position.Y;
+                    infPositionStartY = Actor.Transform.Position.Y;
 
                 if (!InfinityY)
-                    layerCamera.Y = CalCamera().Y;
+                    layerCamera.Y = CalcCamera().Y;
             }
             if (InfinityY)
             {
                 var pos = layerCamera.Position;
                 pos.Y = Screen.Camera.Position.Y * Parallax;
-                layerCamera.Position = pos;
+                layerCamera.SetPosition(pos);
 
                 //Point v1 = view.Bounds.Location;
                 Point v1 = new Point(0, max_y_viewport);
                 Point v2 = layerCamera.Position.ToPoint();
-                int ah = Animation.Bounds.Height;
+                int ah = Actor.Bounds.Height;
 
                 //Distância entre a o eixo X da view e o eixo X da câmera, R = (v1.Y - v2.Y)
                 int r = v1.Y - v2.Y;
@@ -148,22 +135,24 @@ namespace Microsoft.Xna.Framework.Graphics
                 infPositionStartY = -ps;
 
                 if (!InfinityX)
-                    infPositionStartX = Animation.Position.X;
+                    infPositionStartX = Actor.Transform.Position.X;
 
                 if (!InfinityX)
-                    layerCamera.X = CalCamera().X;
+                    layerCamera.X = CalcCamera().X;
             }
 
-            base.Update(gameTime);
+            Actor.Update(gameTime);
         }
 
-        private Camera CalCamera()
+        private Camera CalcCamera()
         {
             oldPosition = position;
             position = Screen.Camera.Position;
 
             Vector2 diff = position - oldPosition;
             Camera c = layerCamera;
+
+            Viewport view = Screen.Game.GraphicsDevice.Viewport;
 
             if (!InfinityX)
             {
@@ -178,11 +167,11 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         dright = dright > 0 ? dright + diff.X : 0;
 
-                        if (Animation.Bounds.Width > View.Width)
+                        if (Actor.Bounds.Width > view.Width)
                         {
-                            if (c.X < Animation.Position.X - Left)
+                            if (c.X < Actor.Transform.Position.X - Left)
                             {
-                                c.X = Animation.Position.X - Left;
+                                c.X = Actor.Transform.Position.X - Left;
                             }
                         }
                         else
@@ -194,7 +183,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             if (dleft > Left)
                             {
                                 //c.Position.X = Animation.Bounds.X - Left;
-                                c.Position.X += absDiffX;
+                                c.X += absDiffX;
                                 dleft = Left;
                                 dright = -Right;
                             }
@@ -206,9 +195,9 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         int cwidth = Screen.Game.Window.ClientBounds.Width;
 
-                        if (Animation.Bounds.Width > View.Width)
+                        if (Actor.Bounds.Width > view.Width)
                         {
-                            if (c.X + cwidth > Animation.Bounds.Width + Right)
+                            if (c.X + cwidth > Actor.Bounds.Width + Right)
                             {
                                 c.X -= absDiffX;
                             }
@@ -220,7 +209,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             //Se passou do limite definido                        
                             if (dright > Right)
                             {
-                                c.Position.X -= absDiffX;
+                                c.X -= absDiffX;
                                 dright = Right;
                                 dleft = -Left;
                             }
@@ -241,11 +230,11 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         ddown = ddown > 0 ? ddown + diff.Y : 0;
 
-                        if (Animation.Bounds.Height > View.Height)
+                        if (Actor.Bounds.Height > view.Height)
                         {
-                            if (c.Y < Animation.Position.Y - Up)
+                            if (c.Y < Actor.Transform.Position.Y - Up)
                             {
-                                c.Y = Animation.Position.Y - Up;
+                                c.Y = Actor.Transform.Position.Y - Up;
                             }
                         }
                         else
@@ -256,7 +245,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             //Se passou do limite definido                        
                             if (dup > Up)
                             {
-                                c.Position.Y += absDiffY;
+                                c.Y += absDiffY;
                                 dup = Up;
                                 ddown = -Down;
                             }
@@ -269,9 +258,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
                         int cheight = Screen.Game.Window.ClientBounds.Height;
 
-                        if (Animation.Bounds.Height > View.Height)
+                        if (Actor.Bounds.Height > view.Height)
                         {
-                            if (c.Y + cheight > Animation.Bounds.Height + Down)
+                            if (c.Y + cheight > Actor.Bounds.Height + Down)
                             {
                                 c.Y -= absDiffY;
                             }
@@ -283,7 +272,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             //Se passou do limite definido                        
                             if (ddown > Down)
                             {
-                                c.Position.Y -= absDiffY;
+                                c.Y -= absDiffY;
                                 ddown = Down;
                                 dup = -Up;
                             }
@@ -300,26 +289,24 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsVisible)
                 return;
 
-            GraphicsDevice device = Screen.Game.GraphicsDevice;
-            Viewport oldView = device.Viewport;
-            device.Viewport = View;
+            Viewport view = Screen.Game.GraphicsDevice.Viewport;
 
             //Desenhamos na tela.
-            spriteBatch.Begin(transformMatrix: layerCamera.GetTransform());
+            spriteBatch.Begin(SpriteBatchConfig.SortMode, SpriteBatchConfig.BlendState, SpriteBatchConfig.Sampler, SpriteBatchConfig.DepthStencil, SpriteBatchConfig.Rasterizer, SpriteBatchConfig.Effect, transformMatrix: layerCamera.GetTransform());
 
             //O desenho caso seja para o infinito.
             if (InfinityX || InfinityY)
             {
                 //Recebe os valores para o infinito em X
-                int sw = View.Width;
-                int aw = Animation.Bounds.Width;
+                int sw = view.Width;
+                int aw = Actor.Bounds.Width;
 
                 int rw = sw / aw;
                 var posx = infPositionStartX;
 
                 //Em Y
-                int sh = View.Height;
-                int ah = Animation.Bounds.Height;
+                int sh = view.Height;
+                int ah = Actor.Bounds.Height;
                 var posy = infPositionStartY;
 
                 float total = (posy + ah) + sh;
@@ -332,8 +319,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     for (int ix = 0; ix <= rw + 1; ix++)
                     {
-                        Animation.Position = new Vector2(posx, posy);
-                        Animation.Draw(gameTime, spriteBatch);
+                        Actor.Transform.Position = new Vector2(posx, posy);
+                        Actor.Draw(gameTime, spriteBatch);
                         posx += aw;
 
                         //Uma correção para não ter animação duplicada.
@@ -347,15 +334,10 @@ namespace Microsoft.Xna.Framework.Graphics
             }
             else
             {
-                Animation.Draw(gameTime, spriteBatch);
+                Actor.Draw(gameTime, spriteBatch);
             }
 
             spriteBatch.End();
-
-            //Recuperamos a viewport originária da tela.
-            device.Viewport = oldView;
-
-            base.Draw(gameTime, spriteBatch);
         }
     }
 }

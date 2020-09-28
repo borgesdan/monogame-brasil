@@ -1,15 +1,19 @@
 ﻿// Danilo Borges Santos, 2020.
 
-using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Classe que representa uma camada de uma tela que não sofre modificação em sua posição e tamanho,
-    /// e não é afetada pela posição da câmera da tela associada.
+    /// Classe que representa uma camada que não sofre modificação da câmera corrente da tela.
     /// </summary>
-    public class StaticLayer : Layer
+    public class StaticLayer : ScreenLayer
     {
+        /// <summary>
+        /// Obtém ou define a lista de atores da camada.
+        /// </summary>
+        public List<Actor> Actors = new List<Actor>();
+
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
@@ -18,17 +22,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Inicializa uma nova instância da classe StaticLayer.
         /// </summary>
         /// <param name="screen">A tela em que a camada será associada.</param>
-        /// <param name="animation">A animação a ser exibida na camada.</param>
-        public StaticLayer(Screen screen, Animation animation) : base(screen, animation)
+        /// <param name="actors">O atores a serem exibidos na camada.</param>
+        public StaticLayer(Screen screen, params Actor[] actors) : base(screen)
         {
-        }
-
-        /// <summary>
-        /// Inicializa uma nova instância da classe StaticLayer.
-        /// </summary>
-        /// <param name="screen">A tela em que a camada será associada.</param>        
-        public StaticLayer(Screen screen) : base(screen)
-        {
+            if (actors != null)
+                Actors.AddRange(actors);
         }
 
         /// <summary>
@@ -37,57 +35,42 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A instância a ser copiada.</param>
         public StaticLayer(StaticLayer source) : base(source)
         {
+            source.Actors.ForEach(a => this.Actors.Add(a));
         }
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
-        //---------------------------------------//
+        //---------------------------------------//        
 
-        /// <summary>
-        /// Cria uma nova instância da camada quando não for possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public override T Clone<T>(T source)
-        {
-            if (source is StaticLayer)
-                return (T)Activator.CreateInstance(typeof(StaticLayer), source);
-            else
-                throw new InvalidCastException();
-        }
-
-        /// <summary>Atualiza a camada.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        ///<inheritdoc/>
         public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
                 return;
 
-            base.Update(gameTime);
+            for (int i = 0; i < Actors.Count; i++)
+            {
+                if(Actors[i].Enable.IsEnabled)
+                    Actors[i].Update(gameTime);
+            }                
         }
 
-        /// <summary>Desenha a camada.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
+        ///<inheritdoc/>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible)
-                return;
-
-            GraphicsDevice device = Screen.Game.GraphicsDevice;
-            Viewport oldView = device.Viewport;
-
-            device.Viewport = View;
+                return;            
 
             //Desenhamos na tela.
-            spriteBatch.Begin();
-            Animation.Draw(gameTime, spriteBatch);
+            spriteBatch.Begin(SpriteBatchConfig.SortMode, SpriteBatchConfig.BlendState, SpriteBatchConfig.Sampler, SpriteBatchConfig.DepthStencil, SpriteBatchConfig.Rasterizer, SpriteBatchConfig.Effect, null);
+
+            for (int i = 0; i < Actors.Count; i++)
+            {
+                if (Actors[i].Enable.IsEnabled)
+                    Actors[i].Draw(gameTime, spriteBatch);
+            }
+
             spriteBatch.End();
-
-            //Recuperamos a viewport originária da tela.
-            device.Viewport = oldView;
-
-            base.Draw(gameTime, spriteBatch);
         }
     }
 }

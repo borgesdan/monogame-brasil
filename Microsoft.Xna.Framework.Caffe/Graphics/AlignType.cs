@@ -5,14 +5,14 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Enumeração que representa o tipo de alinhamento na tela de um objeto.</summary>
     public enum AlignType : byte
     {
-        Center = 1,
-        Left,
-        Right,
-        Top,
-        Bottom,
-        LeftTop,
-        LeftBottom,
-        RightTop,
-        RightBottom
+        Top                 = 0,
+        Bottom              = 1,
+        Left                = 2,
+        Right               = 3,
+        Center              = 4,
+        LeftTop             = 5,
+        LeftBottom          = 6,
+        RightTop            = 7,
+        RightBottom         = 8
     }
 }

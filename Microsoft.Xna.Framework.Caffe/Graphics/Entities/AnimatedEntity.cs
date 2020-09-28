@@ -1,8 +1,4 @@
-﻿//---------------------------------------//
-// Danilo Borges Santos, 2020       -----//
-// danilo.bsto@gmail.com            -----//
-// MonoGame.Caffe [1.0]             -----//
-//---------------------------------------//
+﻿// Danilo Borges Santos, 2020.
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +8,10 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Representa uma entidade com animações.</summary>
     public class AnimatedEntity : Entity2D
     {
+        //---------------------------------------//
+        //-----         VARIÁVEIS           -----//
+        //---------------------------------------//                
+        private Vector2 percentage = Vector2.One;
         private bool outOfView = false;
 
         //---------------------------------------//
@@ -32,6 +32,22 @@ namespace Microsoft.Xna.Framework.Graphics
         public List<CollisionBox> CollisionBoxes { get; private set; } = new List<CollisionBox>();
         /// <summary>Obtém as caixas de ataque do atual frame.</summary>
         public List<AttackBox> AttackBoxes { get; private set; } = new List<AttackBox>();
+        /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
+        public Vector2 DrawPercentage
+        {
+            get => percentage;
+            set
+            {
+                float x = MathHelper.Clamp(value.X, 0f, 1f);
+                float y = MathHelper.Clamp(value.Y, 0f, 1f);
+
+                percentage = new Vector2(x, y);
+            }
+        }
+        /// <summary>Obtém ou define a porcentagem de largura do desenho. De 0f (0%) a 1f (100%).</summary>
+        public float XDraw { get => DrawPercentage.X; set => DrawPercentage = new Vector2(value, YDraw); }
+        /// <summary>Obtém ou define a porcentagem de altura do desenho. De 0f (0%) a 1f (100%).</summary>
+        public float YDraw { get => DrawPercentage.Y; set => DrawPercentage = new Vector2(XDraw, value); }
 
 
         //---------------------------------------//
@@ -76,20 +92,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
-        //---------------------------------------//        
-
-        /// <summary>
-        /// Cria uma nova instância de AnimatedEntity quando não for possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public override T Clone<T>(T source)
-        {
-            if (source is AnimatedEntity)
-                return (T)Activator.CreateInstance(typeof(AnimatedEntity), source);
-            else
-                throw new InvalidCastException();
-        }
+        //---------------------------------------//
 
         /// <summary>Atualiza a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
@@ -131,14 +134,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //Define as propridades da entidade para as propriedades da animação corrente.
         private void SetCurrentProperties()
         {
-            CurrentAnimation.Color = Transform.Color;
-            CurrentAnimation.SpriteEffect = Transform.SpriteEffect;
-            CurrentAnimation.Rotation = Transform.Rotation;
-            CurrentAnimation.Scale = Transform.Scale;
-            CurrentAnimation.Position = Transform.Position;
-            CurrentAnimation.LayerDepth = LayerDepth;
-            CurrentAnimation.Origin = Origin;
-            CurrentAnimation.DrawPercentage = DrawPercentage;
+            CurrentAnimation.Transform.Set(Transform);
         }
 
         /// <summary>Desenha a entidade.</summary>
@@ -167,7 +163,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     var windowWidth = Game.Window.ClientBounds.Width;
 
-                    CurrentAnimation.Position = position;
+                    CurrentAnimation.Transform.Position = position;
 
                     if (CurrentAnimation.Bounds.Right > camera.X)
                     {
@@ -181,8 +177,8 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         var windowHeight = Game.Window.ClientBounds.Height;
 
-                        position.Y += CurrentAnimation.ScaledSize.Y;
-                        CurrentAnimation.Position = position;
+                        position.Y += CurrentAnimation.Transform.ScaledSize.Y;
+                        CurrentAnimation.Transform.Position = position;
 
                         if (CurrentAnimation.Bounds.Bottom > camera.Y)
                         {
@@ -193,33 +189,12 @@ namespace Microsoft.Xna.Framework.Graphics
                         }                        
                     }
 
-                    position.X += CurrentAnimation.ScaledSize.X;
+                    position.X += CurrentAnimation.Transform.ScaledSize.X;
                     position.Y = Transform.Y;
                 }                
             }
 
-            base.Draw(gameTime, spriteBatch);
-
-            if (Debug.IsEnabled)
-            {
-                if(Debug.ShowCollisionBox)
-                {
-                    foreach(CollisionBox cb in CollisionBoxes)
-                    {
-                        poly.Set(cb.Bounds);
-                        Debug.Polygons.Add(new Tuple<Polygon, Color>(poly, Debug.CollisionBoxColor));
-                    }
-                }
-
-                if (Debug.ShowAttackBox)
-                {
-                    foreach (AttackBox ab in AttackBoxes)
-                    {
-                        poly.Set(ab.Bounds);
-                        Debug.Polygons.Add(new Tuple<Polygon, Color>(poly, Debug.AttackBoxColor));
-                    }
-                }
-            }            
+            base.Draw(gameTime, spriteBatch);                    
         }        
 
         /// <summary>Adiciona uma nova animação à entidade.</summary>
@@ -289,13 +264,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="color">A cor do retângulo</param>
         public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color)
         {
-            Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), Color.White).Texture;
-            Sprite sprite = new Sprite(texture, true);
+            Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
+            Sprite sprite = new Sprite(game, texture, true);
             Animation animation = new Animation(game, 0, "default");
             animation.AddSprites(sprite);
 
-            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
-            animatedEntity.Transform.Color = color;
+            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);            
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
@@ -311,13 +285,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="borderColor">A cor da borda.</param>
         public static AnimatedEntity CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
         {
-            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, Color.White).Texture;
-            Sprite sprite = new Sprite(texture, true);
+            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
+            Sprite sprite = new Sprite(game, texture, true);
             Animation animation = new Animation(game, 0, "default");
             animation.AddSprites(sprite);
 
-            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);
-            animatedEntity.Transform.Color = borderColor;
+            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);            
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
@@ -329,16 +302,16 @@ namespace Microsoft.Xna.Framework.Graphics
             //Atualiza o tamanho da entidade.
 
             //o tamanho do frame.
-            float cbw = 0;
-            float cbh = 0;
+            int cbw = 0;
+            int cbh = 0;
 
             if(CurrentAnimation != null)
             {
                 //cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
                 //cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
 
-                cbw = CurrentAnimation.Frame.Width;
-                cbh = CurrentAnimation.Frame.Height;
+                cbw = CurrentAnimation.CurrentFrame.Width;
+                cbh = CurrentAnimation.CurrentFrame.Height;
 
                 if (XRepeat > 0)
                     cbw *= XRepeat + 1;
@@ -346,7 +319,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     cbh *= YRepeat + 1;
             }
 
-            Transform.Size = new Point((int)cbw, (int)cbh);
+            Transform.Size = new Point(cbw, cbh);
 
             //O tamanho da entidade e sua posição.
             int x = (int)Transform.X;
@@ -361,7 +334,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (CurrentAnimation != null && CurrentAnimation.CurrentSprite != null)
             {
-                s_f_oc = CurrentAnimation.CurrentSprite.Frames[CurrentAnimation.FrameIndex].Align;
+                s_f_oc = CurrentAnimation.CurrentSprite.Boxes[CurrentAnimation.FrameIndex].SpriteFrame.Align;
             }
             else
             {
@@ -369,7 +342,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             //A soma de todas as origens.
-            var totalOrigin = ((Origin + s_f_oc) * Transform.Scale);
+            var totalOrigin = ((Transform.Origin + s_f_oc) * Transform.Scale);
 
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
@@ -382,21 +355,35 @@ namespace Microsoft.Xna.Framework.Graphics
 
             foreach(CollisionBox cb in CurrentAnimation.CollisionBoxesList)
             {
-                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.Frame, Bounds, Transform.Scale, Transform.SpriteEffect);
+                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.CurrentFrame.Bounds, Bounds, Transform.Scale, Transform.SpriteEffects); ;
                 CollisionBoxes.Add(relative);
             }
 
             foreach (AttackBox ab in CurrentAnimation.AttackBoxesList)
             {
-                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.Frame, Bounds, Transform.Scale, Transform.SpriteEffect);
+                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.CurrentFrame.Bounds, Bounds, Transform.Scale, Transform.SpriteEffects);
                 AttackBoxes.Add(relative);
             }
 
             //Criação do polígono (BoundsR).
-            Util.CreateBoundsR(this, totalOrigin, Bounds);
+            BoundsR = Util.CreateBoundsR(Transform, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }
+
+        /// <summary>
+        /// Obtém o conteúdo de cores da animação atual.
+        /// Caso não houve mudança na animação e no SpriteEffects retornará o último array Color.
+        /// </summary>
+        public override Color[] GetData()
+        {
+            return CurrentAnimation.GetData();
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+        bool disposed = false;
 
         protected override void Dispose(bool disposing)
         {
@@ -409,6 +396,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 Animations = null;
                 CurrentAnimation = null;
             }
+
+            disposed = true;
 
             base.Dispose(disposing);
         }

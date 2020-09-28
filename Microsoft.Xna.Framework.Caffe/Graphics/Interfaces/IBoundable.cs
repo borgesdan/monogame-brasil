@@ -2,10 +2,12 @@
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Representa os limites de uma entidade.</summary>
+    /// <summary>Representa os limites de um objeto.</summary>
     public interface IBoundsable
     {
-        /// <summary>Obtém o retângulo que representa os limites da entidade.</summary>
+        /// <summary>Obtém o retângulo que representa os limites da objeto.</summary>
         Rectangle Bounds { get; }
+        /// <summary>Atualiza os limites da objeto.</summary>
+        void UpdateBounds();
     }
 }

@@ -8,11 +8,11 @@ namespace Microsoft.Xna.Framework.Graphics
     public class SpriteBatchBeginConfig
     {
         public SpriteSortMode SortMode { get; set; } = SpriteSortMode.Deferred;
-        public BlendState Blend { get; set; } = null;
+        public BlendState BlendState { get; set; } = null;
         public SamplerState Sampler { get; set; } = null;
         public DepthStencilState DepthStencil { get; set; } = null;
         public RasterizerState Rasterizer { get; set; } = null;
-        public Effect Effects { get; set; } = null;
+        public Effect Effect { get; set; } = null;
         public Matrix? TransformMatrix { get; set; } = null;
 
         /// <summary>
@@ -22,6 +22,17 @@ namespace Microsoft.Xna.Framework.Graphics
         {
         }
 
+        public SpriteBatchBeginConfig(SpriteSortMode sortMode, BlendState blendState, SamplerState samplerState, DepthStencilState depthStencilState, RasterizerState rasterizerState, Effect effect, Matrix? transformMatrix)
+        {
+            SortMode = sortMode;
+            BlendState = blendState;
+            Sampler = samplerState;
+            DepthStencil = depthStencilState;
+            Rasterizer = rasterizerState;
+            Effect = effect;
+            TransformMatrix = transformMatrix;
+        }
+
         /// <summary>
         /// Inicializa uma nova instância de SpriteBatchBeginConfig como cópia de outro SpriteBatchBeginConfig.
         /// </summary>
@@ -29,11 +40,11 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteBatchBeginConfig(SpriteBatchBeginConfig source)
         {            
             this.SortMode = source.SortMode;
-            this.Blend = source.Blend;
+            this.BlendState = source.BlendState;
             this.Sampler = source.Sampler;
             this.DepthStencil = source.DepthStencil;
             this.Rasterizer = source.Rasterizer;
-            this.Effects = source.Effects;
+            this.Effect = source.Effect;
             this.TransformMatrix = source.TransformMatrix;
         }
     }

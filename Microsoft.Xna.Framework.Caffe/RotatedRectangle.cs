@@ -1,7 +1,6 @@
 ﻿// Danilo Borges Santos, 2020.
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework
 {
@@ -50,22 +49,60 @@ namespace Microsoft.Xna.Framework
         /// Cria um novo objeto de RotatedRectangle informando os argumentos para uma rotação de um Rectangle.
         /// </summary>
         /// <param name="rectangle">O retângulo a ser rotacionado.</param>
-        /// <param name="origin">A origem da rotação.</param>
+        /// <param name="origin">A origem da rotação em relação ao mundo do ator.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees)
         {
-            RotatedRectangle r = Rotation.GetRotation(rectangle, origin, degrees);
+            RotatedRectangle r = Rotation.Get(rectangle, origin, degrees);
 
             P1 = r.P1;
             P2 = r.P2;
             P3 = r.P3;
             P4 = r.P4;
             Center = r.Center;
-        }        
+        }
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
+        
+        public bool Intersects(RotatedRectangle rotatedRectangle)
+        {
+            float area = Triangle.FindArea(rotatedRectangle.P1, rotatedRectangle.P2, rotatedRectangle.P3)
+                + Triangle.FindArea(rotatedRectangle.P3, rotatedRectangle.P4, rotatedRectangle.P1);
+
+            //float area = Triangle.FindArea(P1, P2, P3) + Triangle.FindArea(P3, P4, P1);
+
+            float p1a = SumArea(P1, rotatedRectangle);
+            float p2a = SumArea(P2, rotatedRectangle);
+            float p3a = SumArea(P3, rotatedRectangle);
+            float p4a = SumArea(P4, rotatedRectangle);
+
+            //float p1a = SumArea(rotatedRectangle.P1);
+            //float p2a = SumArea(rotatedRectangle.P2);
+            //float p3a = SumArea(rotatedRectangle.P3);
+            //float p4a = SumArea(rotatedRectangle.P4);
+
+            if (p1a == area || p2a == area || p3a == area || p4a == area)
+                return true;
+            else
+                return false;            
+        }
+
+        private float SumArea(Point p, RotatedRectangle rectangle)
+        {
+            //float a = Triangle.FindArea(P1, p, P4);
+            //float b = Triangle.FindArea(P4, p, P3);
+            //float c = Triangle.FindArea(P3, p, P2);
+            //float d = Triangle.FindArea(p, P2, P1);
+
+            float a = Triangle.FindArea(rectangle.P1, p, rectangle.P4);
+            float b = Triangle.FindArea(rectangle.P4, p, rectangle.P3);
+            float c = Triangle.FindArea(rectangle.P3, p, rectangle.P2);
+            float d = Triangle.FindArea(p, rectangle.P2, rectangle.P1);
+
+            return a + b + c + d;
+        }
 
         public override bool Equals(object obj)
         {
@@ -83,12 +120,7 @@ namespace Microsoft.Xna.Framework
 
         public override int GetHashCode()
         {
-            var hashCode = 1635792830;
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P2);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P3);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Point>.Default.GetHashCode(P4);
-            return hashCode;
+            return HashCode.Combine(P1, P2, P3, P4, Center);
         }
 
         public static bool operator ==(RotatedRectangle left, RotatedRectangle right)

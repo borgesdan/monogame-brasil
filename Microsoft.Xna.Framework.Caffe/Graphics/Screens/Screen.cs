@@ -2,6 +2,7 @@
 
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -18,8 +19,7 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
-        //---------------------------------------//
-        protected bool disposed = false;
+        //---------------------------------------//        
         protected Camera camera = Camera.Create();
         private InputManager input = null;
         private bool needInputUpdate = false;
@@ -28,27 +28,23 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
+        /// <summary>Obtém ou define a lista de atores da tela.</summary>
+        public List<Actor> Actors { get; set; } = new List<Actor>();
         /// <summary>Obtém a instância ativa da classe Game.</summary>
         public Game Game { get; private set; } = null;
         /// <summary>Obtém ou define o nome ds tela.</summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>Obtém ou define a instância corrente do gerenciador de telas.</summary>
-        public ScreenManager Manager { get; set; } = null;
-        /// <summary>Obtém ou define a instância corrente do subgerenciador de telas.</summary>
-        public SubScreenManager SubManager { get; set; } = null;
+        public ScreenManager Manager { get; set; } = null;       
         /// <summary>Obtém ou define a capacidade da tela de ser ativa ou desenhável.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup(true, true);
         /// <summary>Obtém o valor True se a tela foi carregada.</summary>
-        public ScreenLoadState LoadState { get; protected set; } = ScreenLoadState.UnLoaded;
-        /// <summary>Obtém ou define a cor de fundo da tela.</summary>
-        public Color BackgroundColor { get; set; } = Color.CornflowerBlue;
-        /// <summary>Obtém ou define a Viewport da tela.</summary>
-        public Viewport Viewport { get; set; }
+        public ScreenLoadState LoadState { get; protected set; } = ScreenLoadState.UnLoaded; 
         /// <summary>Obtém ou define a câmera da tela.</summary>
         public Camera Camera { get => camera; set => camera = value; }
         /// <summary>
-        /// Obtém o acesso ao InputManager do ScreenManager ou SubManager em que a tela é associada, 
-        /// ou a um objeto InputManager independente caso não se tenha resultado nessas tentativas.
+        /// Obtém o acesso ao InputManager do ScreenManager em que a tela é associada, 
+        /// ou a um novo objeto InputManager caso o ScreenManager ou a propriedade Input dele seja null.
         /// </summary>
         public InputManager Input
         {
@@ -56,10 +52,8 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if(input == null)
                 {
-                    if (Manager != null)
+                    if (Manager != null && Manager.Input != null)
                         input = Manager.Input;
-                    else if (SubManager != null)
-                        input = SubManager.Input;
                     else
                     {
                         input = new InputManager();
@@ -86,44 +80,24 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Inicializa uma nova instância da classe Screen.</summary>
         /// <param name="game">A instância da classe Game.</param>
         /// <param name="name">O nome da tela.</param>
-        public Screen(Game game, string name) : this(game, name, true) { }
+        public Screen(Game game, string name) : this(game, null, name, true) { }
 
         /// <summary>
         /// Inicializa uma nova instância da classe Screen.
         /// </summary>
-        /// <param name="manager">O gerenciador de telas atual.</param>
+        /// <param name="game">A instância corrente da classe Game.</param>
+        /// <param name="manager">O gerenciador de telas atual (pode ser null).</param>
         /// <param name="name">O nome da tela.</param>
         /// <param name="loadScreen">True se a tela será carregada.</param>
-        public Screen(ScreenManager manager, string name, bool loadScreen) : this(manager.Game, name, loadScreen)
-        {
-            Manager = manager;
-        }
-
-        /// <summary>
-        /// Inicializa uma nova instância da classe Screen.
-        /// </summary>
-        /// <param name="subManager">O subgerenciador de telas associado a uma tela administradora.</param>
-        /// <param name="name">O nome da tela.</param>
-        /// <param name="loadScreen">True se a tela será carregada.</param>
-        public Screen(SubScreenManager subManager, string name, bool loadScreen) : this(subManager.Game, name, loadScreen)
-        {
-            Manager = subManager.ScreenManager;
-            SubManager = subManager;
-        }
-
-        /// <summary>Inicializa uma nova instância da classe Screen.</summary>
-        /// <param name="game">A instância ativa da classe Game.</param>
-        /// <param name="name">Nome da tela.</param>
-        /// <param name="loadScene">True se a tela será carregada.</param>
-        public Screen(Game game, string name, bool loadScreen)
+        public Screen(Game game, ScreenManager manager, string name, bool loadScreen)
         {
             Game = game;
+            Manager = manager;
             Name = name;
-            Viewport = game.GraphicsDevice.Viewport;
 
             if (loadScreen)
                 Load();
-        }
+        }                
 
         /// <summary>
         /// Inicializa uma nova instância da classe Screen copiando uma outra tela. 
@@ -131,17 +105,15 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A tela a ser copiada.</param>
         public Screen(Screen source)
         {
+            source.Actors.ForEach(a => this.Actors.Add(a));
             this.camera = source.Camera;
             this.Enable = source.Enable;
-            this.BackgroundColor = source.BackgroundColor;
             this.Game = source.Game;
             this.LoadState = source.LoadState;
             this.Manager = source.Manager;
-            this.Viewport = source.Viewport;
             this.Name = source.Name;
             this.OnDraw = source.OnDraw;
             this.OnUpdate = source.OnUpdate;
-            this.SubManager = source.SubManager;
         }
 
         //---------------------------------------//
@@ -165,7 +137,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Sobrecarregue e chame esse método para definir sua tela em um estado inicial.
+        /// Sobrecarregue e chame esse método para definir sua tela em um estado padrão.
         /// </summary>
         public virtual void Reset()
         {
@@ -181,8 +153,14 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (needInputUpdate)
                 Input.Update(gameTime);
+
+            for (int i = 0; i < Actors.Count; i++)
+            {
+                if(Actors[i].Enable.IsEnabled)
+                    Actors[i].Update(gameTime);
+            }                
             
-            //Chama OnEndUpdate
+            //Chama OnUpdate
             OnUpdate?.Invoke(this, gameTime);
         }
 
@@ -193,6 +171,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (!Enable.IsVisible)
                 return;
+
+            for (int i = 0; i < Actors.Count; i++)
+                Actors[i].Draw(gameTime, spriteBatch);
 
             OnDraw?.Invoke(this, gameTime, spriteBatch);            
         }
@@ -209,7 +190,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//        
-
+        private bool disposed = false;
+        
         public void Dispose()
         {
             Dispose(true);
@@ -226,7 +208,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 Game = null;
                 Manager = null;
                 Name = null;
-                SubManager = null;                
+                Actors.Clear();
+                Actors = null;
             }
 
             disposed = true;

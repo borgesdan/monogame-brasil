@@ -64,45 +64,33 @@ namespace Microsoft.Xna.Framework.Graphics
             TextBuilder = new StringBuilder(source.TextBuilder.ToString());
         }
 
+        //---------------------------------------//
+        //-----         MÉTODOS             -----//
+        //---------------------------------------//
+
         /// <summary>
         /// Obtém uma nova instância de um SpriteFont através de um cópia profunda.
         /// </summary>
         /// <param name="source">A origem para cópia.</param>
-        public SpriteFont GetDeeepCopy(SpriteFont source)
+        public SpriteFont GetDeepCopy(SpriteFont source)
         {
             var glyphs = source.Glyphs;
-            List<Rectangle> gs = new List<Rectangle>();
-            List<Rectangle> cs = new List<Rectangle>();
-            List<Vector3> ks = new List<Vector3>();
+            List<Rectangle> glyphBounds = new List<Rectangle>();
+            List<Rectangle> cropping = new List<Rectangle>();
+            List<Vector3> kerning = new List<Vector3>();
             List<char> chars = new List<char>();
+            
             foreach (var g in glyphs)
             {
                 chars.Add(g.Character);
-                gs.Add(g.BoundsInTexture);
-                cs.Add(g.Cropping);
-                ks.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
+                glyphBounds.Add(g.BoundsInTexture);
+                cropping.Add(g.Cropping);
+                kerning.Add(new Vector3(g.LeftSideBearing, g.Width, g.RightSideBearing));
             }
 
-            SpriteFont font = new SpriteFont(source.Texture, gs, cs, chars, source.LineSpacing, source.Spacing, ks, source.DefaultCharacter);
+            SpriteFont font = new SpriteFont(source.Texture, glyphBounds, cropping, chars, source.LineSpacing, source.Spacing, kerning, source.DefaultCharacter);
             return font;
         }
-
-        /// <summary>
-        /// Cria uma nova instância de TextEntity quando não for possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public override T Clone<T>(T source)
-        {
-            if (source is TextEntity)
-                return (T)Activator.CreateInstance(typeof(TextEntity), source);
-            else
-                throw new InvalidCastException();
-        }
-
-        //---------------------------------------//
-        //-----         MÉTODOS             -----//
-        //---------------------------------------//
 
         /// <summary>Adiciona um objeto SpriteFont à entidade.</summary>
         /// <param name="font">A fonte a ser utilizada no desenho.</param>
@@ -151,7 +139,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             if (TextBuilder != null)
-                spriteBatch.DrawString(Font, TextBuilder, Transform.Position, Transform.Color, Transform.Rotation, Origin, Transform.Scale, Transform.SpriteEffect, LayerDepth);
+                spriteBatch.DrawString(Font, TextBuilder, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 
             base.Draw(gameTime, spriteBatch);
         }
@@ -183,7 +171,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int w = (int)Transform.ScaledSize.X;
             int h = (int)Transform.ScaledSize.Y;
 
-            var totalOrigin = Origin * Transform.Scale;
+            var totalOrigin = Transform.Origin * Transform.Scale;
 
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
@@ -191,10 +179,21 @@ namespace Microsoft.Xna.Framework.Graphics
             Bounds = new Rectangle(recX, recY, w, h);
 
             //Calcula o BoundsR. 
-            Util.CreateBoundsR(this, totalOrigin, Bounds);
+            Util.CreateBoundsR(Transform, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }
+
+        /// <summary>GetData em TextEntity retornará um array vazio.</summary>
+        public override Color[] GetData()
+        {
+            return new Color[0];
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+        bool disposed = false;
 
         protected override void Dispose(bool disposing)
         {
@@ -207,6 +206,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 TextBuilder.Clear();
                 TextBuilder = null;
             }
+
+            disposed = true;
 
             base.Dispose(disposing);
         }

@@ -1,15 +1,14 @@
 ﻿// Danilo Borges Santos, 2020.
 
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Microsoft.Xna.Framework
 {
     /// <summary>Classe que expõe funções de auxílio.</summary>
     public static class Util
     {
-        /// <summary>Obtém o tamanho de uma entidade multiplicado por uma escala.</summary>
-        /// <param name="size">O tamanho da entidade.</param>
-        /// <param name="scale">A escala da entidade.</param>
+        /// <summary>Obtém um tamanho multiplicado por uma escala.</summary>
         public static Vector2 GetScaledSize(Point size, Vector2 scale)
         {
             Vector2 sSize = new Vector2(size.X * scale.X, size.Y * scale.Y);
@@ -17,38 +16,31 @@ namespace Microsoft.Xna.Framework
         } 
         
         /// <summary>
-        /// Calcula se os limites de uma entidade em uma viewport se encontra no espaço de desenho da janela de jogo.
+        /// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
         /// </summary>
         /// <param name="game">A instância atual classe Game.</param>
         /// <param name="camera">O objeto câmera a ser usado para os devidos cálculos.</param>
-        /// <param name="bounds">Os limites da entidade.</param>
+        /// <param name="bounds">Os limites do objeto.</param>
         public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
         {
             var x = camera.X;
             var y = camera.Y;
-            var w = game.Window.ClientBounds.Width;
-            var h = game.Window.ClientBounds.Height;
+            var w = game.GraphicsDevice.Viewport.Width;
+            var h = game.GraphicsDevice.Viewport.Height;
 
-            if (camera.Scale != Vector2.One)
+            if (camera.Zoom != 1)
             {
-                if (camera.Scale.X < 1)
+                if (camera.Zoom < 1)
                 {
-                    w = (int)(w * (camera.Scale.X * 100));
-                }                    
-                if (camera.Scale.Y < 1)
-                {
-                    h = (int)(h * (camera.Scale.Y * 100));
-                }                    
+                    w = (int)(w * (camera.Zoom * 100));
+                    h = (int)(h * (camera.Zoom * 100));
+                }                 
 
-                if (camera.Scale.X > 1)
+                if (camera.Zoom > 1)
                 {
-                    w = (int)(w * (camera.Scale.X / 100));
-                }                    
-                if (camera.Scale.Y > 1)
-                {
-                    h = (int)(h * (camera.Scale.Y / 100));
-                }
-                    
+                    w = (int)(w * (camera.Zoom / 100));
+                    h = (int)(h * (camera.Zoom / 100));
+                }                     
             }                
 
             Viewport visible_view = new Viewport((int)x, (int)y, w, h);
@@ -60,28 +52,27 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Calcula se os limites de uma entidade se encontra no espaço de desenho da janela de jogo.
+        /// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
         /// </summary>
         /// <param name="screen">A tela a ser verificada.</param>
-        /// <param name="bounds">Os limites da entidade.</param>
+        /// <param name="bounds">Os limites do objeto.</param>
         public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
         {
             return CheckFieldOfView(screen.Game, screen.Camera, bounds);
         }
 
         /// <summary>
-        /// Calcula o BoundsR (os limites de um retângulo rotacionado) de uma entidade.
+        /// Calcula o BoundsR (os limites de um retângulo rotacionado) de um objeto.
         /// </summary>
-        /// <param name="e">A entidade para os cálculos.</param>
+        /// <param name="transform">O objeto Transform a ser usado para cálculo</param>
         /// <param name="totalOrigin">A origem para efeitos de cálculos.</param>
-        /// <param name="bounds">Os limites da entidade.</param>
-        public static void CreateBoundsR(Entity2D e, Vector2 totalOrigin, Rectangle bounds)
+        /// <param name="bounds">Os limites do objeto.</param>
+        public static Polygon CreateBoundsR<T>(TransformGroup<T> transform, Vector2 totalOrigin, Rectangle bounds) where T : IBoundsable
         {
-            var transform = e.Transform;
-            var boundsR = e.BoundsR;
+            Polygon boundsR = new Polygon();
             
             //var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.Size), totalOrigin, transform.Rotation);
-            var r = Rotation.GetRotation(new Rectangle(transform.Scale.ToPoint(), transform.ScaledSize.ToPoint()), totalOrigin, transform.Rotation);
+            var r = Rotation.Get(new Rectangle(transform.Scale.ToPoint(), transform.ScaledSize.ToPoint()), totalOrigin, transform.Rotation);
 
             boundsR.Points.Clear();
             boundsR.Points.Add(r.P1.ToVector2());
@@ -91,19 +82,21 @@ namespace Microsoft.Xna.Framework
 
             boundsR.Offset(bounds.Location.ToVector2());
             boundsR.BuildEdges();
+
+            return boundsR;
         }
 
-        /// <summary>Define a posição do ator relativo aos limites de um retângulo.</summary>   
-        /// <param name="view">O retângulo para alinhamento.</param>
-        /// <param name="actorScaledSize">O tamanho final do ator.</param>
+        /// <summary>Define a posição de um objeto relativo aos limites de um retângulo.</summary>   
+        /// <param name="rectangle">O retângulo para alinhamento.</param>
+        /// <param name="scaledSize">O tamanho do objeto escalado.</param>
         /// <param name="align">O tipo de alinhamento.</param>
-        public static Vector2 AlignActor(Rectangle rectangle, Vector2 actorScaledSize, AlignType align)
+        public static Vector2 AlignObject(Rectangle rectangle, Vector2 scaledSize, AlignType align)
         {
             int w = rectangle.Width;
             int h = rectangle.Height;
 
-            float ew = actorScaledSize.X;
-            float eh = actorScaledSize.Y;
+            float ew = scaledSize.X;
+            float eh = scaledSize.Y;
             Vector2 tempPosition = Vector2.Zero;
 
             switch (align)
@@ -138,6 +131,17 @@ namespace Microsoft.Xna.Framework
             }
 
             return tempPosition;
-        } 
+        }
+
+        /// <summary>
+        /// Cria um cópia de um objeto quando não for possível utilizar o seu construtor de cópia.
+        /// </summary>
+        /// <typeparam name="A">O tipo a ser informado.</typeparam>
+        /// <param name="obj">O objeto de referência da cópia.</param>
+        /// <param name="args">Os argumentos do construtor de cópia que não foi possível ser utilizado.</param>
+        public static A Clone<A>(A obj, params object[] args)
+        {
+            return (A)Activator.CreateInstance(obj.GetType(), args);
+        }
     }        
 }

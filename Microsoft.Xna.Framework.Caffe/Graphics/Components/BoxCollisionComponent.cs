@@ -6,98 +6,125 @@ using System.Collections.Generic;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que verifica uma colisão de boxes entre entidades. 
+    /// Componente que verifica uma colisão de boxes entre AnimatedEntities. 
     /// </summary>
-    public class BoxCollisionComponent : EntityComponent
+    public class BoxCollisionComponent : ActorComponent
     {
-        /// <summary>Obtém ou define se o componente deve utilizar a tela corrente (caso LayeredScreen) para busca das entidades para colisão.</summary>
-        public bool UseCurrentScreen { get; set; } = true;
-        /// <summary>Obtém ou define as entidades a serem utilizadas caso UseCurrentScreen seja falso.</summary>
-        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
+        public class Result<T1, T2> where T1 : struct where T2 : struct
+        {
+            /// <summary>
+            /// A entidade que implementa este delegate.
+            /// </summary>
+            public AnimatedEntity Source { get; set; }
+            /// <summary>
+            /// A entidade que participou da colisão.
+            /// </summary>
+            public AnimatedEntity CollidedEntity { get; set; }
+            /// <summary>
+            /// Fornece acesso aos valores de tempo do jogo.
+            /// </summary>
+            public GameTime GameTime { get; set; }
+            /// <summary>
+            /// As caixas recorrentes da colisão.
+            /// </summary>
+            public Tuple<T1, T2> Boxes { get; set; }
+            /// <summary>
+            /// O resultado da colisão entre os boxes.
+            /// </summary>
+            public RectangleCollisionResult CollisionResult { get; set; }
 
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre CollisionBoxes.</summary>
-        public BoxCollisionAction<CollisionBox, CollisionBox> CxCCollision;
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um AttackBox.</summary>
-        public BoxCollisionAction<CollisionBox, AttackBox> CxACollision;        
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre AttackBoxes.</summary>
-        public BoxCollisionAction<AttackBox, AttackBox> AxACollision;
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um retângulo.</summary>
-        public BoxCollisionAction<CollisionBox, Rectangle> CxBCollision;
-        /// <summary>Encapsula um método a ser chamado como resultado de uma colisão entre um AttackBox e um retângulo.</summary>
-        public BoxCollisionAction<AttackBox, Rectangle> AxBCollision;
+            public Result(AnimatedEntity source, AnimatedEntity collided, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result)
+            {
+                Source = source;
+                CollidedEntity = collided;
+                GameTime = gameTime;
+                Boxes = boxes;
+                CollisionResult = result;
+            }
+        }
+
+        AnimatedEntity entity = null;
+        Result<CollisionBox, CollisionBox> ccResult = new Result<CollisionBox, CollisionBox>(null, null, null, null, new RectangleCollisionResult());
+        Result<CollisionBox, AttackBox> caResult = new Result<CollisionBox, AttackBox>(null, null, null, null, new RectangleCollisionResult());
+        Result<AttackBox, AttackBox> aaResult = new Result<AttackBox, AttackBox>(null, null, null, null, new RectangleCollisionResult());
+        Result<CollisionBox, Rectangle> cbResult = new Result<CollisionBox, Rectangle>(null, null, null, null, new RectangleCollisionResult());
+        Result<AttackBox, Rectangle> abResult = new Result<AttackBox, Rectangle>(null, null, null, null, new RectangleCollisionResult());
+
+        /// <summary>Obtém ou define se o componente deve utilizar uma tela do tipo LayeredScreen para busca de atores para colisão.</summary>
+        public LayeredScreen Screen { get; set; } = null;
+        /// <summary>Obtém ou define os atores para verificação caso a propriedade Screen seja nulo.</summary>
+        public List<AnimatedEntity> Entities { get; set; } = new List<AnimatedEntity>();       
+
+        /// <summary>
+        /// Encapsula um método a ser chamado como resultado de uma colisão entre CollisionBoxes.        
+        public Action<Result<CollisionBox, CollisionBox>> CxCCollision;
+        /// <summary>
+        /// Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um AttackBox.
+        /// </summary>
+        public Action<Result<CollisionBox, AttackBox>> CxACollision;
+        /// <summary>
+        /// Encapsula um método a ser chamado como resultado de uma colisão entre AttackBoxes.
+        /// </summary>
+        public Action<Result<AttackBox, AttackBox>> AxACollision;
+        /// <summary>
+        /// Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um retângulo.
+        /// </summary>
+        public Action<Result<CollisionBox, Rectangle>> CxBCollision;
+        /// <summary>
+        /// Encapsula um método a ser chamado como resultado de uma colisão entre um AttackBox e um retângulo.
+        /// </summary>
+        public Action<Result<AttackBox, Rectangle>> AxBCollision;
 
         /// <summary>
         /// Inicializa uma nova instância de BoxCollisionComponent.
         /// </summary>
-        public BoxCollisionComponent() : base()
+        public BoxCollisionComponent(AnimatedEntity animatedEntity, LayeredScreen screen) : base(animatedEntity)
         {
             Name = nameof(BoxCollisionComponent);
+            entity = animatedEntity;
+            Screen = screen;
         }
 
         /// <summary>
-        /// Inicializa uma nova instância da classe BoxCollisionComponent como uma cópia de outro boxCollisionComponent.
+        /// Inicializa uma nova instância da classe BoxCollisionComponent como uma cópia de outro BoxCollisionComponent.
         /// </summary>
-        /// <param name="destination">A entidade a ser associada esse componente.</param>
+        /// <param name="destination">O ator a ser associado esse componente.</param>
         /// <param name="source">A origem para cópia.</param>
-        public BoxCollisionComponent(Entity2D destination, BoxCollisionComponent source) : base(destination, source)
+        public BoxCollisionComponent(AnimatedEntity destination, BoxCollisionComponent source) : base(destination, source)
         {
             AxACollision = source.AxACollision;
+            AxBCollision = source.AxBCollision;
             CxACollision = source.CxACollision;
+            CxBCollision = source.CxBCollision;
             CxCCollision = source.CxCCollision;
-        }
-
-        /// <summary>
-        /// Cria uma nova instância de BoxCollisionComponent quando não for possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">O objeto a ser copiado</param>
-        /// <param name="destination">A entidade a ser associada a esse componente.</param>
-        public override T Clone<T>(T source, Entity2D destination)
-        {
-            if (source is BoxCollisionComponent)
-                return (T)Activator.CreateInstance(typeof(BoxCollisionComponent), destination, source);
-            else
-                throw new InvalidCastException();
+            Screen = source.Screen;
         }
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
-            //Recebe a tela em que a entidade está associada.
-            var screen = Entity.Screen;
-
-            if(UseCurrentScreen)
+            if (Screen != null)
             {
-                if (screen != null && screen is LayeredScreen ls)
+                //Busca todas as entidades vísiveis da tela.
+                foreach (var other in Screen.DrawableActors)
                 {
-                    //Busca todas as entidades vísiveis da tela.
-                    foreach (var other in ls.DrawableEntities)
-                    {
-                        // Prossegue se a entidade atual é diferente da entidade da lista.
-                        if (!Entity.Equals(other))
-                        {
-                            //Checa a colisão
-                            var e = (AnimatedEntity)Entity;
-                            var o = (AnimatedEntity)other;
-
-                            Check(e, o, gameTime);
-                        }
+                    // Prossegue se a entidade atual é diferente da entidade da lista.
+                    if (!entity.Equals(other))
+                    {   
+                        if(other is AnimatedEntity o)
+                            Check(entity, o, gameTime);
                     }
-                }                
+                }
             }
             else
             {
                 foreach (var other in Entities)
                 {
                     // Prossegue se a entidade atual é diferente da entidade da lista.
-                    if (!Entity.Equals(other))
+                    if (!entity.Equals(other))
                     {
-                        //Checa a colisão
-                        var e = (AnimatedEntity)Entity;
-                        var o = (AnimatedEntity)other;
-
-                        Check(e, o, gameTime);
+                        Check(entity, other, gameTime);
                     }
                 }
             }
@@ -121,9 +148,15 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (Collision.BoundsCollision(ecb.Bounds, ocb.Bounds))
                     {
                         result.Intersection = Rectangle.Intersect(ecb.Bounds, ocb.Bounds);
-                        result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, ocb.Bounds);
+                        result.Subtract = Collision.Subtract(ecb.Bounds, ocb.Bounds);
 
-                        CxCCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, CollisionBox>(ecb, ocb), result, o);
+                        ccResult.Source = entity;
+                        ccResult.CollidedEntity = o;
+                        ccResult.GameTime = gameTime;
+                        ccResult.Boxes = new Tuple<CollisionBox, CollisionBox>(ecb, ocb);
+                        ccResult.CollisionResult = result;
+
+                        CxCCollision?.Invoke(ccResult);
                     }
                 }
 
@@ -134,18 +167,30 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (Collision.BoundsCollision(ecb.Bounds, oab.Bounds))
                     {
                         result.Intersection = Rectangle.Intersect(ecb.Bounds, oab.Bounds);
-                        result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, oab.Bounds);
+                        result.Subtract = Collision.Subtract(ecb.Bounds, oab.Bounds);
 
-                        CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ecb, oab), result, o);
+                        caResult.Source = entity;
+                        caResult.CollidedEntity = o;
+                        caResult.GameTime = gameTime;
+                        caResult.Boxes = new Tuple<CollisionBox, AttackBox>(ecb, oab);
+                        caResult.CollisionResult = result;
+
+                        CxACollision?.Invoke(caResult);
                     }
                 }
 
                 if (Collision.BoundsCollision(e.CollisionBoxes[i].Bounds, o.Bounds))
                 {
                     result.Intersection = Rectangle.Intersect(ecb.Bounds, o.Bounds);
-                    result.Subtract = Collision.IntersectionSubtract(ecb.Bounds, o.Bounds);
+                    result.Subtract = Collision.Subtract(ecb.Bounds, o.Bounds);
 
-                    CxBCollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, Rectangle>(ecb, o.Bounds), result, o);
+                    cbResult.Source = entity;
+                    cbResult.CollidedEntity = o;
+                    cbResult.GameTime = gameTime;
+                    cbResult.Boxes = new Tuple<CollisionBox, Rectangle>(ecb, o.Bounds);
+                    cbResult.CollisionResult = result;
+
+                    CxBCollision?.Invoke(cbResult);
                 }
             }
 
@@ -161,9 +206,15 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (Collision.BoundsCollision(eab.Bounds, ocb.Bounds))
                     {
                         result.Intersection = Rectangle.Intersect(eab.Bounds, ocb.Bounds);
-                        result.Subtract = Collision.IntersectionSubtract(eab.Bounds, ocb.Bounds);
+                        result.Subtract = Collision.Subtract(eab.Bounds, ocb.Bounds);
 
-                        CxACollision?.Invoke(Entity, gameTime, new Tuple<CollisionBox, AttackBox>(ocb, eab), result, o);
+                        caResult.Source = entity;
+                        caResult.CollidedEntity = o;
+                        caResult.GameTime = gameTime;
+                        caResult.Boxes = new Tuple<CollisionBox, AttackBox>(ocb, eab);
+                        caResult.CollisionResult = result;
+
+                        CxACollision?.Invoke(caResult);
                     }
                 }
 
@@ -174,18 +225,30 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (Collision.BoundsCollision(eab.Bounds, oab.Bounds))
                     {
                         result.Intersection = Rectangle.Intersect(eab.Bounds, oab.Bounds);
-                        result.Subtract = Collision.IntersectionSubtract(eab.Bounds, oab.Bounds);
+                        result.Subtract = Collision.Subtract(eab.Bounds, oab.Bounds);
 
-                        AxACollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, AttackBox>(eab, oab), result, o);
+                        aaResult.Source = entity;
+                        aaResult.CollidedEntity = o;
+                        aaResult.GameTime = gameTime;
+                        aaResult.Boxes = new Tuple<AttackBox, AttackBox>(eab, oab);
+                        aaResult.CollisionResult = result;
+
+                        AxACollision?.Invoke(aaResult);
                     }
                 }
 
                 if (Collision.BoundsCollision(e.AttackBoxes[i].Bounds, o.Bounds))
                 {
                     result.Intersection = Rectangle.Intersect(eab.Bounds, o.Bounds);
-                    result.Subtract = Collision.IntersectionSubtract(eab.Bounds, o.Bounds);
+                    result.Subtract = Collision.Subtract(eab.Bounds, o.Bounds);
 
-                    AxBCollision?.Invoke(Entity, gameTime, new Tuple<AttackBox, Rectangle>(eab, o.Bounds), result, o);
+                    abResult.Source = entity;
+                    abResult.CollidedEntity = o;
+                    abResult.GameTime = gameTime;
+                    abResult.Boxes = new Tuple<AttackBox, Rectangle>(eab, o.Bounds);
+                    abResult.CollisionResult = result;
+
+                    AxBCollision?.Invoke(abResult);
                 }
             }
         }

@@ -5,85 +5,72 @@ using System;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que calcula se os limites da entidade se encontram dentro ou fora dos limites informados.
+    /// Componente que calcula se os limites do ator se encontram dentro ou fora de um retângulo informado.
     /// </summary>
-    public class BoundsComponent : EntityComponent
+    public class BoundsComponent : ActorComponent
     {
-        /// <summary>Os limites a serem usados para cálculo.</summary>
-        public Rectangle Bounds { get; set; }
+        //----------------------------------------//
+        //-----         PROPRIEDADES         -----//
+        //----------------------------------------//
 
-        /// <summary>Encapsula um metodo com os parâmetros definidos e que expõe um resultado final no formato Vector2.
-        /// Em que o valor do vetor será a diferença em que a entidade se encontra fora dos limites.</summary>
-        public ResultAction<Vector2> OnOutOfBounds;
-
-        //---------------------------------------//
-        //-----         CONSTRUTOR          -----//
-        //---------------------------------------//
+        /// <summary>Obtém ou define o retângulo que representa os limites em que o ator pode se encontrar fora ou dentro.</summary>
+        public Rectangle Bounds { get; set; } = Rectangle.Empty;
+        /// <summary>
+        /// Obtém um resultado dos cálculos em um objeto Vector2, em que o valor do vetor será a diferença em que a entidade se encontra fora dos limites do retângulo informado.
+        /// </summary>
+        public Vector2 Result { get; private set; } = Vector2.Zero;
 
         /// <summary>
-        /// Inicializa uma nova instância da classe BoundsComponent.
+        /// Encapsula um método a ser chamado no fim do método Update deste component.
+        /// <list type="number">
+        /// <item>GameTime são os valores de tempo do jogo.</item>
+        /// <item>Vector2 é o retorno da propriedade Result.</item>
+        /// <item>Actor é o ator que implementa esse componente.</item>        
+        /// </list>
         /// </summary>
-        /// <param name="bounds">Os limites a serem usados para cálculo.</param>
-        public BoundsComponent(Rectangle bounds) : base()
+        public Action<GameTime, Vector2, Actor> OnUpdate;
+
+        //----------------------------------------//
+        //-----         CONSTRUTOR           -----//
+        //----------------------------------------//
+
+        /// <summary>
+        /// Inicializa uma nova instância de BoundsComponent.
+        /// </summary>
+        /// <param name="bounds">Define o retângulo que representa os limites em que o ator pode se encontrar fora ou dentro.</param>
+        public BoundsComponent(Actor actor, Rectangle bounds): base(actor) 
         {
-            Name = nameof(BoundsComponent);
             Bounds = bounds;
+            Name = nameof(BoundsComponent);
         }
 
         /// <summary>
-        /// Inicializa uma nova instância da classe BoundsComponent.
+        /// Inicializa uma nova instância de BoundsComponent como cópia de outra instância
         /// </summary>
-        /// <param name="bounds">Os limites a serem usados para cálculo.</param>
-        /// <param name="action">Encapsula um metodo com os parâmetros definidos</param>
-        public BoundsComponent(Rectangle bounds, ResultAction<Vector2> action) : base()
-        {
-            Name = nameof(BoundsComponent);
-            Bounds = bounds;
-            OnOutOfBounds += action;
-        }
-
-        /// <summary>
-        /// Inicializa uma nova instância da classe BoundsComponent como uma cópia.
-        /// </summary>
-        /// <param name="destination">A entidade a ser associada a esse componente.</param>
-        /// <param name="source">A origem para cópia.</param>
-        public BoundsComponent(Entity2D destination, BoundsComponent source) : base(destination, source)
+        /// <param name="destination">O ator o qual esse componente será associado.</param>
+        /// <param name="source">O componente a ser copiado.</param>
+        public BoundsComponent(Actor destination, BoundsComponent source) : base(destination, source)
         {
             Bounds = source.Bounds;
-            OnOutOfBounds = source.OnOutOfBounds;
+            Result = source.Result;
         }
 
-        //---------------------------------------//
-        //-----         FUNÇÕES             -----//
-        //---------------------------------------//
+        //----------------------------------------//
+        //-----         MÉTODOS              -----//
+        //----------------------------------------//        
 
-        /// <summary>
-        /// Cria uma nova instância de BoundsComponent quando não é possível utilizar o construtor de cópia.
-        /// </summary>
-        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-        /// <param name="source">O origem a ser copiada.</param>
-        /// <param name="destination">A entidade a ser associada a esse componente.</param>
-        public override T Clone<T>(T source, Entity2D destination)
-        {
-            if (source is BoundsComponent)
-                return (T)Activator.CreateInstance(typeof(BoundsComponent), destination, source);
-            else
-                throw new InvalidCastException();
-        }
-
-        /// <summary>Atualiza o componente.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        ///<inheritdoc/>
         public override void Update(GameTime gameTime)
         {
-            var ebounds = Entity.Bounds;
+            var ebounds = Actor.Bounds;
 
             if (Bounds.Width < ebounds.Width || Bounds.Height < ebounds.Height)
-                throw new Exception("O tamanho dos limites informado não pode ser menor que os limites da entidade.");
+                throw new Exception("O tamanho dos limites informado não pode ser menor que os limites do ator.");
 
             Vector2 result = Vector2.Zero;
 
             //Cálculo do retângulo com e sem rotação.
-            if(Entity.Transform.Rotation == 0)
+            if (Actor.Transform.Rotation == 0)
             {
                 if (ebounds.Left < Bounds.Left)
                 {
@@ -104,15 +91,15 @@ namespace Microsoft.Xna.Framework.Graphics
             }
             else
             {
-                var boundsR = Entity.BoundsR;
+                var boundsR = Actor.BoundsR;
 
-                foreach(var p in boundsR.Points)
+                foreach (var p in boundsR.Points)
                 {
-                    if(p.X < Bounds.Left)
+                    if (p.X < Bounds.Left)
                     {
                         result.X -= p.X - Bounds.Left;
                     }
-                    else if(p.X > Bounds.Right)
+                    else if (p.X > Bounds.Right)
                     {
                         result.X -= p.X - Bounds.Right;
                     }
@@ -127,22 +114,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
 
-            OnOutOfBounds?.Invoke(Entity, gameTime, result);
+            Result = result;
 
+            OnUpdate?.Invoke(gameTime, result, Actor);
             base.Update(gameTime);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                OnOutOfBounds = null;
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

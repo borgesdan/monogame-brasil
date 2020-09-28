@@ -1,6 +1,6 @@
 ﻿// Danilo Borges Santos, 2020.
 
-namespace Microsoft.Xna.Framework
+namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Classe que expõe funções de extensão.
@@ -35,6 +35,11 @@ namespace Microsoft.Xna.Framework
         public static Point GetHalf(this Rectangle rectangle)
         {
             return new Point(rectangle.GetHalfW(), rectangle.GetHalfH());
+        }
+
+        public static void Begin(this SpriteBatch spriteBatch, SpriteBatchBeginConfig config)
+        {
+            spriteBatch.Begin(config.SortMode, config.BlendState, config.Sampler, config.DepthStencil, config.Rasterizer, config.Effect, config.TransformMatrix);
         }
     }
 }
