@@ -2,6 +2,9 @@
 
 namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Estrutura que representa um triângulo.
+    /// </summary>
     public struct Triangle
     {
         /// <summary>
@@ -83,7 +86,8 @@ namespace Microsoft.Xna.Framework
             float bc = Vector2.Distance(b, c);
             float ac = Vector2.Distance(c, a);
 
-            return FindArea(Math.Abs(ab), Math.Abs(bc), Math.Abs(ac));
+            //return Triangle.FindArea(Math.Abs(ab), Math.Abs(bc), Math.Abs(ac));
+            return FindArea((int)ab, (int)bc, (int)ac);
         }
 
         /// <summary>
@@ -97,11 +101,14 @@ namespace Microsoft.Xna.Framework
             // Length of sides must be positive 
             // and sum of any two sides 
             // must be smaller than third side. 
-            if (a < 0 || b < 0 || c < 0 ||
-            (a + b <= c) || a + c <= b ||
-                b + c <= a)
+            if (a < 0 || b < 0 || c < 0)
             {
-                throw new Exception("Length of sides must be positive and sum of any two sides must be smaller than third side");
+                throw new Exception("Os comprimentos dos lados do triângulo devem ser positivo.");
+            }
+
+            if (a + b <= c || a + c <= b || b + c <= a)
+            {
+                throw new Exception("A soma de dois lados não pode ser menor que o terceiro lado.");
             }
 
             float s = (a + b + c) / 2.0f;

@@ -25,7 +25,6 @@
 // Code: https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
 
 using System;
-using System.Drawing;
 
 namespace Microsoft.Xna.Framework.Graphics
 {

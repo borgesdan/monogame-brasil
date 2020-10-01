@@ -221,7 +221,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Texture.GetData(0, frame.Bounds, colors, 0, colors.Length);
 
-            return GetDataHelper(frame.Bounds, colors);
+            return GetData(frame.Bounds, colors, Transform.SpriteEffects);
         }     
 
         //---------------------------------------//

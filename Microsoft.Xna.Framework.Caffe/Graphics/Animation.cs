@@ -138,9 +138,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Evento chamado no fim do método Update.</summary>
-        public event UpdateAction<Animation> OnUpdate;        
+        public event Action<Animation, GameTime> OnUpdate;        
         /// <summary>Evento chamado no fim do método Draw.</summary>
-        public event DrawAction<Animation> OnDraw;
+        public event Action<Animation, GameTime, SpriteBatch> OnDraw;
         /// <summary>Evento chamado quando a animação chega ao fim.</summary>
         public event Action<Animation> OnEndAnimation;
         /// <summary>Evento chamado quando o valor do Index é mudado.</summary>
@@ -429,7 +429,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Color[] colors = new Color[frame.Width * frame.Height];
             CurrentSprite.Texture.GetData(0, frame.Bounds, colors, 0, colors.Length);
 
-            return GetDataHelper(frame.Bounds, colors);
+            return GetData(frame.Bounds, colors, Transform.SpriteEffects);
         }
 
         //---------------------------------------//

@@ -70,9 +70,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----------------------------------------//
 
         /// <summary>Evento chamado no fim do método Update.</summary>
-        public event UpdateAction<Screen> OnUpdate;
+        public event Action<Screen, GameTime> OnUpdate;
         /// <summary>Evento chamado no fim do método Draw.</summary>
-        public event DrawAction<Screen> OnDraw;
+        public event Action<Screen, GameTime, SpriteBatch> OnDraw;
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -155,11 +155,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 Input.Update(gameTime);
 
             for (int i = 0; i < Actors.Count; i++)
-            {
-                if(Actors[i].Enable.IsEnabled)
-                    Actors[i].Update(gameTime);
-            }                
-            
+                Actors[i].Update(gameTime);
+
             //Chama OnUpdate
             OnUpdate?.Invoke(this, gameTime);
         }

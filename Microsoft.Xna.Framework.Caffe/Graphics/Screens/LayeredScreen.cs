@@ -107,28 +107,16 @@ namespace Microsoft.Xna.Framework.Graphics
             }
             
             for (int e = 0; e < BackLayers.Count; e++)
-            {
-                if(BackLayers[e].Enable.IsEnabled)
-                    BackLayers[e].Update(gameTime);
-            }
-            
+                BackLayers[e].Update(gameTime);
+
             for (int e = 0; e < FrontLayers.Count; e++)
-            {
-                if (FrontLayers[e].Enable.IsEnabled)
-                    FrontLayers[e].Update(gameTime);
-            }
-            
+                FrontLayers[e].Update(gameTime);
+
             for (int e = 0; e < BackStaticActors.Count; e++)
-            {
-                if (BackStaticActors[e].Enable.IsEnabled)
-                    BackStaticActors[e].Update(gameTime);
-            }
-            
+                BackStaticActors[e].Update(gameTime);
+
             for (int e = 0; e < FrontStaticActors.Count; e++)
-            {
-                if (FrontStaticActors[e].Enable.IsEnabled)
-                    FrontStaticActors[e].Update(gameTime);
-            }
+                FrontStaticActors[e].Update(gameTime);
         }
 
         /// <summary>Desenha a tela.</summary>
@@ -141,10 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
             
             //Desenha as camadas traseiras.           
             foreach(var bl in BackLayers)
-            {
-                if (bl.Enable.IsVisible)
-                    bl.Draw(gameTime, spriteBatch);
-            } 
+                bl.Draw(gameTime, spriteBatch);
 
             //Desenha as entidades não afetadas pela câmera.
             spriteBatch.Begin(sortMode: BackStaticConfig.SortMode, blendState: BackStaticConfig.BlendState, samplerState: BackStaticConfig.Sampler,
@@ -152,8 +137,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 transformMatrix: BackStaticConfig.TransformMatrix);
             foreach (var bse in BackStaticActors)
             {
-                if (bse.Enable.IsVisible)
-                    bse.Draw(gameTime, spriteBatch);
+                bse.Draw(gameTime, spriteBatch);
+
             }
             spriteBatch.End();
            
@@ -164,8 +149,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //Desenhas a entidades e chama o evento.
             foreach (var de in DrawableActors)
             {
-                if (de.Enable.IsVisible)
-                    de.Draw(gameTime, spriteBatch);
+                de.Draw(gameTime, spriteBatch);
             }
             spriteBatch.End();            
 
@@ -175,16 +159,14 @@ namespace Microsoft.Xna.Framework.Graphics
                 transformMatrix: FrontStaticConfig.TransformMatrix);
             foreach (var fe in FrontStaticActors)
             {
-                if (fe.Enable.IsVisible)
-                    fe.Draw(gameTime, spriteBatch);
+                fe.Draw(gameTime, spriteBatch);
             }
             spriteBatch.End();
 
             //Desenha as camadas frontais.
             foreach (var fl in FrontLayers)
             {
-                if (fl.Enable.IsVisible)
-                    fl.Draw(gameTime, spriteBatch);
+                fl.Draw(gameTime, spriteBatch);
             }           
 
             base.Draw(gameTime, spriteBatch);
@@ -268,6 +250,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 FrontStaticActors = null;
                 FrontStaticConfig = null;
             }
+
+            disposed = true;
 
             base.Dispose(disposing);
         }

@@ -10,9 +10,6 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-        
-        /// <summary>Obtém ou define se a entidade será atualizada fora dos limites de desenho da tela.</summary>
-        public bool UpdateOutOfView { get; set; } = true;
         /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
         public Screen Screen { get; set; } = null;        
 
@@ -21,9 +18,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Encapsula métodos que serão invocados na função Update.</summary>        
-        public event UpdateAction<Entity2D> OnUpdate;
+        public event Action<Entity2D, GameTime> OnUpdate;
         /// <summary>Encapsula métodos que serão invocados na função Draw.</summary>
-        public event DrawAction<Entity2D> OnDraw;
+        public event Action<Entity2D, GameTime, SpriteBatch> OnDraw;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -42,7 +39,8 @@ namespace Microsoft.Xna.Framework.Graphics
         protected Entity2D(Entity2D source) : base(source)
         {
             Screen = source.Screen;
-            UpdateOutOfView = source.UpdateOutOfView;
+            OnUpdate = source.OnUpdate;
+            OnDraw = source.OnDraw;
         }
 
         //---------------------------------------//

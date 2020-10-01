@@ -16,19 +16,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define o retângulo que representa os limites em que o ator pode se encontrar fora ou dentro.</summary>
         public Rectangle Bounds { get; set; } = Rectangle.Empty;
         /// <summary>
-        /// Obtém um resultado dos cálculos em um objeto Vector2, em que o valor do vetor será a diferença em que a entidade se encontra fora dos limites do retângulo informado.
+        /// Obtém um resultado dos cálculos em um objeto Vector2, em que o valor do vetor será a diferença em que a entidade se encontra fora ou dentro dos limites do retângulo informado.
         /// </summary>
         public Vector2 Result { get; private set; } = Vector2.Zero;
 
         /// <summary>
         /// Encapsula um método a ser chamado no fim do método Update deste component.
         /// <list type="number">
+        /// <item>Actor é o ator que implementa esse componente.</item>
         /// <item>GameTime são os valores de tempo do jogo.</item>
         /// <item>Vector2 é o retorno da propriedade Result.</item>
-        /// <item>Actor é o ator que implementa esse componente.</item>        
         /// </list>
         /// </summary>
-        public Action<GameTime, Vector2, Actor> OnUpdate;
+        public Action<Actor, GameTime, Vector2> OnUpdate;
 
         //----------------------------------------//
         //-----         CONSTRUTOR           -----//
@@ -37,6 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância de BoundsComponent.
         /// </summary>
+        /// <param name="actor">Define o ator o qual esse componente será associado.</param>
         /// <param name="bounds">Define o retângulo que representa os limites em que o ator pode se encontrar fora ou dentro.</param>
         public BoundsComponent(Actor actor, Rectangle bounds): base(actor) 
         {
@@ -116,8 +117,29 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Result = result;
 
-            OnUpdate?.Invoke(gameTime, result, Actor);
+            OnUpdate?.Invoke(Actor, gameTime, result);
             base.Update(gameTime);
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                OnUpdate = null;
+            }
+
+            disposed = true;
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -10,6 +10,11 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public class BoxCollisionComponent : ActorComponent
     {
+        /// <summary>
+        /// Obtém o resultado da colisão entre boxes.
+        /// </summary>
+        /// <typeparam name="T1">É uma estrutura que armazena valores da colisão.</typeparam>
+        /// <typeparam name="T2">É uma estrutura que armazena valores da colisão.</typeparam>
         public class Result<T1, T2> where T1 : struct where T2 : struct
         {
             /// <summary>
@@ -43,6 +48,10 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
+        //---------------------------------------//
+        //-----         VARIÁVEIS           -----//
+        //---------------------------------------//
+
         AnimatedEntity entity = null;
         Result<CollisionBox, CollisionBox> ccResult = new Result<CollisionBox, CollisionBox>(null, null, null, null, new RectangleCollisionResult());
         Result<CollisionBox, AttackBox> caResult = new Result<CollisionBox, AttackBox>(null, null, null, null, new RectangleCollisionResult());
@@ -50,10 +59,18 @@ namespace Microsoft.Xna.Framework.Graphics
         Result<CollisionBox, Rectangle> cbResult = new Result<CollisionBox, Rectangle>(null, null, null, null, new RectangleCollisionResult());
         Result<AttackBox, Rectangle> abResult = new Result<AttackBox, Rectangle>(null, null, null, null, new RectangleCollisionResult());
 
+        //---------------------------------------//
+        //-----         PROPRIEDADES        -----//
+        //---------------------------------------//
+
         /// <summary>Obtém ou define se o componente deve utilizar uma tela do tipo LayeredScreen para busca de atores para colisão.</summary>
         public LayeredScreen Screen { get; set; } = null;
         /// <summary>Obtém ou define os atores para verificação caso a propriedade Screen seja nulo.</summary>
-        public List<AnimatedEntity> Entities { get; set; } = new List<AnimatedEntity>();       
+        public List<AnimatedEntity> Entities { get; set; } = new List<AnimatedEntity>();
+
+        //---------------------------------------//
+        //-----         EVENTOS             -----//
+        //---------------------------------------//
 
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre CollisionBoxes.        
@@ -75,9 +92,15 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public Action<Result<AttackBox, Rectangle>> AxBCollision;
 
+        //---------------------------------------//
+        //-----         CONSTRUTOR          -----//
+        //---------------------------------------//        
+
         /// <summary>
         /// Inicializa uma nova instância de BoxCollisionComponent.
         /// </summary>
+        /// <param name="animatedEntity">Define o AnimatedEntity o qual esse componente será associado.</param>
+        /// <param name="screen">Define a tela para busca de entidades, pode ser null.</param>
         public BoxCollisionComponent(AnimatedEntity animatedEntity, LayeredScreen screen) : base(animatedEntity)
         {
             Name = nameof(BoxCollisionComponent);
@@ -98,6 +121,7 @@ namespace Microsoft.Xna.Framework.Graphics
             CxBCollision = source.CxBCollision;
             CxCCollision = source.CxCCollision;
             Screen = source.Screen;
+            Entities = source.Entities;
         }
 
         /// <summary>Atualiza o componente.</summary>
@@ -251,6 +275,38 @@ namespace Microsoft.Xna.Framework.Graphics
                     AxBCollision?.Invoke(abResult);
                 }
             }
+        }
+
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
+
+        private bool disposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.aaResult = null;
+                this.abResult = null;
+                this.AxACollision = null;
+                this.AxBCollision = null;
+                this.caResult = null;
+                this.cbResult = null;
+                this.ccResult = null;
+                this.CxACollision = null;
+                this.CxBCollision = null;
+                this.CxCCollision = null;
+                this.entity = null;
+                this.Screen = null;
+            }
+
+            disposed = true;
+
+            base.Dispose(disposing);
         }
     }
 }

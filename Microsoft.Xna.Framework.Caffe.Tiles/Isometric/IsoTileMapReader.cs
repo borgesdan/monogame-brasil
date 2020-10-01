@@ -93,8 +93,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
                         //O cálculo se dá na animação do topo
                         //antes o valor de row era positivo
-                        tile.Animation.X = ((w / 2) * -row) + ((w / 2) * col) + sx;
-                        tile.Animation.Y = ((h / 2) * col) - ((h / 2) * -row) + sy;
+                        tile.Actor.Transform.X = ((w / 2) * -row) + ((w / 2) * col) + sx;
+                        tile.Actor.Transform.Y = ((h / 2) * col) - ((h / 2) * -row) + sy;
                         
                         Tiles.Add(new Point(row, col), tile);
                     }                    
@@ -133,7 +133,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {   
                 if(_screen != null)
                 {
-                    if (Util.CheckFieldOfView(_screen, t.Value.Animation.Bounds))
+                    if (Util.CheckFieldOfView(_screen, t.Value.Actor.Bounds))
                     {
                         t.Value.Draw(gameTime, spriteBatch);
                     }                        

@@ -12,7 +12,6 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//                
         private Vector2 percentage = Vector2.One;
-        private bool outOfView = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -102,23 +101,6 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled || CurrentAnimation == null)
                 return;
 
-            //Define que a entidade está dentro dos limites de desenho da tela
-            outOfView = false;
-
-            //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
-            if (!UpdateOutOfView)
-            {
-                if(Screen != null)
-                {
-                    if (!Util.CheckFieldOfView(Screen, Bounds))
-                    {
-                        //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
-                        outOfView = true;
-                        return;
-                    }
-                }
-            }
-
             //Coloca OldPosition e Position com os mesmos valores.
             Transform.SetPosition(Transform.Position);
 
@@ -143,9 +125,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Se a entidade não é visível
-            //Se não existe uma animação ativa
-            //Ou se a entidade se encontra fora dos limites da tela, não prossegue com a execução do método.            
-            if (!Enable.IsVisible || CurrentAnimation == null || outOfView)
+            //Se não existe uma animação ativa            
+            if (!Enable.IsVisible || CurrentAnimation == null)
                 return;            
 
             if(XRepeat == 0 && YRepeat == 0)

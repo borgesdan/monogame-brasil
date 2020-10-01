@@ -5,9 +5,38 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Expõe acesso as transformações de um objeto, como posição, velocidade, rotação, entre outros.
     /// </summary>
-    /// <typeparam name="T">T é uma classe que implementa a interface IBoundsable.</typeparam>
     public sealed class TransformGroup<T> where T : IBoundsable
     {
+        public struct OriginValues
+        {
+            public Vector2 LeftTop;
+            public Vector2 Left;
+            public Vector2 LeftBottom;
+
+            public Vector2 RightTop;
+            public Vector2 Right;
+            public Vector2 RightBottom;
+
+            public Vector2 CenterTop;
+            public Vector2 Center;
+            public Vector2 CenterBottom;
+
+            public OriginValues(TransformGroup<T> transform)
+            {
+                LeftTop = Vector2.Zero;
+                Left = new Vector2(0, transform.Height / 2);
+                LeftBottom = new Vector2(0, transform.Height);
+
+                RightTop = new Vector2(transform.Width, 0);
+                Right = new Vector2(transform.Width, transform.Height / 2);
+                RightBottom = new Vector2(transform.Width, transform.Height);
+
+                CenterTop = new Vector2(transform.Width / 2, 0);
+                Center = new Vector2(transform.Width / 2, transform.Height / 2);
+                CenterBottom = new Vector2(transform.Width / 2, transform.Height);
+            }
+        }
+
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
@@ -188,6 +217,15 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
+
+        /// <summary>
+        /// Obtém as posições das origens para cálculos posteriores.
+        /// </summary>
+        public OriginValues GetOrigins()
+        {
+            Owner.UpdateBounds();
+            return new OriginValues(this);
+        }
 
         public void Set<T2>(TransformGroup<T2> source) where T2 : IBoundsable
         {

@@ -10,7 +10,7 @@ namespace Microsoft.Xna.Framework.Graphics
     public abstract class ActorComponent : IUpdateDrawable, IDisposable
     {
         /// <summary>
-        /// Obtém ou define o ator o qual esse componente é associado.
+        /// Obtém o ator o qual esse componente é associado.
         /// </summary>
         public Actor Actor { get; protected set; } = default;
         /// <summary>

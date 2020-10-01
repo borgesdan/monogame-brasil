@@ -28,6 +28,12 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
+        /// <summary>
+        /// Cria um novo objeto Câmera.
+        /// </summary>
+        /// <param name="x">Posição no eixo X.</param>
+        /// <param name="y">Posição no eixo Y.</param>
+        /// <param name="zoom">O zoom da câmera (Padrão 1).</param>
         public Camera(float x, float y, float zoom)
         {
             X = x;
@@ -71,6 +77,15 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Move(new Vector2(x, y));
         } 
+
+        /// <summary>
+        /// Aplica zoom na câmera.
+        /// </summary>
+        /// <param name="zoom">O incremento do zoom.</param>
+        public void ZoomIn(float zoom)
+        {
+            Zoom += zoom;
+        }
         
         /// <summary>
         /// Define a posição da câmera
@@ -97,7 +112,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public Matrix GetTransform()
         {
             Matrix m = new Matrix();
-            m += Matrix.CreateTranslation(-X, -Y, 0) * Matrix.CreateScale(Zoom, Zoom, 0);
+            m += Matrix.CreateTranslation(-X, -Y, 0) * Matrix.CreateScale(Zoom, Zoom, 1);
+
             return m;            
         }
 

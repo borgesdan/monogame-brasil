@@ -61,7 +61,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Extension.cs" />
   </ItemGroup>
   <ItemGroup>
