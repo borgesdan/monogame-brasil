@@ -1,55 +1,69 @@
 ﻿// Danilo Borges Santos, 2020.
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Estrutura que representa uma projeção de câmera no desenho 2D.
     /// </summary>
-    public struct Camera : IEquatable<Camera>
+    public class Camera
     {
+        private Game game = null;
+
         /// <summary>Obtém ou define a posição no eixo X da câmera.</summary>
-        public float X;
+        public float X { get; set; }
         /// <summary>Obtém ou define a posição no eixo Y da câmera.</summary>
-        public float Y;
+        public float Y { get; set; }
         /// <summary>Obtém ou define o zoom da câmera.</summary>
-        public float Zoom;
+        public float Zoom { get; set; }
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
         /// <summary>Obtém ou define a posição da câmera.</summary>
-        public Vector2 Position { get => new Vector2(X, Y); }        
+        public Vector2 Position { get => new Vector2(X, Y); set { X = value.X; Y = value.Y; } }
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        public Camera(float x, float y, float zoom)
+        /// <summary>
+        /// Cria uma nova instância da classe Câmera.
+        /// </summary>
+        /// <param name="x">Posição no eixo X.</param>
+        /// <param name="y">Posição no eixo Y.</param>
+        /// <param name="zoom">O zoom da câmera (Padrão 1).</param>
+        public Camera(Game game, float x, float y, float zoom)
         {
             X = x;
             Y = y;
             Zoom = zoom;
+            this.game = game;
+        }
+
+        /// <summary>
+        /// Cria uma nova instância da classe Câmera.
+        /// </summary>
+        public Camera(Game game) : this(game, 0, 0, 1f) { }
+
+        public Camera(Camera camera)
+        {
+            X = camera.X;
+            Y = camera.Y;
+            Zoom = camera.Zoom;
+            game = camera.game;
         }
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
-        //---------------------------------------//
-
-        /// <summary>Cria uma nova instância da estrutura Camera com um valor padrão.</summary>
-        public static Camera Create()
-        {
-            return new Camera(0, 0, 1);
-        }
+        //---------------------------------------//        
         
         /// <summary>
         /// Obtém o tamanho total do campo de exibição da câmera.
-        /// </summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        public Rectangle GetBounds(Game game)
+        /// </summary>        
+        public Rectangle GetBounds()
         {
             return new Rectangle(Position.ToPoint(), game.Window.ClientBounds.Size);
         }
@@ -71,6 +85,15 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Move(new Vector2(x, y));
         } 
+
+        /// <summary>
+        /// Aplica zoom na câmera.
+        /// </summary>
+        /// <param name="zoom">O incremento do zoom.</param>
+        public void ZoomIn(float zoom)
+        {
+            Zoom += zoom;
+        }
         
         /// <summary>
         /// Define a posição da câmera
@@ -87,7 +110,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
         /// <param name="bounds">Os limites do objeto.</param>
-        public void Focus(Game game, Rectangle bounds)
+        public void Focus(Rectangle bounds)
         {
             X = bounds.Center.X - game.Window.ClientBounds.GetHalfW();
             Y = bounds.Center.Y - game.Window.ClientBounds.GetHalfH();
@@ -97,36 +120,10 @@ namespace Microsoft.Xna.Framework.Graphics
         public Matrix GetTransform()
         {
             Matrix m = new Matrix();
-            m += Matrix.CreateTranslation(-X, -Y, 0) * Matrix.CreateScale(Zoom, Zoom, 0);
+            m += Matrix.CreateTranslation(-X, -Y, 0) * Matrix.CreateScale(Zoom, Zoom, 1);
+
             return m;            
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Camera camera && Equals(camera);
-        }
-
-        public bool Equals(Camera other)
-        {
-            return X.Equals(other.X) &&
-                Y.Equals(other.Y) &&
-                Zoom.Equals(other.Zoom);
-        }
-
-        public override int GetHashCode()
-        {            
-            return HashCode.Combine(X, Y, Zoom);
-        }
-
-        public static bool operator ==(Camera left, Camera right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Camera left, Camera right)
-        {
-            return !(left == right);
-        }
+        }        
     }
 
     /// <summary>
@@ -139,7 +136,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém a câmera ativa da tela.
         /// </summary>
-        /// <returns></returns>
         public static Camera GetCamera()
         {
             return _screen.Camera;

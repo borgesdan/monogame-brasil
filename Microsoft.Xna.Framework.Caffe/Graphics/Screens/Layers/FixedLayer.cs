@@ -16,7 +16,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         private Vector2 move = Vector2.Zero;
-        private Camera fixedCamera = Camera.Create();
+        private Camera fixedCamera = null;
         private Vector2 oldPosition = Vector2.Zero;
         private Vector2 position = Vector2.Zero;
         private int top, left, right, bottom = 0;
@@ -64,6 +64,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Down = down;
             Left = left;
             Right = right;
+            fixedCamera = new Camera(screen.Game);
 
             if (actors != null)
                 Actors.AddRange(actors);
@@ -80,6 +81,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Down = source.Down;
             this.Left = source.Left;
             this.Right = source.Right;
+            this.fixedCamera = new Camera(source.fixedCamera);
         }
 
         //---------------------------------------//
@@ -132,10 +134,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             for (int i = 0; i < Actors.Count; i++)
             {
-                if (Actors[i].Enable.IsEnabled)
-                {
-                    Actors[i].Update(gameTime);
-                }
+                Actors[i].Update(gameTime);
             }
 
             fixedCamera.Zoom = Screen.Camera.Zoom;
@@ -286,10 +285,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             for (int i = 0; i < Actors.Count; i++)
             {
-                if (Actors[i].Enable.IsVisible)
-                {
-                    Actors[i].Draw(gameTime, spriteBatch);
-                }
+                Actors[i].Draw(gameTime, spriteBatch);
             }
 
             spriteBatch.End();

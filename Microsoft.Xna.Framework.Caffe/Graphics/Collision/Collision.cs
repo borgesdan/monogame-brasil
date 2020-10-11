@@ -25,11 +25,10 @@
 // Code: https://www.codeproject.com/Articles/15573/2D-Polygon-Collision-Detection
 
 using System;
-using System.Drawing;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Expõe métodos para verificação de colisão entre duas entidades.</summary>
+    /// <summary>Expõe métodos para verificação de colisão entre dois atores.</summary>
     public static class Collision
     {
         /// <summary>
@@ -41,25 +40,29 @@ namespace Microsoft.Xna.Framework.Graphics
             actor1.UpdateBounds();
             actor2.UpdateBounds();
 
-            CollisionResult result = new CollisionResult();
-            result.Type = CollisionType.None;
-            result.HasCollided = false;
+            CollisionResult result = new CollisionResult
+            {
+                Type = CollisionType.None,
+                HasCollided = false
+            };
 
-            //Se as entidades não estão rotacionadas, então fazemos o cálculo simples de intersecção.
-            if(actor1.Transform.Rotation == 0 && actor2.Transform.Rotation == 0)
+            //Fazemos o cálculo simples de intersecção entre retângulos se não rotaçaõ nos atores.
+            if (actor1.Transform.Rotation == 0 && actor2.Transform.Rotation == 0)
             {
                 //Verifica se  há colisão.
                 if (BoundsCollision(actor1.Bounds, actor2.Bounds))
                 {
                     //Cria o resultado da colisão entre retângulos.
-                    RectangleCollisionResult rcr = new RectangleCollisionResult();
-                    rcr.Intersection = Rectangle.Intersect(actor1.Bounds, actor2.Bounds);                    
+                    RectangleCollisionResult rcr = new RectangleCollisionResult
+                    {
+                        Intersection = Rectangle.Intersect(actor1.Bounds, actor2.Bounds)
+                    };
 
-                    var eb = actor1.Bounds;
+                    var ab = actor1.Bounds;
                     var ob = actor2.Bounds;
 
                     //O vetor de subtração a ser completado e adicionado.
-                    rcr.Subtract = Subtract(eb, ob);
+                    rcr.Subtract = Subtract(ab, ob);
 
                     result.HasCollided = true;
                     result.Type = CollisionType.Rectangle;
@@ -136,34 +139,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             return sub;
-        }
-
-        /// <summary>
-        /// Verifica se os pixels do objeto 1 intersecta outro pixels do objeto 2.
-        /// </summary>
-        /// <param name="bounds1">Os limites do objeto 1.</param>
-        /// <param name="texture1">A textura do objeto 1.</param>
-        /// <param name="frame1">A parte da textura 1 a ser verificada ou para textura completa use texture1.Bounds.</param>
-        /// <param name="bounds2">Os limites do objeto 2.</param>
-        /// <param name="texture2">A textura do objeto 2.</param>
-        /// <param name="frame2">A parte da textura 2 a ser verificada ou para textura completa use texture2.Bounds.</param>
-        public static bool PerPixelCollision(Rectangle bounds1, Texture2D texture1, Rectangle frame1, Rectangle bounds2, Texture2D texture2, Rectangle frame2)
-        {
-            //"https://www.austincc.edu/cchrist1/GAME1343/PerPixelCollision/PerPixelCollision.htm"
-
-            Color[] oneTextureData;
-            Color[] twoTextureData;
-
-            //Carrega a quantidade de pixels que terá em cada array
-            oneTextureData = new Color[frame1.Width * frame1.Height];
-            twoTextureData = new Color[frame2.Width * frame2.Height];
-
-            //Recebe os pixels do determinado local da textura
-            texture1.GetData(0, frame1, oneTextureData, 0, oneTextureData.Length);
-            texture2.GetData(0, frame2, twoTextureData, 0, twoTextureData.Length);            
-
-            return PerPixelCollision(bounds1, oneTextureData, bounds2, twoTextureData);
-        }
+        }        
 
         /// <summary>
         /// Verifica se os pixels do objeto 1 intersecta outros pixels do objeto 2.
@@ -174,6 +150,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="data2">O array de cores recebido da textura 2.</param>
         public static bool PerPixelCollision(Rectangle bounds1, Color[] data1, Rectangle bounds2, Color[] data2)
         {
+            //"https://www.austincc.edu/cchrist1/GAME1343/PerPixelCollision/PerPixelCollision.htm"
+
             bool result = false;
 
             int top = Math.Max(bounds1.Top, bounds2.Top);
@@ -266,7 +244,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Verifica se um polígono colidiu com outro.
+        /// Verifica se um polígono colidiu outro polígono.
         /// </summary>
         /// <param name="polygonA">O primeiro polígono.</param>
         /// <param name="polygonB">O segundo polígono.</param>

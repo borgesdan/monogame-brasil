@@ -12,7 +12,6 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//                
         private Vector2 percentage = Vector2.One;
-        private bool outOfView = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -102,23 +101,6 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled || CurrentAnimation == null)
                 return;
 
-            //Define que a entidade está dentro dos limites de desenho da tela
-            outOfView = false;
-
-            //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
-            if (!UpdateOutOfView)
-            {
-                if(Screen != null)
-                {
-                    if (!Util.CheckFieldOfView(Screen, Bounds))
-                    {
-                        //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
-                        outOfView = true;
-                        return;
-                    }
-                }
-            }
-
             //Coloca OldPosition e Position com os mesmos valores.
             Transform.SetPosition(Transform.Position);
 
@@ -140,12 +122,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Desenha a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Se a entidade não é visível
-            //Se não existe uma animação ativa
-            //Ou se a entidade se encontra fora dos limites da tela, não prossegue com a execução do método.            
-            if (!Enable.IsVisible || CurrentAnimation == null || outOfView)
+            //Se não existe uma animação ativa            
+            if (!Enable.IsVisible || CurrentAnimation == null)
                 return;            
 
             if(XRepeat == 0 && YRepeat == 0)
@@ -156,7 +137,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 for (int i = 0; i <= XRepeat; i++)
                 {
-                    Camera camera = Camera.Create();
+                    Camera camera = new Camera(Game);
 
                     if (Screen != null)
                         camera = Screen.Camera;
@@ -194,7 +175,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 }                
             }
 
-            base.Draw(gameTime, spriteBatch);                    
+            base._Draw(gameTime, spriteBatch);                    
         }        
 
         /// <summary>Adiciona uma nova animação à entidade.</summary>

@@ -1,133 +1,125 @@
-﻿//// Danilo Borges Santos, 2020.
+﻿// Danilo Borges Santos, 2020.
 
-//using System;
-//using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
-//namespace Microsoft.Xna.Framework.Graphics
-//{
-//    /// <summary>
-//    /// Componente que verifica uma colisão entre entidades. 
-//    /// </summary>
-//    public class CollisionComponent : EntityComponent
-//    {   
-//        /// <summary>Define através deste evento a ação necessária que deve ocorrer ao acontecer uma colisão.</summary>
-//        public event CollisionAction OnCollision;
-//        /// <summary>Obtém ou define se o componente deve utilizar a tela corrente (caso LayeredScreen) para busca das entidades para colisão.</summary>
-//        public bool UseCurrentScreen { get; set; } = true;
-//        /// <summary>Obtém ou define as entidades a serem utilizadas caso UseCurrentScreen seja falso.</summary>
-//        public List<Entity2D> Entities { get; set; } = new List<Entity2D>();
+namespace Microsoft.Xna.Framework.Graphics
+{
+    /// <summary>
+    /// Componente que verifica uma colisão de retângulos entre atores. 
+    /// </summary>
+    public class CollisionComponent : ActorComponent
+    {
+        /// <summary>Obtém ou define as entidades a serem utilizadas caso a propriedade Screen seja nula.</summary>
+        public List<Actor> Actors { get; set; } = new List<Actor>();
+        /// <summary>Obtém ou define se o componente deve utilizar uma tela do tipo LayeredScreen para busca de atores para colisão.</summary>
+        public LayeredScreen Screen { get; set; }
 
-//        //-----------------------------------------//
-//        //-----         CONSTRUTOR            -----//
-//        //-----------------------------------------//
+        /// <summary>
+        /// Encapsula um método a ser chamado no fim do método Update deste component.
+        /// <list type="number">
+        /// <item>Actor é o ator que implementa esse componente.</item>
+        /// <item>Actor é o outro ator que participa da colisão.</item>
+        /// <item>GameTime são os valores de tempo do jogo.</item>
+        /// <item>CollisionResult é o retorno da colisão.</item>
+        /// </list>
+        /// </summary>
+        public Action<Actor, Actor, GameTime, CollisionResult> OnCollision;
 
-//        /// <summary>
-//        /// Inicializa uma nova instância de CollisionComponent
-//        /// </summary>
-//        public CollisionComponent()  : base()
-//        {
-//            Name = nameof(CollisionComponent);
-//        }
+        //-----------------------------------------//
+        //-----         CONSTRUTOR            -----//
+        //-----------------------------------------//
 
-//        /// <summary>
-//        /// Inicializa uma nova instância de CollisionComponent.
-//        /// </summary>
-//        /// <param name="collisionAction">Um método que define os mesmos parâmetros de um delegate CollisionAction.</param>
-//        public CollisionComponent(CollisionAction collisionAction) : this()
-//        {
-//            OnCollision = collisionAction;            
-//        }
+        /// <summary>
+        /// Inicializa uma nova instância de CollisionComponent
+        /// </summary>
+        /// <param name="actor">Define o ator o qual esse componente será associad.</param>
+        /// <param name="screen">Define a tela para busca de entidades, pode ser null.</param>
+        public CollisionComponent(Actor actor, LayeredScreen screen) : base(actor)
+        {
+            Name = nameof(CollisionComponent);
+            Screen = screen;
+        }        
 
-//        /// <summary>
-//        /// Inicializa uma nova instância da classe CollisionComponent como uma cópia de outro CollisionComponent.
-//        /// </summary>
-//        /// <param name="destination">A entidade a ser associada esse componente.</param>
-//        /// <param name="source">A origem para cópia.</param>
-//        public CollisionComponent(Entity2D destination, CollisionComponent source): base(destination, source)
-//        {
-//            OnCollision = source.OnCollision;
-//            UseCurrentScreen = source.UseCurrentScreen;
-//            Entities = source.Entities;
-//        }
+        /// <summary>
+        /// Inicializa uma nova instância da classe CollisionComponent como uma cópia de outro CollisionComponent.
+        /// </summary>
+        /// <param name="destination">O ator a ser associado esse componente.</param>
+        /// <param name="source">A origem para cópia.</param>
+        public CollisionComponent(Actor destination, CollisionComponent source) : base(destination, source)
+        {
+            Screen = source.Screen;
+            Actors = source.Actors;
+        }
 
-//        //---------------------------------------//
-//        //-----         FUNÇÕES             -----//
-//        //---------------------------------------//
+        //---------------------------------------//
+        //-----         FUNÇÕES             -----//
+        //---------------------------------------//        
 
-//        /// <summary>
-//        /// Cria uma nova instância de CollisionComponent quando não for possível utilizar o construtor de cópia.
-//        /// </summary>
-//        /// <typeparam name="T">O tipo a ser informado.</typeparam>
-//        /// <param name="source">O objeto a ser copiado</param>
-//        /// <param name="destination">A entidade a ser associada a esse componente.</param>
-//        public override T Clone<T>(T source, Entity2D destination)
-//        {
-//            if (source is CollisionComponent)
-//                return (T)Activator.CreateInstance(typeof(CollisionComponent), destination, source);
-//            else
-//                throw new InvalidCastException();
-//        }
+        /// <summary>Atualiza o componente.</summary>
+        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        public override void Update(GameTime gameTime)
+        {
+            if (Screen != null)
+            {
+                //Busca todas as entidades vísiveis da tela.
+                foreach (Actor other in Screen.DrawableActors)
+                {
+                    // Prossegue se a entidade atual é diferente da entidade da lista.
+                    if (!Actor.Equals(other))
+                    {
+                        Check(other, gameTime);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var other in Actors)
+                {
+                    // Prossegue se a entidade atual é diferente da entidade da lista.
+                    if (!Actor.Equals(other))
+                    {
+                        Check(other, gameTime);
+                    }
+                }
+            }
 
-//        /// <summary>Atualiza o componente.</summary>
-//        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-//        public override void Update(GameTime gameTime)
-//        {
-//            //Recebe a tela em que a entidade está associada.
-//            var screen = Entity.Screen;
+            base.Update(gameTime);
+        }
 
-//            if(UseCurrentScreen)
-//            {
-//                if(screen != null && screen is LayeredScreen ls)
-//                {
-//                    //Busca todas as entidades vísiveis da tela.
-//                    foreach (var other in ls.DrawableEntities)
-//                    {
-//                        // Prossegue se a entidade atual é diferente da entidade da lista.
-//                        if (!Entity.Equals(other))
-//                        {
-//                            Check(other, gameTime);
-//                        }
-//                    }
-//                }                
-//            }
-//            else
-//            {
-//                foreach(var other in Entities)
-//                {
-//                    // Prossegue se a entidade atual é diferente da entidade da lista.
-//                    if (!Entity.Equals(other))
-//                    {
-//                        Check(other, gameTime);
-//                    }
-//                }
-//            }            
+        private void Check(Actor other, GameTime gameTime)
+        {
+            //Checa a colisão
+            var result = Collision.ActorCollision(Actor, other);
 
-//            base.Update(gameTime);
-//        }
+            if (result.HasCollided)
+            {
+                //O que fazer sobre a colisão será definido pelo usuário.
+                OnCollision?.Invoke(Actor, other, gameTime, result);
+            }
+        }
 
-//        private void Check(Entity2D other, GameTime gameTime)
-//        {
-//            //Checa a colisão
-//            var result = Collision.EntityCollision(Entity, other);
+        //---------------------------------------//
+        //-----         DISPOSE             -----//
+        //---------------------------------------//
 
-//            if (result.HasCollided)
-//            {
-//                //O que fazer sobre a colisão será definido pelo usuário.
-//                OnCollision?.Invoke(Entity, gameTime, result, other);
-//            }
-//        }
+        private bool disposed = false;
 
-//        protected override void Dispose(bool disposing)
-//        {
-//            if (disposed)
-//                return;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
 
-//            if (disposing)
-//            {
-//                OnCollision = null;
-//            }
+            if (disposing)
+            {
+                this.Screen = null;
+                this.Actors = null;
+                this.OnCollision = null;
+            }
 
-//            base.Dispose(disposing);
-//        }
-//    }
-//}
+            disposed = true;
+
+            base.Dispose(disposing);
+        }
+    }
+}

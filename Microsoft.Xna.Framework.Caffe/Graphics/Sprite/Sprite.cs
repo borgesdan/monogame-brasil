@@ -48,7 +48,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (isSingleFrame)
             {
                 SpriteFrame defaultFrame = SpriteFrame.Create(texture.Bounds, Vector2.Zero);
-                Boxes.Add(defaultFrame, null, null);
+                Boxes.Add("", defaultFrame, null, null);
             }            
         }
 
@@ -99,14 +99,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Desenha o sprite.
         /// </summary>
         /// <param name="spriteBatch">A instância corrente do SpriteBatch.</param>
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible)
                 return;
 
             spriteBatch.Draw(Texture, Transform.Position, this[CurrentIndex].Bounds, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 
-            base.Draw(gameTime, spriteBatch);
+            base._Draw(gameTime, spriteBatch);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             Texture.GetData(0, frame.Bounds, colors, 0, colors.Length);
 
-            return GetDataHelper(frame.Bounds, colors);
+            return GetData(frame.Bounds, colors, Transform.SpriteEffects);
         }     
 
         //---------------------------------------//

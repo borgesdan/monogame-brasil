@@ -4,10 +4,6 @@ namespace Microsoft.Xna.Framework.Graphics
 {
     public abstract class Actor : IActor<Actor>
     {
-        Rectangle oldFrame = new Rectangle();
-        SpriteEffects oldEffects = SpriteEffects.None;
-        Color[] currentColor = null;
-
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
@@ -39,7 +35,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define os componentes do ator.
         /// </summary>
-        public ComponentGroup<Actor> Components { get; set; } = null;        
+        public ComponentGroup Components { get; set; } = null;        
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -48,7 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Actor(Game game)
         {
             this.Game = game;
-            this.Components = new ComponentGroup<Actor>(this);
+            this.Components = new ComponentGroup(this);
             this.Transform = new TransformGroup<Actor>(this);            
         }
 
@@ -58,7 +54,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Game = source.Game;
             this.Bounds = source.Bounds;
             this.BoundsR = new Polygon(source.BoundsR);
-            this.Components = new ComponentGroup<Actor>(this, source.Components);
+            this.Components = new ComponentGroup(this, source.Components);
             this.Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             this.Transform = new TransformGroup<Actor>(this, source.Transform);            
         }
@@ -72,12 +68,19 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
         /// <param name="spriteBatch">A instância do SpriteBatch para desenho.</param>
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible)
                 return;
 
-            Components.Draw(gameTime, spriteBatch);
+            Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
+            _Draw(gameTime, spriteBatch);
+            Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
+        }
+
+        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+
         }
 
         /// <summary>
@@ -108,17 +111,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém o conteúdo de cores passando o frame (com o tamanho do data) e o Color data.
         /// </summary>
-        protected Color[] GetDataHelper(Rectangle frame, Color[] data)
+        /// <param name="frame">O recorte da textura.</param>
+        /// <param name="data">O array de cores recebido da textura.</param>
+        /// <param name="effects">Os efeitos a serem observados.</param>
+        public static Color[] GetData(Rectangle frame, Color[] data, SpriteEffects effects)
         {
-            //Retorna o último array de cores caso as propriedades não tenham sido mudadas
-            if (currentColor != null
-                && oldFrame == frame
-                && oldEffects == Transform.SpriteEffects)
-            {
-                return currentColor;
-            }
-
-            if (Transform.SpriteEffects == SpriteEffects.None)
+            if (effects == SpriteEffects.None)
             {
                 //Se não há transformação retorna o array recebido.                
                 return data;
@@ -133,7 +131,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 Color[] final = new Color[data.Length];                   // O array a ser enviado no final
                 int finalIndex = 0;                                         // O index para percorrer o array final
 
-                if (Transform.SpriteEffects == (SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically))
+                if (effects == (SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically))
                 {
                     position.X = frame.Width - 1;
                     position.Y = frame.Height - 1;
@@ -150,7 +148,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         position.X = frame.Width - 1;
                     }
                 }
-                else if (Transform.SpriteEffects == SpriteEffects.FlipHorizontally)
+                else if (effects == SpriteEffects.FlipHorizontally)
                 {
                     position.X = frame.Width - 1;
                     for (int h = 0; h < frame.Height; h++)
@@ -167,7 +165,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         position.X = frame.Width - 1;
                     }
                 }
-                else if(Transform.SpriteEffects == SpriteEffects.FlipVertically)
+                else if(effects == SpriteEffects.FlipVertically)
                 {
                     position.Y = frame.Height - 1;
                     for (int h = 0; h < frame.Height; h++)
@@ -195,11 +193,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
                 }
 
-                currentColor = final;
-                oldEffects = Transform.SpriteEffects;
-                oldFrame = frame;
-
-                return currentColor;
+                return final;
             }
         }
 
@@ -229,7 +223,6 @@ namespace Microsoft.Xna.Framework.Graphics
                 this.BoundsR = null;
                 this.Enable = null;
                 this.Transform = null;
-                this.currentColor = null;
             }
 
             disposed = true;

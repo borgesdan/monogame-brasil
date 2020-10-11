@@ -20,7 +20,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//        
-        protected Camera camera = Camera.Create();
+        protected Camera camera = null;
         private InputManager input = null;
         private bool needInputUpdate = false;
 
@@ -70,9 +70,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----------------------------------------//
 
         /// <summary>Evento chamado no fim do método Update.</summary>
-        public event UpdateAction<Screen> OnUpdate;
+        public event Action<Screen, GameTime> OnUpdate;
         /// <summary>Evento chamado no fim do método Draw.</summary>
-        public event DrawAction<Screen> OnDraw;
+        public event Action<Screen, GameTime, SpriteBatch> OnDraw;
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -94,6 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Game = game;
             Manager = manager;
             Name = name;
+            camera = new Camera(game);
 
             if (loadScreen)
                 Load();
@@ -114,6 +115,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Name = source.Name;
             this.OnDraw = source.OnDraw;
             this.OnUpdate = source.OnUpdate;
+            this.camera = new Camera(source.camera);
         }
 
         //---------------------------------------//
@@ -155,11 +157,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 Input.Update(gameTime);
 
             for (int i = 0; i < Actors.Count; i++)
-            {
-                if(Actors[i].Enable.IsEnabled)
-                    Actors[i].Update(gameTime);
-            }                
-            
+                Actors[i].Update(gameTime);
+
             //Chama OnUpdate
             OnUpdate?.Invoke(this, gameTime);
         }

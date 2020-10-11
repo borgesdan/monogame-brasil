@@ -14,7 +14,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIES          -----//
         //---------------------------------------//                
         private bool callLoadScreen = false;
-        private Task taskLoading = null;
+        private Task taskLoading = null;        
+        private bool changed = false;           //True caso o método Change() foi chamado        
+        private Screen standbyScreen = null;    //A tela a ser colocada como ativa pelo método Change()
 
         //----------------------------------------//
         //-----         PROPRIEDADES         -----//
@@ -148,9 +150,18 @@ namespace Microsoft.Xna.Framework.Graphics
         public void Change(string name, bool reset)
         {
             Screen old = Active;
-
             Screen finder = this[name];
-            Active = finder ?? throw new ArgumentException("Não foi encontrada uma tela com esse nome", nameof(name));
+
+            if(finder != null)
+            {
+                //Active = finder;
+                changed = true;
+                standbyScreen = finder;
+            }
+            else
+            {
+                throw new ArgumentException("Não foi encontrada uma tela com esse nome", nameof(name));
+            }            
 
             if (reset)
                 old.Reset();
@@ -171,7 +182,7 @@ namespace Microsoft.Xna.Framework.Graphics
             else
                 index++;
 
-            Change(Screens[index].Name, reset);
+            Change(Screens[index].Name, reset);            
         }
 
         /// <summary>
@@ -203,6 +214,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public virtual void Update(GameTime gameTime)
         {
+            if(changed)
+            {
+                changed = false;
+                Active = standbyScreen;
+            }
+
             Input.Update(gameTime);
             Active?.Update(gameTime);
 

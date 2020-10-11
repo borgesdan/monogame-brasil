@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ActorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoundsComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\GhostComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IActor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundsR.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IDraw.cs" />
@@ -42,7 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\FixedLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\InfiniteLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\StaticLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\ScreenLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\SpriteBatchBeginConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Interfaces\ISpriteBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUpdate.cs" />
@@ -61,7 +62,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Extension.cs" />
   </ItemGroup>
   <ItemGroup>

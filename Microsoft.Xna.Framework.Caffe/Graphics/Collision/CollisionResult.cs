@@ -85,10 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public override int GetHashCode()
         {
-            var hashCode = -1513100886;
-            hashCode = hashCode * -1521134295 + EqualityComparer<Rectangle>.Default.GetHashCode(Intersection);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Vector2>.Default.GetHashCode(Subtract);
-            return hashCode;
+            return HashCode.Combine(Intersection, Subtract);
         }
 
         public static bool operator ==(RectangleCollisionResult left, RectangleCollisionResult right)
@@ -145,11 +142,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public override int GetHashCode()
         {
-            var hashCode = -2017691047;
-            hashCode = hashCode * -1521134295 + WillIntersect.GetHashCode();
-            hashCode = hashCode * -1521134295 + Intersect.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Vector2>.Default.GetHashCode(Subtract);
-            return hashCode;
+            return HashCode.Combine(WillIntersect, Intersect, Subtract);
         }
 
         public static bool operator ==(PolygonCollisionResult left, PolygonCollisionResult right)

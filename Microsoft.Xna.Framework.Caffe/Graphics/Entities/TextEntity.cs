@@ -14,7 +14,6 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         StringBuilder builder = new StringBuilder();
-        bool outOfView = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -29,7 +28,7 @@ namespace Microsoft.Xna.Framework.Graphics
             get => builder;
             set
             {
-                builder = value;
+                builder = value;                
                 UpdateBounds();
             }
                 
@@ -108,22 +107,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
-                return;
-
-            //Se UpdateOutOfView é false, então é necessário saber se a entidade está dentro dos limites de desenho da tela.
-            if (!UpdateOutOfView)
-            {
-                if (Screen != null)
-                {
-                    if (!Util.CheckFieldOfView(Screen, Bounds))
-                    {
-                        //Se o resultado for false, definimos 'outOfView' como true para verificação no método Draw.
-                        outOfView = true;
-
-                        return;
-                    }
-                }
-            }
+                return;            
 
             UpdateBounds();
 
@@ -133,15 +117,15 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Desenha a entidade.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible || outOfView)
+            if (!Enable.IsVisible)
                 return;
 
             if (TextBuilder != null)
                 spriteBatch.DrawString(Font, TextBuilder, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 
-            base.Draw(gameTime, spriteBatch);
+            base._Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Atualiza os limites da entidade.</summary>

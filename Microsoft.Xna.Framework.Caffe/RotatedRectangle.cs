@@ -66,43 +66,45 @@ namespace Microsoft.Xna.Framework
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
         
-        public bool Intersects(RotatedRectangle rotatedRectangle)
-        {
-            float area = Triangle.FindArea(rotatedRectangle.P1, rotatedRectangle.P2, rotatedRectangle.P3)
-                + Triangle.FindArea(rotatedRectangle.P3, rotatedRectangle.P4, rotatedRectangle.P1);
+        //public bool Intersects(RotatedRectangle rotatedRectangle)
+        //{
+        //    float area = Triangle.FindArea(rotatedRectangle.P1, rotatedRectangle.Center, rotatedRectangle.P2)
+        //        + Triangle.FindArea(rotatedRectangle.P2, rotatedRectangle.Center, rotatedRectangle.P3)
+        //        + Triangle.FindArea(rotatedRectangle.P3, rotatedRectangle.Center, rotatedRectangle.P4)
+        //        + Triangle.FindArea(rotatedRectangle.P4, rotatedRectangle.Center, rotatedRectangle.P1);
 
-            //float area = Triangle.FindArea(P1, P2, P3) + Triangle.FindArea(P3, P4, P1);
+        //    //float area = Triangle.FindArea(P1, P2, P3) + Triangle.FindArea(P3, P4, P1);
 
-            float p1a = SumArea(P1, rotatedRectangle);
-            float p2a = SumArea(P2, rotatedRectangle);
-            float p3a = SumArea(P3, rotatedRectangle);
-            float p4a = SumArea(P4, rotatedRectangle);
+        //    float p1a = SumArea(P1, rotatedRectangle);
+        //    float p2a = SumArea(P2, rotatedRectangle);
+        //    float p3a = SumArea(P3, rotatedRectangle);
+        //    float p4a = SumArea(P4, rotatedRectangle);
 
-            //float p1a = SumArea(rotatedRectangle.P1);
-            //float p2a = SumArea(rotatedRectangle.P2);
-            //float p3a = SumArea(rotatedRectangle.P3);
-            //float p4a = SumArea(rotatedRectangle.P4);
+        //    //float p1a = SumArea(rotatedRectangle.P1);
+        //    //float p2a = SumArea(rotatedRectangle.P2);
+        //    //float p3a = SumArea(rotatedRectangle.P3);
+        //    //float p4a = SumArea(rotatedRectangle.P4);
 
-            if (p1a == area || p2a == area || p3a == area || p4a == area)
-                return true;
-            else
-                return false;            
-        }
+        //    if (p1a == area || p2a == area || p3a == area || p4a == area)
+        //        return true;
+        //    else
+        //        return false;            
+        //}
 
-        private float SumArea(Point p, RotatedRectangle rectangle)
-        {
-            //float a = Triangle.FindArea(P1, p, P4);
-            //float b = Triangle.FindArea(P4, p, P3);
-            //float c = Triangle.FindArea(P3, p, P2);
-            //float d = Triangle.FindArea(p, P2, P1);
+        //private float SumArea(Point p, RotatedRectangle rectangle)
+        //{
+        //    //float a = Triangle.FindArea(P1, p, P4);
+        //    //float b = Triangle.FindArea(P4, p, P3);
+        //    //float c = Triangle.FindArea(P3, p, P2);
+        //    //float d = Triangle.FindArea(p, P2, P1);
 
-            float a = Triangle.FindArea(rectangle.P1, p, rectangle.P4);
-            float b = Triangle.FindArea(rectangle.P4, p, rectangle.P3);
-            float c = Triangle.FindArea(rectangle.P3, p, rectangle.P2);
-            float d = Triangle.FindArea(p, rectangle.P2, rectangle.P1);
+        //    float a = Triangle.FindArea(rectangle.P1, p, rectangle.P4);
+        //    float b = Triangle.FindArea(rectangle.P4, p, rectangle.P3);
+        //    float c = Triangle.FindArea(rectangle.P3, p, rectangle.P2);
+        //    float d = Triangle.FindArea(p, rectangle.P2, rectangle.P1);
 
-            return a + b + c + d;
-        }
+        //    return a + b + c + d;
+        //}
 
         public override bool Equals(object obj)
         {

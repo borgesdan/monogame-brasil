@@ -150,7 +150,7 @@ namespace Microsoft.Xna.Framework.Graphics
             position = Screen.Camera.Position;
 
             Vector2 diff = position - oldPosition;
-            Camera c = layerCamera;
+            Camera c = new Camera(layerCamera);
 
             Viewport view = Screen.Game.GraphicsDevice.Viewport;
 

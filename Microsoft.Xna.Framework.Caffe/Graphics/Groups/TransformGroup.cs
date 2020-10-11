@@ -5,9 +5,38 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Expõe acesso as transformações de um objeto, como posição, velocidade, rotação, entre outros.
     /// </summary>
-    /// <typeparam name="T">T é uma classe que implementa a interface IBoundsable.</typeparam>
     public sealed class TransformGroup<T> where T : IBoundsable
     {
+        public struct OriginValues
+        {
+            public Vector2 LeftTop;
+            public Vector2 Left;
+            public Vector2 LeftBottom;
+
+            public Vector2 RightTop;
+            public Vector2 Right;
+            public Vector2 RightBottom;
+
+            public Vector2 Top;
+            public Vector2 Center;
+            public Vector2 Bottom;
+
+            public OriginValues(TransformGroup<T> transform)
+            {
+                LeftTop = Vector2.Zero;
+                Left = new Vector2(0, transform.Height / 2);
+                LeftBottom = new Vector2(0, transform.Height);
+
+                RightTop = new Vector2(transform.Width, 0);
+                Right = new Vector2(transform.Width, transform.Height / 2);
+                RightBottom = new Vector2(transform.Width, transform.Height);
+
+                Top = new Vector2(transform.Width / 2, 0);
+                Center = new Vector2(transform.Width / 2, transform.Height / 2);
+                Bottom = new Vector2(transform.Width / 2, transform.Height);
+            }
+        }
+
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
@@ -188,6 +217,15 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
+
+        /// <summary>
+        /// Obtém as posições das origens para cálculos posteriores.
+        /// </summary>
+        public OriginValues GetOrigins()
+        {
+            Owner.UpdateBounds();
+            return new OriginValues(this);
+        }
 
         public void Set<T2>(TransformGroup<T2> source) where T2 : IBoundsable
         {
@@ -432,6 +470,46 @@ namespace Microsoft.Xna.Framework.Graphics
         public void SetOrigin(Vector2 origin)
         {
             Origin = origin;
+            Owner.UpdateBounds();
+        }
+
+        /// <summary>
+        /// Define a origem do desenho e da rotação do objeto e invoca o método UpdateBounds do objeto associado.
+        /// </summary>
+        /// <param name="align">A posição da origem informando o alinhamento.</param>
+        public void SetOrigin(AlignType align)
+        {
+            switch(align)
+            {
+                case AlignType.LeftTop:
+                    Origin = GetOrigins().LeftTop;
+                    break;
+                case AlignType.Left:
+                    Origin = GetOrigins().Left;
+                    break;
+                case AlignType.LeftBottom:
+                    Origin = GetOrigins().LeftBottom;
+                    break;
+                case AlignType.RightTop:
+                    Origin = GetOrigins().RightTop;
+                    break;
+                case AlignType.Right:
+                    Origin = GetOrigins().Right;
+                    break;
+                case AlignType.RightBottom:
+                    Origin = GetOrigins().RightBottom;
+                    break;
+                case AlignType.Top:
+                    Origin = GetOrigins().Top;
+                    break;
+                case AlignType.Center:
+                    Origin = GetOrigins().Center;
+                    break;
+                case AlignType.Bottom:
+                    Origin = GetOrigins().Bottom;
+                    break;
+            }
+
             Owner.UpdateBounds();
         }
     }

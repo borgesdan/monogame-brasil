@@ -138,9 +138,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Evento chamado no fim do método Update.</summary>
-        public event UpdateAction<Animation> OnUpdate;        
+        public event Action<Animation, GameTime> OnUpdate;        
         /// <summary>Evento chamado no fim do método Draw.</summary>
-        public event DrawAction<Animation> OnDraw;
+        public event Action<Animation, GameTime, SpriteBatch> OnDraw;
         /// <summary>Evento chamado quando a animação chega ao fim.</summary>
         public event Action<Animation> OnEndAnimation;
         /// <summary>Evento chamado quando o valor do Index é mudado.</summary>
@@ -162,6 +162,20 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Time = time;
             Name = name;
+        }
+
+        /// <summary>Inicializa uma nova instância da classe Animation.</summary>
+        /// <param name="game">A instância atual da classe Game.</param>
+        /// <param name="time">O tempo de cada quadro da animação.</param>
+        /// <param name="name">O nome da animação.</param>
+        /// <param name="sprite">O sprite a ser utilizado.</param>
+        /// <param name="frameGroupName">O nome do grupo de frames a serem utilizados na animação.</param>
+        public Animation(Game game, int time, string name, Sprite sprite, string frameGroupName) : base(game)
+        {
+            Time = time;
+            Name = name;
+
+            AddSprite(sprite, frameGroupName);
         }
 
         /// <summary>Inicializa uma nova instância da classe Animation como cópia de outro Animation.</summary>
@@ -354,7 +368,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <inheritdoc />
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible ||        //Se a animação está em modo visível
                 CurrentSprite == null)    //Se existe um sprite ativo.
@@ -378,7 +392,8 @@ namespace Microsoft.Xna.Framework.Graphics
                    );
 
             //chama OnDraw
-            OnDraw?.Invoke(this, gameTime, spriteBatch);            
+            OnDraw?.Invoke(this, gameTime, spriteBatch);
+            base._Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
@@ -418,6 +433,33 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
+        public void AddSprite(Sprite source, string boxesGroupName)
+        {
+            Sprite s = new Sprite(source);
+            s.Boxes.Clear();
+
+            var list = source.Boxes.GetByGroup(boxesGroupName);
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                s.Boxes.Add(new BoxCollection(list[i]));
+
+                //BoxCollection boxes = list[i];
+                //SpriteFrame sf = boxes.SpriteFrame;
+                //var clist = new List<CollisionBox>();
+                //var alist = new List<AttackBox>();
+                //string group = "";
+
+                //source.Boxes.Values[i].CollisionBoxes.ForEach(cb => clist.Add(cb));
+                //source.Boxes.Values[i].AttackBoxes.ForEach(ab => alist.Add(ab));
+                //group = source.Boxes.Values[i].Group;
+
+                //s.Boxes.Add(new BoxCollection(group, sf, clist, alist));
+            }
+
+            AddSprites(s);
+        }
+
         /// <summary>
         /// Obtém o conteúdo de cores da textura ativa definida pelo SpriteFrame ativo.
         /// Caso não houve mudança no SpriteFrame e no SpriteEffects retornará o último array Color.
@@ -429,7 +471,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Color[] colors = new Color[frame.Width * frame.Height];
             CurrentSprite.Texture.GetData(0, frame.Bounds, colors, 0, colors.Length);
 
-            return GetDataHelper(frame.Bounds, colors);
+            return GetData(frame.Bounds, colors, Transform.SpriteEffects);
         }
 
         //---------------------------------------//

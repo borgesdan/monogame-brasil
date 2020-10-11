@@ -8,44 +8,66 @@ namespace Microsoft.Xna.Framework.Graphics
     /// Classe que armazena um SpriteFrame e suas listas de Boxes.
     /// </summary>
     public class BoxCollection
-    {        
+    {
         /// <summary>
         /// Obtém ou define o SpriteFrame da coleção.
         /// </summary>
-        public SpriteFrame SpriteFrame { get; set; }
+        public SpriteFrame SpriteFrame { get; set; } = new SpriteFrame();
         /// <summary>
         /// Obtém ou define a lista de CollisionBox de um SpriteFrame.
         /// </summary>
-        public List<CollisionBox> CollisionBoxes { get; set; }
+        public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
         /// <summary>
         /// Obtém ou define a lista de AttackBox de um SpriteFrame.
         /// </summary>
-        public List<AttackBox> AttackBoxes { get; set; }
+        public List<AttackBox> AttackBoxes { get; set; } = new List<AttackBox>();
+        /// <summary>
+        /// Obtém ou define o nome do grupo ao qual pertence essa coleção. 
+        /// </summary>
+        public string Group { get; set; } = string.Empty;
+
 
         /// <summary>
         /// Inicializa uma nova instância de BoxCollection.
         /// </summary>
+        /// <param name="group">Define o nome do grupo ao qual pertence essa coleção. </param>
         /// <param name="frame">Define o SpriteFrame da coleção.</param>
         /// <param name="cboxes">Define a lista de CollisionBox de um SpriteFrame (pode ser null).</param>
-        /// <param name="atkBoxes">Define a lista de AttackBox de um SpriteFrame (pode ser null).</param>
-        public BoxCollection(SpriteFrame frame, CollisionBox[] cboxes, AttackBox[] atkBoxes)
+        /// <param name="atkBoxes">Define a lista de AttackBox de um SpriteFrame (pode ser null).</param>        
+        public BoxCollection(string group, SpriteFrame frame, CollisionBox[] cboxes, AttackBox[] atkBoxes)
         {
             SpriteFrame = frame;
             CollisionBoxes = cboxes != null ? new List<CollisionBox>(cboxes) : new List<CollisionBox>();
             AttackBoxes = atkBoxes != null ? new List<AttackBox>(atkBoxes) : new List<AttackBox>();
+            Group = group;
         }
 
         /// <summary>
         /// Inicializa uma nova instância de BoxCollection.
         /// </summary>
+        /// <param name="group">Define o nome do grupo ao qual pertence essa coleção. </param>
         /// <param name="frame">Define o SpriteFrame da coleção.</param>
         /// <param name="cboxes">Define a lista de CollisionBox de um SpriteFrame (pode ser null).</param>
         /// <param name="atkBoxes">Define a lista de AttackBox de um SpriteFrame (pode ser null).</param>
-        public BoxCollection(SpriteFrame frame, List<CollisionBox> cboxes, List<AttackBox> atkBoxes)
+        public BoxCollection(string group, SpriteFrame frame, List<CollisionBox> cboxes, List<AttackBox> atkBoxes)
         {
             SpriteFrame = frame;
             CollisionBoxes = cboxes ?? new List<CollisionBox>();
             AttackBoxes = atkBoxes ?? new List<AttackBox>();
+            Group = group;
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância de BoxCollection como cópia de outra instância.
+        /// </summary>
+        /// <param name="source">A instância a ser copiada.</param>
+        public BoxCollection(BoxCollection source)
+        {
+            this.SpriteFrame = source.SpriteFrame;
+            this.Group = source.Group;
+
+            source.CollisionBoxes.ForEach(cb => CollisionBoxes.Add(cb));
+            source.AttackBoxes.ForEach(ab => AttackBoxes.Add(ab));
         }
     }
 
@@ -66,7 +88,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Obtém a quantidade de itens no dicionário.
         /// </summary>
         public int Count { get => Values.Count; }
-
+        
         /// <summary>
         /// Inicializa uma nova instância de BoxGroup.
         /// </summary>
@@ -85,15 +107,19 @@ namespace Microsoft.Xna.Framework.Graphics
 
             for(int i = 0; i < source.Values.Count; i++)
             {
-                var boxes = source.Values[i];
-                SpriteFrame sf = boxes.SpriteFrame;
-                var clist = new List<CollisionBox>();
-                var alist = new List<AttackBox>();
+                Values.Add(new BoxCollection(source.Values[i]));
 
-                source.Values[i].CollisionBoxes.ForEach(cb => clist.Add(cb));
-                source.Values[i].AttackBoxes.ForEach(ab => alist.Add(ab));
+                //BoxCollection boxes = source.Values[i];
+                //SpriteFrame sf = boxes.SpriteFrame;
+                //var clist = new List<CollisionBox>();
+                //var alist = new List<AttackBox>();
+                //string group = "";
 
-                Values.Add(new BoxCollection(sf, clist, alist));
+                //source.Values[i].CollisionBoxes.ForEach(cb => clist.Add(cb));
+                //source.Values[i].AttackBoxes.ForEach(ab => alist.Add(ab));
+                //group = source.Values[i].Group;
+
+                //Values.Add(new BoxCollection(group, sf, clist, alist));
             }            
         }
         
@@ -109,12 +135,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Adiciona um novo item BoxGroup com o seu index.
         /// </summary>        
+        /// <param name="group">Define o nome do grupo ao qual pertence essa coleção. </param>
         /// <param name="spriteFrame">Define o SpriteFrame da coleção.</param>
         /// <param name="collisionBoxes">Define a lista de CollisionBox de um SpriteFrame (pode ser null).</param>
         /// <param name="attackBoxes">Define a lista de AttackBox de um SpriteFrame (pode ser null).</param>
-        public void Add(SpriteFrame spriteFrame, CollisionBox[] collisionBoxes, AttackBox[] attackBoxes)
+        public void Add(string group, SpriteFrame spriteFrame, CollisionBox[] collisionBoxes, AttackBox[] attackBoxes)
         {
-            Values.Add(new BoxCollection(spriteFrame, collisionBoxes, attackBoxes));
+            Values.Add(new BoxCollection(group, spriteFrame, collisionBoxes, attackBoxes));
         }
 
         /// <summary>
@@ -151,6 +178,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Obtém a lista de Attackbox associado ao index.
         /// </summary>
         public List<AttackBox> GetAttackBoxes(int index) => Values[index].AttackBoxes;
+
+        /// <summary>
+        /// Obtém uma lista de BoxCollection buscando por um grupo.
+        /// </summary>
+        public List<BoxCollection> GetByGroup(string groupName)
+        {            
+            return Values.FindAll(g => g.Group.Equals(groupName));
+        }
 
         /// <summary>
         /// Limpa a lista.

@@ -141,5 +141,21 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
         }
+
+        /// <summary>Desenha o componente.</summary>
+        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
+        /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
+        /// <param name="priority">Define o componente que será desenhado atráves de sua prioridade.</param>
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, ActorComponent.DrawPriority priority)
+        {
+            foreach (var component in List)
+            {
+                if (component.Enable.IsVisible)
+                {
+                    if(component.Priority == priority)
+                        component.Draw(gameTime, spriteBatch);
+                }
+            }
+        }
     }
 }
