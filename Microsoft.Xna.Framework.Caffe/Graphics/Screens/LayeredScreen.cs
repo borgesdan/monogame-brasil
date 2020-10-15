@@ -27,8 +27,6 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteBatchBeginConfig BackStaticConfig { get; set; } = new SpriteBatchBeginConfig();
         /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores frontais que não são afetados pela Camera da tela.</summary>
         public SpriteBatchBeginConfig FrontStaticConfig { get; set; } = new SpriteBatchBeginConfig();
-        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores que serão desenhadas normalmente.</summary>
-        public SpriteBatchBeginConfig DrawableConfig { get; set; } = new SpriteBatchBeginConfig();
                 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//

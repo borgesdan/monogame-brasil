@@ -47,7 +47,7 @@ namespace Microsoft.Xna.Framework.Graphics
         float _rotation = 0f;
 
         //Só usada no construtor de cópia.
-        readonly bool inCopy = false;
+        //readonly bool inCopy = false;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -68,8 +68,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 _oldPosition = _position;
                 _position = value;
 
-                if (inCopy)
-                    return;
+                //if (inCopy)
+                //    return;
             }
         }
         /// <summary>Obtém ou define a velocidade.</summary>
@@ -86,8 +86,8 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _rotation = value;
 
-                if (inCopy)
-                    return;
+                //if (inCopy)
+                //    return;
             }
         }
         /// <summary>Obtém ou define a escala. Valor padrão Vector.Zero.</summary>
@@ -98,8 +98,8 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _scale = value;
 
-                if (inCopy)
-                    return;
+                //if (inCopy)
+                //    return;
             }
         }
         /// <summary>Obtém o valor da escala * tamanho.</summary>
@@ -124,8 +124,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 _oldPosition.X = _position.X;
                 _position.X = value;
 
-                if (inCopy)
-                    return;
+                //if (inCopy)
+                //    return;
             }
         }
         /// <summary>Obtém ou define a posição no eixo Y.</summary>
@@ -137,8 +137,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 _oldPosition.Y = _position.Y;
                 _position.Y = value;
 
-                if (inCopy)
-                    return;
+                //if (inCopy)
+                //    return;
             }
         }
         /// <summary>Obtém ou define a escala em X.</summary>
@@ -198,7 +198,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">O TransformGroup a ser copiado.</param>
         public TransformGroup(T destination, TransformGroup<T> source)
         {
-            inCopy = true;
+            //inCopy = true;
 
             this.Owner = destination;
             this.Size = source.Size;
@@ -211,7 +211,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Origin = source.Origin;
             this.LayerDepth = source.LayerDepth;
 
-            inCopy = false;
+            //inCopy = false;
         }
 
         //---------------------------------------//
@@ -227,6 +227,11 @@ namespace Microsoft.Xna.Framework.Graphics
             return new OriginValues(this);
         }
 
+        /// <summary>
+        /// Define a propriedade deste grupo como cópia de outro TransformGroup.
+        /// </summary>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="source"></param>
         public void Set<T2>(TransformGroup<T2> source) where T2 : IBoundsable
         {
             this.Size = source.Size;
@@ -336,6 +341,31 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Velocity = velocity;
             Owner.UpdateBounds();
+        }
+
+        /// <summary>
+        /// Define a velocidade informando uma direção e a força da velocidade.
+        /// </summary>
+        /// <param name="direction">a direção desejada (pode ser acumulada com o operador |)</param>
+        /// <param name="force">A força aplicada (valor padrão 1)</param>
+        public void SetVelocityDirection(Direction2D direction, float force)
+        {
+            if (direction == (Direction2D.Up | Direction2D.Right))
+                SetVelocity(1.5f * force, -0.75f * force);
+            else if (direction == (Direction2D.Up | Direction2D.Left))
+                SetVelocity(-1.5f * force, -0.75f * force);
+            else if (direction == (Direction2D.Down | Direction2D.Right))
+                SetVelocity(1.5f * force, 0.75f * force);
+            else if (direction == (Direction2D.Down | Direction2D.Left))
+                SetVelocity(-1.5f * force, 0.75f * force);
+            else if (direction == Direction2D.Up)
+                SetVelocity(0f, -1f * force);
+            else if(direction == Direction2D.Down)
+                SetVelocity(0f, 1f * force);
+            else if (direction == Direction2D.Left)
+                SetVelocity(-1f * force, 0);
+            else if (direction == Direction2D.Right)
+                SetVelocity(1f * force, 0);            
         }
 
         //Posição

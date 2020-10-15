@@ -9,6 +9,7 @@
     <Import_RootNamespace>Microsoft.Xna.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Direction2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ActorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />

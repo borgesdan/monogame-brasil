@@ -1,6 +1,5 @@
 ﻿// Danilo Borges Santos, 2020.
 
-using System;
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -8,26 +7,17 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa um leitor de setores de tiles isometricos.
     /// </summary>
-    public class IsoTileSectorReader<T> : IUpdateDrawable, IIsoReader, IDisposable where T : struct
+    /// <typeparam name="T">T é uma estrutura (int, short, byte)</typeparam>
+    public class IsoTileSectorReader<T> : IsoReader<T> where T : struct
     {
-        T[,] map = null;
         List<T[]> total = new List<T[]>();
-        IsoTileSector<T>[,] array = null;
-        Screen _screen = null;        
+        IsoTileSector<T>[,] sectorsList = null;
         Dictionary<Point, IsoTileSector<T>> point_sector = new Dictionary<Point, IsoTileSector<T>>();
-
-        /// <summary>Obtém a lista de tiles ordenados pelo método Read(). A chave Point representa a linha e a coluna onde se encontra o Tile.</summary>
-        public Dictionary<Point, IsoTile> Tiles { get; private set; } = new Dictionary<Point, IsoTile>();
-        /// <summary>Obtém se o método Read() leu todo seu conteúdo e chegou ao fim.</summary>
-        public bool IsRead { get; private set; } = false;
+        
         /// <summary>Obtém ou define a posição inicial para o cálculo de ordenação dos tiles.</summary>
-        public Vector2 StartPosition { get; set; } = Vector2.Zero;
-        /// <summary>Obtém ou define a largura dos tiles para cálculos posteriores.</summary>
-        public int TileWidth { get; set; }
-        /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
-        public int TileHeight { get; set; }
+        public Vector2 StartPosition { get; set; } = Vector2.Zero;        
         /// <summary>Obtém ou define o valor que representa simultaneamente a quantidade de linhas e de colunas de todos os setores.</summary>
-        public static int Length { get; set; } = 20;
+        public static int Length { get; set; } = 10;
 
         /// <summary>
         /// Inicializa uma nova instância de SectorReader.
@@ -36,32 +26,23 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="sectors">Os setores a serem lidos.</param>
         /// <param name="tileWidth">A largura dos tiles.</param>
         /// <param name="tileHeight">A altura dos tiles.</param>
-        public IsoTileSectorReader(Screen screen, IsoTileSector<T>[,] sectors, int tileWidth, int tileHeight, int length)
+        /// <param name="length">Define o valor que representa simultaneamente a quantidade de linhas e de colunas de todos os setores.</param>
+        public IsoTileSectorReader(Screen screen, IsoTileSector<T>[,] sectors, int tileWidth, int tileHeight, int length) : base(screen, tileWidth, tileHeight)
         {
-            _screen = screen;
-            array = sectors;
+            sectorsList = sectors;
             TileWidth = tileWidth;
             TileHeight = tileHeight;
             Length = length;
-        }
-
-        /// <summary>
-        /// Inicializa uma nova instância de SectorReader.
-        /// </summary>
-        /// <param name="sectors">Os setores a serem lidos.</param>
-        public IsoTileSectorReader(IsoTileSector<T>[,] sectors)
-        {
-            array = sectors;
-        }
+        }        
 
         /// <summary>
         /// Lê o array contido nos setores e ordena as posições dos tiles.
         /// </summary>
-        public void Read()
+        public override void Read()
         {
             //dimensões do array
-            int d0 = array.GetLength(0);
-            int d1 = array.GetLength(1);
+            int d0 = sectorsList.GetLength(0);
+            int d1 = sectorsList.GetLength(1);
 
             total = new List<T[]>(d0 * Length);
 
@@ -75,7 +56,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 for (int col = 0; col < d1; col++)
                 {
                     //busco o setor na linha e coluna selecionada
-                    IsoTileSector<T> s = array[row, col];
+                    IsoTileSector<T> s = sectorsList[row, col];
                     //recebo o mapa do setor
                     T[,] _map = s.GetMap();
 
@@ -116,7 +97,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
 
-            map = new T[total.Count, total[01].GetLength(0)];
+            TotalMap = new T[total.Count, total[01].GetLength(0)];
 
             for (int i = 0; i < total.Count; i++)
             {
@@ -124,7 +105,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 for (int j = 0; j < row.GetLength(0); j++)
                 {
-                    map[i, j] = row[j];
+                    TotalMap[i, j] = row[j];
                 }
             }
 
@@ -137,15 +118,15 @@ namespace Microsoft.Xna.Framework.Graphics
             Tiles.Clear();
 
             //dimensões do array
-            int d0 = map.GetLength(0);
-            int d1 = map.GetLength(1);
+            int d0 = TotalMap.GetLength(0);
+            int d1 = TotalMap.GetLength(1);
 
             for (int row = 0; row < d0; row++)
             {
                 for (int col = 0; col < d1; col++)
                 {
                     //O valor da posição no array
-                    T index = map[row, col];
+                    T index = TotalMap[row, col];
                     //Recebe o Tile da tabela
                     Dictionary<T, IsoTile> table = point_sector[new Point(row, col)].Table;
 
@@ -178,7 +159,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Obtém a coordenada de um ponto no mapa geral informando a linha e a coluna de um setor.
+        /// Obtém a linha e a coluna no mapa geral informando o setor.
         /// </summary>
         /// <param name="sector">O setor informado.</param>
         /// <param name="row">A linha desejada.</param>
@@ -192,6 +173,20 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
+        /// Obtém a posição do tile informando o setor, a linha e a coluna desejada
+        /// </summary>
+        /// <param name="sector">O setor informado.</param>
+        /// <param name="row">A linha desejada.</param>
+        /// <param name="column">A coluna desejada.</param>
+        public Vector2 GetPosition(Point sector, int row, int column)
+        {
+            Point point = GetPoint(sector, row, column);
+            IsoTile tile = GetTile(point.X, point.Y);
+
+            return tile.Actor.Transform.Position;
+        }        
+
+        /// <summary>
         /// Obtém um Tile informando sua posição no mapa. Retorna null se não for encontrado.
         /// </summary>
         /// <param name="sector">O setor.</param>
@@ -201,47 +196,39 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Point p = GetPoint(sector, row, column);
             return GetTile(p.X, p.Y);
-        }
+        }                
 
         /// <summary>
-        /// Obtém um Tile informando sua posição no mapa. Retorna null se não for encontrado.
+        /// Obtém o valor da posição informada.
         /// </summary>
-        /// <param name="row">A linha desejada.</param>
-        /// <param name="column">A coluna desejada.</param>
-        public IsoTile GetTile(int row, int column)
+        /// <param name="sector">O setor a ser buscado.</param>
+        /// <param name="row">A linha desejada do setor.</param>
+        /// <param name="column">A coluna desejada do setor.</param>
+        public T GetValue(Point sector, int row, int column)
         {
-            if (Tiles.ContainsKey(new Point(row, column)))
-                return Tiles[new Point(row, column)];
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Obtém o mapa.
-        /// </summary>
-        public short[,] GetMap()
-        {
-            return (short[,])map.Clone();
-        }
+            T[,] m = sectorsList[sector.X, sector.Y].GetMap();
+            return m[row, column];
+        }        
 
         /// <inheritdoc />
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             foreach (var t in Tiles.Values)
                 t.Update(gameTime);
         }
 
         /// <inheritdoc/>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (var t in Tiles)
             {
-                if(_screen != null)
+                if(Screen != null)
                 {
-                    if (Util.CheckFieldOfView(_screen, t.Value.Actor.Bounds))
-                    {
-                        t.Value.Draw(gameTime, spriteBatch);
-                    }
+                    t.Value.Draw(gameTime, spriteBatch);
+                    //if (Util.CheckFieldOfView(_screen, t.Value.Actor.Bounds))
+                    //{
+                    //    t.Value.Draw(gameTime, spriteBatch);
+                    //}
                 }
                 else
                 {
@@ -254,33 +241,24 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         DISPOSE             -----//
         //---------------------------------------//
 
-        private bool disposed = false;
+        private bool disposed = false;        
 
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposed)
                 return;
 
             if (disposing)
             {
-                this.array = null;
-                this.map = null;
+                this.sectorsList = null;
                 this.point_sector = null;
                 this.total.Clear();
-                this.total = null;
-                this._screen = null;
-                this.Tiles.Clear();
-                this.Tiles = null;                
+                this.total = null;              
             }
 
             disposed = true;
+
+            base.Dispose(disposing);
         }
     }
 }

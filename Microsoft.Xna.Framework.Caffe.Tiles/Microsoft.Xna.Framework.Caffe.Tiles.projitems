@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Isometric\Interfaces\IIsoReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Isometric\IsoTileMapReader.cs" />

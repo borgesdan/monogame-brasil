@@ -1,34 +1,21 @@
 ﻿// Danilo Borges Santos, 2020.
 
-using System;
-using System.Collections.Generic;
-
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Representa um leitor de mapas de tiles que os desenha na tela.
     /// </summary>
-    public class IsoTileMapReader<T> : IUpdateDrawable, IIsoReader, IDisposable where T : struct
+    /// <typeparam name="T">T é uma estrutura (int, short, byte)</typeparam>
+    public class IsoTileMapReader<T> : IsoReader<T> where T : struct
     {
-        private T[,] array = null;
-        private Screen _screen = null;        
-
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
         /// <summary>Obtém ou define o mapa de tiles.</summary>
-        public IsoTileMap<T> Map { get; set; } = null;
-        /// <summary>Obtém a lista de tiles ordenados pelo método Read(). Point representa a linha e a coluna onde se encontra o Tile.</summary>
-        public Dictionary<Point, IsoTile> Tiles { get; private set; } = new Dictionary<Point, IsoTile>();
-        /// <summary>Obtém se o método Read() leu todo seu conteúdo e chegou ao fim.</summary>
-        public bool IsRead { get; private set; } = false;
+        public IsoTileMap<T> Map { get; set; } = null;        
         /// <summary>Obtém ou define a posição inicial para o cálculo de ordenação dos tiles.</summary>
-        public Vector2 StartPosition { get; set; } = Vector2.Zero;
-        /// <summary>Obtém ou define a largura dos tiles para cálculos posteriores.</summary>
-        public int TileWidth { get; set; }
-        /// <summary>Obtém ou define a altura dos tiles para cálculos posteriores.</summary>
-        public int TileHeight { get; set; }
+        public Vector2 StartPosition { get; set; } = Vector2.Zero;        
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -41,12 +28,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="map">O mapa de tiles a ser lido.</param>
         /// <param name="tileWidth">A largura dos tiles.</param>
         /// <param name="tileHeight">A altura dos tiles.</param>
-        public IsoTileMapReader(Screen screen, IsoTileMap<T> map, int tileWidth, int tileHeight) 
+        public IsoTileMapReader(Screen screen, IsoTileMap<T> map, int tileWidth, int tileHeight) : base(screen, tileWidth, tileHeight)
         {
-            _screen = screen;
-            Map = map;
-            TileWidth = tileWidth;
-            TileHeight = tileHeight;
+            Map = map;            
         }        
 
         //---------------------------------------//
@@ -56,23 +40,23 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Lê o array contido no mapa e ordena as posições dos tiles.
         /// </summary>
-        public void Read()
+        public override void Read()
         {
             IsRead = false;
 
-            array = Map.GetMap();
+            TotalMap = Map.GetMap();
             Tiles.Clear();
 
             //dimensões do array
-            int d0 = array.GetLength(0);
-            int d1 = array.GetLength(1);
+            int d0 = TotalMap.GetLength(0);
+            int d1 = TotalMap.GetLength(1);
 
             for (int row = 0; row < d0; row++)
             {
                 for (int col = 0; col < d1; col++)
                 {
                     //O valor da posição no array
-                    T index = array[row, col];
+                    T index = TotalMap[row, col];
                     
                     //Recebe o Tile da tabela
                     if(Map.Table.ContainsKey(index))
@@ -102,23 +86,13 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             IsRead = true;
-        }
-
-        /// <summary>
-        /// Obtém um Tile informando sua posição no mapa.
-        /// </summary>
-        /// <param name="row">A linha desejada.</param>
-        /// <param name="column">A coluna desejada.</param>
-        public IsoTile GetTile(int row, int column)
-        {
-            return Tiles[new Point(row, column)];
-        }
+        }              
 
         /// <summary>
         /// Atualiza os tiles.
         /// </summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             foreach(var t in Tiles.Values)
                 t.Update(gameTime);
@@ -127,16 +101,17 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Desenha os tiles.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (var t in Tiles)
             {   
-                if(_screen != null)
+                if(Screen != null)
                 {
-                    if (Util.CheckFieldOfView(_screen, t.Value.Actor.Bounds))
-                    {
-                        t.Value.Draw(gameTime, spriteBatch);
-                    }                        
+                    t.Value.Draw(gameTime, spriteBatch);
+                    //if (Util.CheckFieldOfView(Screen, t.Value.Actor.Bounds))
+                    //{
+
+                    //}                        
                 }
                 else
                 {
@@ -149,30 +124,20 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         DISPOSE             -----//
         //---------------------------------------//
 
-        private bool disposed = false;
+        private bool disposed = false;        
 
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposed)
                 return;
 
             if (disposing)
             {
-                this.array = null;
                 this.Map = null;
-                this.Tiles.Clear();
-                this.Tiles = null;
-                this._screen = null;
             }
 
             disposed = true;
+            base.Dispose(disposing);
         }
     }
 }

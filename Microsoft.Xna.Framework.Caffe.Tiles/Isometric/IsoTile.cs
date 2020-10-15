@@ -24,7 +24,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Inicializa uma nova instância de IsoTile.
         /// </summary>
-        /// <param name="actor">Define a animação do Tile</param>
+        /// <param name="actor">Define o ator do Tile</param>
         public IsoTile(Actor actor)
         {
             Actor = actor;
@@ -36,7 +36,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">A instância de origem.</param>
         public IsoTile(IsoTile source)
         {
-            Actor = source.Actor;
+            //Actor = source.Actor;
+            Actor = Util.Clone(source.Actor, source.Actor);
             MapPoint = source.MapPoint;
             Value = source.Value;
         }

@@ -15,16 +15,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define a tabela de índices com seus respectivos Tiles.
         /// </summary>
-        public Dictionary<T, IsoTile> Table { get; set; } = new Dictionary<T, IsoTile>();
-
-        /// <summary>
-        /// Inicializa uma nova instância de Setor.
-        /// </summary>
-        /// <param name="_array">Um array com a mesma quantidade de linhas e colunas da propriedade Length desta classe.</param>
-        public IsoTileSector(T[,] _array)
-        {
-            array = _array;
-        }
+        public Dictionary<T, IsoTile> Table { get; set; } = new Dictionary<T, IsoTile>();        
 
         /// <summary>
         /// Inicializa uma nova instância de Setor.

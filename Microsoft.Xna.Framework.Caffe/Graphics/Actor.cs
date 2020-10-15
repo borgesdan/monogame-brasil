@@ -106,7 +106,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém o conteúdo de cores do ator.
         /// </summary>
-        public abstract Color[] GetData();
+        public virtual Color[] GetData() 
+        {
+            return null;
+        }
         
         /// <summary>
         /// Obtém o conteúdo de cores passando o frame (com o tamanho do data) e o Color data.
@@ -131,7 +134,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 Color[] final = new Color[data.Length];                   // O array a ser enviado no final
                 int finalIndex = 0;                                         // O index para percorrer o array final
 
-                if (effects == (SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically))
+                if (effects == (SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically)) // | ou & ???
                 {
                     position.X = frame.Width - 1;
                     position.Y = frame.Height - 1;

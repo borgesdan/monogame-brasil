@@ -64,6 +64,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 return input;
             }
         }
+        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores que serão desenhadas normalmente.</summary>
+        public SpriteBatchBeginConfig DrawableConfig { get; set; } = new SpriteBatchBeginConfig();
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//
@@ -171,8 +173,12 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsVisible)
                 return;
 
+            spriteBatch.Begin(DrawableConfig.SortMode, DrawableConfig.BlendState, DrawableConfig.Sampler, DrawableConfig.DepthStencil, DrawableConfig.Rasterizer, DrawableConfig.Effect, Camera.GetTransform());
+
             for (int i = 0; i < Actors.Count; i++)
                 Actors[i].Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
 
             OnDraw?.Invoke(this, gameTime, spriteBatch);            
         }
