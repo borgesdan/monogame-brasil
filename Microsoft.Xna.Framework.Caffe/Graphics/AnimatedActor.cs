@@ -101,7 +101,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled || CurrentAnimation == null)
                 return;
 
-            if (!UpdateOffView)
+            if (!UpdateOffView && !CheckOffView())
                 return;
 
             //Coloca OldPosition e Position com os mesmos valores.

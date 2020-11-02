@@ -228,6 +228,14 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
+        protected bool CheckOffView()
+        {
+            if (Screen != null && Screen.Camera != null)
+                return Util.CheckFieldOfView(Screen.Camera, this.Bounds);
+            else
+                return Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, this.Bounds);
+        }
+
         //---------------------------------------//
         //-----         DISPOSE             -----//
         //---------------------------------------//

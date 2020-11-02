@@ -51,6 +51,11 @@ namespace Microsoft.Xna.Framework
         //        return false;
         //}
 
+        /// <summary>
+        /// Verifica se os limites de um ator se encontram dentro do Viewport.
+        /// </summary>
+        /// <param name="viewport">O viewport atual.</param>
+        /// <param name="actorBounds">Os limites do ator.</param>
         public static bool CheckFieldOfView(Viewport viewport, Rectangle actorBounds)
         {
             if (actorBounds.Intersects(viewport.Bounds))
@@ -59,9 +64,15 @@ namespace Microsoft.Xna.Framework
                 return false;
         }
 
-        public static bool CheckFieldOfView(Viewport viewport, Camera camera, Rectangle actorBounds)
+        /// <summary>
+        /// Verifica se os limites de um ator se encontram dentro dos limites da câmera.
+        /// </summary>        
+        /// <param name="viewport">O viewport atual.</param>
+        /// <param name="camera">A camera ativa.</param>
+        /// <param name="actorBounds">Os limites do ator.</param>
+        public static bool CheckFieldOfView(Camera camera, Rectangle actorBounds)
         {
-            if(camera != null)
+            if (camera != null)
             {
                 Rectangle total = Rectangle.Empty;
                 total.X = (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
@@ -71,13 +82,16 @@ namespace Microsoft.Xna.Framework
 
                 total.X += (int)camera.X;
                 total.Y += (int)camera.Y;
-                total.Width += viewport.Width;
-                total.Height += viewport.Height;
+
+                Rectangle cbounds = camera.GetBounds();
+
+                total.Width += cbounds.Width;
+                total.Height += cbounds.Height;
 
                 return CheckFieldOfView(new Viewport(total), actorBounds);
             }
-
-            return CheckFieldOfView(viewport, actorBounds);
+            else
+                return false;
         }
 
         ///// <summary>

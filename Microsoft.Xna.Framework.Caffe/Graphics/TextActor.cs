@@ -108,7 +108,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
-            if (!UpdateOffView)
+            if (!UpdateOffView && !CheckOffView())
                 return;
 
             UpdateBounds();

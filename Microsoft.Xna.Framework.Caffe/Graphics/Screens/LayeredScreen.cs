@@ -97,7 +97,7 @@ namespace Microsoft.Xna.Framework.Graphics
             foreach (var a in Actors)
             {
                 //Se a entidade é visível em tela.
-                if (Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, Camera, a.Bounds))
+                if (Util.CheckFieldOfView(Camera, a.Bounds))
                 {
                     //Adiciona-a a lista de entidades desenháveis.
                     DrawableActors.Add(a);
