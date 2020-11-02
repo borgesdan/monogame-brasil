@@ -15,51 +15,80 @@ namespace Microsoft.Xna.Framework
             return sSize;
         } 
         
-        /// <summary>
-        /// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
-        /// </summary>
-        /// <param name="game">A instância atual classe Game.</param>
-        /// <param name="camera">O objeto câmera a ser usado para os devidos cálculos.</param>
-        /// <param name="bounds">Os limites do objeto.</param>
-        public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
+        ///// <summary>
+        ///// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
+        ///// </summary>
+        ///// <param name="game">A instância atual classe Game.</param>
+        ///// <param name="camera">O objeto câmera a ser usado para os devidos cálculos.</param>
+        ///// <param name="bounds">Os limites do objeto.</param>
+        //public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
+        //{
+        //    var x = camera.X;
+        //    var y = camera.Y;
+        //    var w = game.GraphicsDevice.Viewport.Width;
+        //    var h = game.GraphicsDevice.Viewport.Height;
+
+        //    if (camera.Zoom != 1)
+        //    {
+        //        if (camera.Zoom < 1)
+        //        {
+        //            w = (int)(w * (camera.Zoom * 100));
+        //            h = (int)(h * (camera.Zoom * 100));
+        //        }                 
+
+        //        if (camera.Zoom > 1)
+        //        {
+        //            w = (int)(w * (camera.Zoom / 100));
+        //            h = (int)(h * (camera.Zoom / 100));
+        //        }                     
+        //    }                
+
+        //    Viewport visible_view = new Viewport((int)x, (int)y, w, h);
+
+        //    if (visible_view.Bounds.Intersects(bounds))
+        //        return true;
+        //    else
+        //        return false;
+        //}
+
+        public static bool CheckFieldOfView(Viewport viewport, Rectangle actorBounds)
         {
-            var x = camera.X;
-            var y = camera.Y;
-            var w = game.GraphicsDevice.Viewport.Width;
-            var h = game.GraphicsDevice.Viewport.Height;
-
-            if (camera.Zoom != 1)
-            {
-                if (camera.Zoom < 1)
-                {
-                    w = (int)(w * (camera.Zoom * 100));
-                    h = (int)(h * (camera.Zoom * 100));
-                }                 
-
-                if (camera.Zoom > 1)
-                {
-                    w = (int)(w * (camera.Zoom / 100));
-                    h = (int)(h * (camera.Zoom / 100));
-                }                     
-            }                
-
-            Viewport visible_view = new Viewport((int)x, (int)y, w, h);
-
-            if (visible_view.Bounds.Intersects(bounds))
+            if (actorBounds.Intersects(viewport.Bounds))
                 return true;
             else
                 return false;
         }
 
-        /// <summary>
-        /// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
-        /// </summary>
-        /// <param name="screen">A tela a ser verificada.</param>
-        /// <param name="bounds">Os limites do objeto.</param>
-        public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
+        public static bool CheckFieldOfView(Viewport viewport, Camera camera, Rectangle actorBounds)
         {
-            return CheckFieldOfView(screen.Game, screen.Camera, bounds);
+            if(camera != null)
+            {
+                Rectangle total = Rectangle.Empty;
+                total.X = (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
+                total.Y = (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
+                total.Width -= (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
+                total.Height -= (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
+
+                total.X += (int)camera.X;
+                total.Y += (int)camera.Y;
+                total.Width += viewport.Width;
+                total.Height += viewport.Height;
+
+                return CheckFieldOfView(new Viewport(total), actorBounds);
+            }
+
+            return CheckFieldOfView(viewport, actorBounds);
         }
+
+        ///// <summary>
+        ///// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
+        ///// </summary>
+        ///// <param name="screen">A tela a ser verificada.</param>
+        ///// <param name="bounds">Os limites do objeto.</param>
+        //public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
+        //{
+        //    return CheckFieldOfView(screen.Game, screen.Camera, bounds);
+        //}
 
         /// <summary>
         /// Calcula o BoundsR (os limites de um retângulo rotacionado) de um objeto.
@@ -67,7 +96,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="transform">O objeto Transform a ser usado para cálculo</param>
         /// <param name="totalOrigin">A origem para efeitos de cálculos.</param>
         /// <param name="bounds">Os limites do objeto.</param>
-        public static Polygon CreateBoundsR<T>(TransformGroup<T> transform, Vector2 totalOrigin, Rectangle bounds) where T : IBoundsable
+        public static Polygon CreateRotatedBounds<T>(TransformGroup<T> transform, Vector2 totalOrigin, Rectangle bounds) where T : IBoundsable
         {
             Polygon boundsR = new Polygon();
             

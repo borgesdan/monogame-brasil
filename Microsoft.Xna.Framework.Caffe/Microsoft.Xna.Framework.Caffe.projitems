@@ -13,7 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ActorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoundsComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\GhostComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IActor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundsR.cs" />
@@ -30,15 +29,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ColorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\FollowMouseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\MouseEventsComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\AnimatedEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\AnimatedActor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Animation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\Entity2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Groups\ComponentGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Groups\EnableGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IUpdateDrawable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Entities\TextEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\TextActor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Screen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\Layers\FixedLayer.cs" />
@@ -90,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Collision\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Entities\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />

@@ -97,7 +97,7 @@ namespace Microsoft.Xna.Framework.Graphics
             foreach (var a in Actors)
             {
                 //Se a entidade é visível em tela.
-                if (Util.CheckFieldOfView(Game, Camera, a.Bounds))
+                if (Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, Camera, a.Bounds))
                 {
                     //Adiciona-a a lista de entidades desenháveis.
                     DrawableActors.Add(a);
@@ -171,10 +171,10 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Adiciona entidades a cena.</summary>
-        /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddActor(params Entity2D[] entities)
+        /// <param name="actors">Lista de entidades a serem adicionada.</param>
+        public void AddActor(params Actor[] actors)
         {
-            foreach(var e in entities)
+            foreach(var e in actors)
             {
                 e.Screen = this;
                 Actors.Add(e);
@@ -203,9 +203,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
         /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddBackStatic(params Entity2D[] backEntities)
+        public void AddBackStatic(params Actor[] backActors)
         {
-            foreach (var e in backEntities)
+            foreach (var e in backActors)
             {
                 e.Screen = this;
                 BackStaticActors.Add(e);
@@ -214,9 +214,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Adiciona entidades a cena que não são afetadas pela câmera.</summary>
         /// <param name="entities">Lista de entidades a serem adicionada.</param>
-        public void AddFrontStatic(params Entity2D[] frontEntities)
+        public void AddFrontStatic(params Actor[] frontActors)
         {
-            foreach (var e in frontEntities)
+            foreach (var e in frontActors)
             {
                 e.Screen = this;
                 FrontStaticActors.Add(e);

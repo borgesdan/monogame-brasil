@@ -1,5 +1,7 @@
 ﻿// Danilo Borges Santos, 2020.
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
@@ -7,7 +9,7 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public sealed class TransformGroup<T> where T : IBoundsable
     {
-        public struct OriginValues
+        struct OriginValues
         {
             public Vector2 LeftTop;
             public Vector2 Left;
@@ -42,12 +44,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         Vector2 _oldPosition = Vector2.Zero;
-        Vector2 _position = Vector2.Zero;
-        Vector2 _scale = Vector2.One;
-        float _rotation = 0f;
-
-        //Só usada no construtor de cópia.
-        //readonly bool inCopy = false;
+        Vector2 _position = Vector2.Zero;        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -67,9 +64,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _oldPosition = _position;
                 _position = value;
-
-                //if (inCopy)
-                //    return;
             }
         }
         /// <summary>Obtém ou define a velocidade.</summary>
@@ -79,29 +73,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém o tamanho da entidade.</summary>
         public Point Size { get; internal set; } = Point.Zero;
         /// <summary>Obtém ou define a rotação. Valor padrão 0.</summary>
-        public float Rotation
-        {
-            get => _rotation;
-            set
-            {
-                _rotation = value;
-
-                //if (inCopy)
-                //    return;
-            }
-        }
-        /// <summary>Obtém ou define a escala. Valor padrão Vector.Zero.</summary>
-        public Vector2 Scale
-        {
-            get => _scale;
-            set
-            {
-                _scale = value;
-
-                //if (inCopy)
-                //    return;
-            }
-        }
+        public float Rotation { get; set; } = 0;
+        /// <summary>Obtém ou define a escala. Valor padrão Vector.One.</summary>
+        public Vector2 Scale { get; set; } = Vector2.One;
         /// <summary>Obtém o valor da escala * tamanho.</summary>
         public Vector2 ScaledSize
         {
@@ -123,9 +97,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _oldPosition.X = _position.X;
                 _position.X = value;
-
-                //if (inCopy)
-                //    return;
             }
         }
         /// <summary>Obtém ou define a posição no eixo Y.</summary>
@@ -136,9 +107,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 _oldPosition.Y = _position.Y;
                 _position.Y = value;
-
-                //if (inCopy)
-                //    return;
             }
         }
         /// <summary>Obtém ou define a escala em X.</summary>
@@ -198,8 +166,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">O TransformGroup a ser copiado.</param>
         public TransformGroup(T destination, TransformGroup<T> source)
         {
-            //inCopy = true;
-
             this.Owner = destination;
             this.Size = source.Size;
             this.Color = source.Color;
@@ -209,29 +175,34 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Velocity = source.Velocity;
             this.Position = source.Position;
             this.Origin = source.Origin;
-            this.LayerDepth = source.LayerDepth;
-
-            //inCopy = false;
+            this.LayerDepth = source.LayerDepth;            
         }
 
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
-        /// <summary>
-        /// Obtém as posições das origens para cálculos posteriores.
-        /// </summary>
-        public OriginValues GetOrigins()
+        public override string ToString()
         {
-            Owner.UpdateBounds();
-            return new OriginValues(this);
+            return string.Concat("Pos: ", Position.ToString(), " Sca: ", Scale.ToString(), " Rot: ", Rotation.ToString(), " Ori: ", Origin, " Eff: ", SpriteEffects.ToString());
         }
 
         /// <summary>
-        /// Define a propriedade deste grupo como cópia de outro TransformGroup.
+        /// Obtém uma matriz com os valores das propriedades.
         /// </summary>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="source"></param>
+        public Matrix GetMatrix()
+        {
+            return Matrix.CreateTranslation(new Vector3(-Origin.X, -Origin.Y, 0))
+                * Matrix.CreateRotationZ(Rotation)
+                * Matrix.CreateScale(new Vector3(Scale, 1))                 
+                * Matrix.CreateTranslation(new Vector3(Position, 0));
+        }        
+
+        /// <summary>
+        /// Define as propriedades deste grupo como cópia de outro TransformGroup.
+        /// </summary>
+        /// <typeparam name="T2">T2 é um classe que implementa a interface IBoundsable.</typeparam>
+        /// <param name="source">A instância para cópia das propriedades.</param>
         public void Set<T2>(TransformGroup<T2> source) where T2 : IBoundsable
         {
             this.Size = source.Size;
@@ -250,12 +221,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public void Update()
         {
+            Velocity += VResistance;
+
             if (Xv != 0)
                 X += Velocity.X;
             if (Yv != 0)
-                Y += Velocity.Y;
-
-            Velocity += VResistance;
+                Y += Velocity.Y;            
 
             Owner.UpdateBounds();
         }
@@ -302,6 +273,14 @@ namespace Microsoft.Xna.Framework.Graphics
             SetVelocity(new Vector2(x, y));
         }
 
+        /// <summary>Define a velocidade e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <param name="velocity">A velocidade no eixo X e Y.</param>
+        public void SetVelocity(Vector2 velocity)
+        {
+            Velocity = velocity;
+            Owner.UpdateBounds();
+        }
+
         /// <summary>
         /// Define a resistência à velocidade e invoca o método UpdateBounds do objeto associado.
         /// </summary>
@@ -333,23 +312,17 @@ namespace Microsoft.Xna.Framework.Graphics
             SetVelocity(velocity);
 
             Owner.UpdateBounds();
-        }
-
-        /// <summary>Define a velocidade e invoca o método UpdateBounds do objeto associado.</summary>
-        /// <param name="velocity">A velocidade no eixo X e Y.</param>
-        public void SetVelocity(Vector2 velocity)
-        {
-            Velocity = velocity;
-            Owner.UpdateBounds();
-        }
+        }        
 
         /// <summary>
         /// Define a velocidade informando uma direção e a força da velocidade.
         /// </summary>
         /// <param name="direction">a direção desejada (pode ser acumulada com o operador |)</param>
-        /// <param name="force">A força aplicada (valor padrão 1)</param>
+        /// <param name="force">A força aplicada à velocidade (valor padrão 1)</param>
         public void SetVelocityDirection(Direction2D direction, float force)
         {
+            force = Math.Abs(force);
+
             if (direction == (Direction2D.Up | Direction2D.Right))
                 SetVelocity(1.5f * force, -0.75f * force);
             else if (direction == (Direction2D.Up | Direction2D.Left))
@@ -541,6 +514,12 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             Owner.UpdateBounds();
+        }
+        
+        private OriginValues GetOrigins()
+        {
+            Owner.UpdateBounds();
+            return new OriginValues(this);
         }
     }
 }

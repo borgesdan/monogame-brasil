@@ -20,7 +20,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <item>GameTime são os valores de tempo do jogo.</item>
         /// </list>
         /// </summary>
-        public Action<GameTime> OnChangeColor;
+        public event Action<GameTime> OnChangeColor;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -54,6 +54,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
 
             if (elapsedTime > Delay)

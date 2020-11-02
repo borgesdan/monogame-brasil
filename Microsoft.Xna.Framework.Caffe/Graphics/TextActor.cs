@@ -1,13 +1,12 @@
 ﻿// Danilo Borges Santos, 2020.
 
-using System;
 using System.Text;
 using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Representa uma entidade que armazena e exibe textos.</summary>
-    public class TextEntity : Entity2D
+    /// <summary>Representa um ator que armazena e exibe textos.</summary>
+    public class TextActor : Actor
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -23,7 +22,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteFont Font { get; set; } = null;
         
         /// <summary>Obtém ou define o texto a ser exibido atráves de uma instância da classe StringBuilder.</summary>
-        public StringBuilder TextBuilder
+        public StringBuilder Text
         {
             get => builder;
             set
@@ -38,29 +37,29 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
+        /// <summary>Inicializa uma nova instância da classe TextActor.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
-        /// <param name="name">O nome da entidade.</param>
-        public TextEntity(Game game, string name) : base(game, name) { }
+        /// <param name="name">O nome do ator.</param>
+        public TextActor(Game game, string name) : base(game, name) { }
 
-        /// <summary>Inicializa uma nova instância da classe TextEntity.</summary>
+        /// <summary>Inicializa uma nova instância da classe TextActor.</summary>
         /// <param name="game">A instância ativa da classe Game.</param>
-        /// <param name="name">O nome da entidade.</param>
+        /// <param name="name">O nome do ator.</param>
         /// <param name="font">A fonte para desenho do texto.</param>
-        public TextEntity(Game game, string name, SpriteFont font) : base(game, name) 
+        public TextActor(Game game, string name, SpriteFont font) : base(game, name) 
         {
             Font = font;
         }
 
-        /// <summary>Inicializa uma nova instância de TextEntity como cópia de outro TextEntity.</summary>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public TextEntity(TextEntity source) : base(source)
+        /// <summary>Inicializa uma nova instância de TextActor como cópia de outro TextActor.</summary>
+        /// <param name="source">O ator a ser copiado.</param>
+        public TextActor(TextActor source) : base(source)
         {
             //Para uma cópia profunda
             //Font = GetDeeepCopy(source.Font);
             
             Font = source.Font;
-            TextBuilder = new StringBuilder(source.TextBuilder.ToString());
+            Text = new StringBuilder(source.Text.ToString());
         }
 
         //---------------------------------------//
@@ -91,30 +90,33 @@ namespace Microsoft.Xna.Framework.Graphics
             return font;
         }
 
-        /// <summary>Adiciona um objeto SpriteFont à entidade.</summary>
+        /// <summary>Adiciona um objeto SpriteFont ao ator.</summary>
         /// <param name="font">A fonte a ser utilizada no desenho.</param>
         public void SetFont(SpriteFont font) => Font = font;
 
-        /// <summary>Define o caminho do arquivo SpriteFont e adiciona à entidade.</summary>
+        /// <summary>Define o caminho do arquivo SpriteFont e adiciona ao ator.</summary>
         /// <param name="path">O caminho da fonte na pasta Content.</param>
         public void SetFont(string path)
         {
-            SetFont(Game.Content.Load<SpriteFont>(path));
-        }          
+            SetFont(Game.Content.Load<SpriteFont>(path));            
+        } 
 
-        /// <summary>Atualiza a entidade.</summary>
+        /// <summary>Atualiza o ator.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
-                return;            
+                return;
+
+            if (!UpdateOffView)
+                return;
 
             UpdateBounds();
 
             base.Update(gameTime);
         }
 
-        /// <summary>Desenha a entidade.</summary>
+        /// <summary>Desenha o ator.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -122,21 +124,21 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsVisible)
                 return;
 
-            if (TextBuilder != null)
-                spriteBatch.DrawString(Font, TextBuilder, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
+            if (Text != null)
+                spriteBatch.DrawString(Font, Text, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 
             base._Draw(gameTime, spriteBatch);
         }
 
-        /// <summary>Atualiza os limites da entidade.</summary>
+        /// <summary>Atualiza os limites do ator.</summary>
         public override void UpdateBounds()
         {
             Vector2 measure;
 
-            if (TextBuilder == null || TextBuilder.Length == 0)
+            if (Text == null || Text.Length == 0)
                 measure = Vector2.Zero;
             else
-                measure = Font.MeasureString(TextBuilder);
+                measure = Font.MeasureString(Text);
 
             //Atualiza o tamanho da entidade.
             //float cbw = measure.X * Transform.Scale.X;
@@ -163,12 +165,12 @@ namespace Microsoft.Xna.Framework.Graphics
             Bounds = new Rectangle(recX, recY, w, h);
 
             //Calcula o BoundsR. 
-            Util.CreateBoundsR(Transform, totalOrigin, Bounds);
+            Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }
 
-        /// <summary>GetData em TextEntity retornará um array vazio.</summary>
+        /// <summary>GetData em TextActor retornará um array vazio.</summary>
         public override Color[] GetData()
         {
             return new Color[0];
@@ -187,8 +189,8 @@ namespace Microsoft.Xna.Framework.Graphics
             if (disposing)
             {
                 Font = null;                    
-                TextBuilder.Clear();
-                TextBuilder = null;
+                Text.Clear();
+                Text = null;
             }
 
             disposed = true;

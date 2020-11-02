@@ -46,7 +46,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 HasCollided = false
             };
 
-            //Fazemos o cálculo simples de intersecção entre retângulos se não rotaçaõ nos atores.
+            //Fazemos o cálculo simples de intersecção entre retângulos se não há rotação nos atores.
             if (actor1.Transform.Rotation == 0 && actor2.Transform.Rotation == 0)
             {
                 //Verifica se  há colisão.

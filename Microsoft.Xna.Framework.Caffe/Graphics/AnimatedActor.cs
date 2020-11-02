@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa uma entidade com animações.</summary>
-    public class AnimatedEntity : Entity2D
+    public class AnimatedActor : Actor
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
@@ -53,9 +53,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância de AnimatedEntity como cópia de outro AnimatedEntity.</summary>
-        /// <param name="source">A entidade a ser copiada.</param>
-        public AnimatedEntity(AnimatedEntity source) : base(source)
+        /// <summary>Inicializa uma nova instância de AnimatedActor como cópia de outro AnimatedEntity.</summary>
+        /// <param name="source">o ator a ser copiado.</param>
+        public AnimatedActor(AnimatedActor source) : base(source)
         {
             //Cópia das animações.
             source.Animations.ForEach(a => this.Animations.Add(new Animation(a)));
@@ -71,10 +71,10 @@ namespace Microsoft.Xna.Framework.Graphics
             source.AttackBoxes.ForEach(ab => AttackBoxes.Add(ab));
         }
 
-        /// <summary>Inicializa uma nova instância de AnimatedEntity.</summary>
+        /// <summary>Inicializa uma nova instância de AnimatedActor.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
-        /// <param name="name">O nome da entidade.</param>
-        public AnimatedEntity(Game game, string name) : base(game, name)
+        /// <param name="name">O nome do ator.</param>
+        public AnimatedActor(Game game, string name) : base(game, name)
         {
         }              
 
@@ -93,12 +93,15 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         MÉTODOS             -----//
         //---------------------------------------//
 
-        /// <summary>Atualiza a entidade.</summary>
+        /// <summary>Atualiza o ator.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {   
             //Se a entidade não estiver disponível ou não existir uma animação ativa, então não se prossegue com a atualização.
             if (!Enable.IsEnabled || CurrentAnimation == null)
+                return;
+
+            if (!UpdateOffView)
                 return;
 
             //Coloca OldPosition e Position com os mesmos valores.
@@ -119,7 +122,7 @@ namespace Microsoft.Xna.Framework.Graphics
             CurrentAnimation.Transform.Set(Transform);
         }
 
-        /// <summary>Desenha a entidade.</summary>
+        /// <summary>Desenha o ator.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -178,7 +181,7 @@ namespace Microsoft.Xna.Framework.Graphics
             base._Draw(gameTime, spriteBatch);                    
         }        
 
-        /// <summary>Adiciona uma nova animação à entidade.</summary>
+        /// <summary>Adiciona uma nova animação ao ator.</summary>
         /// <param name="animation">Um instância da classe Animation.</param>
         public void AddAnimation(Animation animation)
         {
@@ -192,7 +195,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
-        /// <summary>Adiciona uma lista de animações à entidade.</summary>
+        /// <summary>Adiciona uma lista de animações ao ator.</summary>
         /// <param name="animations">Uma lista de animações.</param>
         public void AddAnimations(params Animation[] animations)
         {
@@ -238,40 +241,42 @@ namespace Microsoft.Xna.Framework.Graphics
             return anms;
         }
 
-        /// <summary>Cria uma nova instância de AnimatedEntity definida como um retângulo preenchido com uma cor definida.</summary>
+        /// <summary>Cria uma nova instância de AnimatedActor definida como um retângulo preenchido com uma cor definida.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor do retângulo</param>
-        public static AnimatedEntity CreateRectangle(Game game, string name, Point size, Color color)
+        public static AnimatedActor CreateRectangle(Game game, string name, Point size, Color color)
         {
-            Texture2D texture = Sprite.GetRectangle(game, new Point(size.X, size.Y), color).Texture;
-            Sprite sprite = new Sprite(game, texture, true);
-            Animation animation = new Animation(game, 0, "default");
+            //Texture2D texture = Sprite.GetRectangle(game, name, new Point(size.X, size.Y), color).Texture;
+            //Sprite sprite = new Sprite(game, name, texture, true);
+            Sprite sprite = Sprite.GetRectangle(game, name, new Point(size.X, size.Y), color);
+            Animation animation = new Animation(game, "default", 0);
             animation.AddSprites(sprite);
 
-            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);            
+            AnimatedActor animatedEntity = new AnimatedActor(game, name);            
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
         }
 
         /// <summary>
-        /// Cria uma nova instância de AnimatedEntity definida como um retângulo transparente mas com bordas visíveis.
+        /// Cria uma nova instância de AnimatedActor definida como um retângulo transparente mas com bordas visíveis.
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
         /// <param name="name">O nome da entidade.</param>
         /// <param name="size">O tamanho do retângulo</param>
         /// <param name="borderWidth">O tamanho da borda.</param>
         /// <param name="borderColor">A cor da borda.</param>
-        public static AnimatedEntity CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
+        public static AnimatedActor CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
         {
-            Texture2D texture = Sprite.GetRectangle2(game, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
-            Sprite sprite = new Sprite(game, texture, true);
-            Animation animation = new Animation(game, 0, "default");
+            //Texture2D texture = Sprite.GetRectangle2(game, name, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
+            //Sprite sprite = new Sprite(game, name, texture, true);
+            Sprite sprite = Sprite.GetRectangle2(game, name, new Point(size.X, size.Y), borderWidth, borderColor);
+            Animation animation = new Animation(game, "default", 0);
             animation.AddSprites(sprite);
 
-            AnimatedEntity animatedEntity = new AnimatedEntity(game, name);            
+            AnimatedActor animatedEntity = new AnimatedActor(game, name);            
             animatedEntity.AddAnimation(animation);
 
             return animatedEntity;
@@ -347,14 +352,13 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             //Criação do polígono (BoundsR).
-            BoundsR = Util.CreateBoundsR(Transform, totalOrigin, Bounds);
+            BoundsR = Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);
 
             base.UpdateBounds();
         }
 
         /// <summary>
-        /// Obtém o conteúdo de cores da animação atual.
-        /// Caso não houve mudança na animação e no SpriteEffects retornará o último array Color.
+        /// Obtém o conteúdo de cores da animação atual.        
         /// </summary>
         public override Color[] GetData()
         {

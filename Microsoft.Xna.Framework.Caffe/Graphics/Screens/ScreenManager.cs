@@ -164,9 +164,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }            
 
             if (reset)
-                old.Reset();
-
-            SCamera.SetScreen(Active);
+                old.Reset();            
         }
 
         /// <summary>

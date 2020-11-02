@@ -10,7 +10,7 @@ namespace Microsoft.Xna.Framework.Graphics
     public abstract class ActorComponent : IUpdateDrawable, IDisposable
     {
         /// <summary>
-        /// Define a prioridade do desenho do componente.
+        /// Define se o componente será desenhado atrás ou na frente do ator.
         /// </summary>
         public enum DrawPriority : byte
         {
@@ -18,7 +18,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Obtém ou define a prioridade do desenho do componente.
+        /// Obtém ou define se o componente será desenhado atrás ou na frente do ator.
         /// </summary>
         public DrawPriority Priority { get; protected set; } = DrawPriority.Back;
         /// <summary>

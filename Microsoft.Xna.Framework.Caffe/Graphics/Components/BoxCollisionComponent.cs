@@ -20,11 +20,11 @@ namespace Microsoft.Xna.Framework.Graphics
             /// <summary>
             /// A entidade que implementa este delegate.
             /// </summary>
-            public AnimatedEntity Source { get; set; }
+            public AnimatedActor Source { get; set; }
             /// <summary>
             /// A entidade que participou da colisão.
             /// </summary>
-            public AnimatedEntity CollidedEntity { get; set; }
+            public AnimatedActor CollidedEntity { get; set; }
             /// <summary>
             /// Fornece acesso aos valores de tempo do jogo.
             /// </summary>
@@ -38,7 +38,7 @@ namespace Microsoft.Xna.Framework.Graphics
             /// </summary>
             public RectangleCollisionResult CollisionResult { get; set; }
 
-            public Result(AnimatedEntity source, AnimatedEntity collided, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result)
+            public Result(AnimatedActor source, AnimatedActor collided, GameTime gameTime, Tuple<T1, T2> boxes, RectangleCollisionResult result)
             {
                 Source = source;
                 CollidedEntity = collided;
@@ -52,7 +52,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
-        AnimatedEntity entity = null;
+        AnimatedActor entity = null;
         Result<CollisionBox, CollisionBox> ccResult = new Result<CollisionBox, CollisionBox>(null, null, null, null, new RectangleCollisionResult());
         Result<CollisionBox, AttackBox> caResult = new Result<CollisionBox, AttackBox>(null, null, null, null, new RectangleCollisionResult());
         Result<AttackBox, AttackBox> aaResult = new Result<AttackBox, AttackBox>(null, null, null, null, new RectangleCollisionResult());
@@ -64,9 +64,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
 
         /// <summary>Obtém ou define se o componente deve utilizar uma tela do tipo LayeredScreen para busca de atores para colisão.</summary>
-        public LayeredScreen Screen { get; set; } = null;
+        LayeredScreen Screen { get; set; } = null;
         /// <summary>Obtém ou define os atores para verificação caso a propriedade Screen seja nulo.</summary>
-        public List<AnimatedEntity> Entities { get; set; } = new List<AnimatedEntity>();
+        List<AnimatedActor> Entities { get; set; } = new List<AnimatedActor>();
 
         //---------------------------------------//
         //-----         EVENTOS             -----//
@@ -74,23 +74,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre CollisionBoxes.        
-        public Action<Result<CollisionBox, CollisionBox>> CxCCollision;
+        public event Action<Result<CollisionBox, CollisionBox>> CxCCollision;
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um AttackBox.
         /// </summary>
-        public Action<Result<CollisionBox, AttackBox>> CxACollision;
+        public event Action<Result<CollisionBox, AttackBox>> CxACollision;
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre AttackBoxes.
         /// </summary>
-        public Action<Result<AttackBox, AttackBox>> AxACollision;
+        public event Action<Result<AttackBox, AttackBox>> AxACollision;
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre um CollisionBox e um retângulo.
         /// </summary>
-        public Action<Result<CollisionBox, Rectangle>> CxBCollision;
+        public event Action<Result<CollisionBox, Rectangle>> CxBCollision;
         /// <summary>
         /// Encapsula um método a ser chamado como resultado de uma colisão entre um AttackBox e um retângulo.
         /// </summary>
-        public Action<Result<AttackBox, Rectangle>> AxBCollision;
+        public event Action<Result<AttackBox, Rectangle>> AxBCollision;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -100,12 +100,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Inicializa uma nova instância de BoxCollisionComponent.
         /// </summary>
         /// <param name="animatedEntity">Define o AnimatedEntity o qual esse componente será associado.</param>
-        /// <param name="screen">Define a tela para busca de entidades, pode ser null.</param>
-        public BoxCollisionComponent(AnimatedEntity animatedEntity, LayeredScreen screen) : base(animatedEntity)
+        public BoxCollisionComponent(AnimatedActor animatedEntity) : base(animatedEntity)
         {
             Name = nameof(BoxCollisionComponent);
             entity = animatedEntity;
-            Screen = screen;
         }
 
         /// <summary>
@@ -113,7 +111,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="destination">O ator a ser associado esse componente.</param>
         /// <param name="source">A origem para cópia.</param>
-        public BoxCollisionComponent(AnimatedEntity destination, BoxCollisionComponent source) : base(destination, source)
+        public BoxCollisionComponent(AnimatedActor destination, BoxCollisionComponent source) : base(destination, source)
         {
             AxACollision = source.AxACollision;
             AxBCollision = source.AxBCollision;
@@ -124,10 +122,33 @@ namespace Microsoft.Xna.Framework.Graphics
             Entities = source.Entities;
         }
 
+        /// <summary>
+        /// Define a tela a ser utilizada para buscar os atores para verificação de colisão.
+        /// </summary>        
+        public void SetScreen(LayeredScreen screen)
+        {
+            Screen = screen;
+            Entities.Clear();
+        }
+
+        /// <summary>
+        /// Define as entidades a serem utilizadas para a verificação de colisão ao invés de utilizar uma tela.
+        /// </summary>
+        public void SetEntites(params AnimatedActor[] entities)
+        {
+            Entities.Clear();
+            Entities.AddRange(entities);
+
+            Screen = null;
+        }
+
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
             if (Screen != null)
             {
                 //Busca todas as entidades vísiveis da tela.
@@ -136,7 +157,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     // Prossegue se a entidade atual é diferente da entidade da lista.
                     if (!entity.Equals(other))
                     {   
-                        if(other is AnimatedEntity o)
+                        if(other is AnimatedActor o)
                             Check(entity, o, gameTime);
                     }
                 }
@@ -156,7 +177,7 @@ namespace Microsoft.Xna.Framework.Graphics
             base.Update(gameTime);
         }
 
-        private void Check(AnimatedEntity e, AnimatedEntity o, GameTime gameTime)
+        private void Check(AnimatedActor e, AnimatedActor o, GameTime gameTime)
         {
             RectangleCollisionResult result = new RectangleCollisionResult();
 

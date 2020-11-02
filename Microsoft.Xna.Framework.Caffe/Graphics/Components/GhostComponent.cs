@@ -17,7 +17,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public Vector2 Position { get; set; }
         }
 
-        AnimatedEntity entity = null;
+        AnimatedActor entity = null;
         List<Ghost> ghosts = new List<Ghost>();
         int delayTime = 0;
         int elapsedTime = 0;
@@ -51,7 +51,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Inicializa uma nova instância de GhostComponent.
         /// </summary>
         /// <param name="actor">O ator associado a esse component.</param>
-        public GhostComponent(AnimatedEntity actor) : base(actor)
+        public GhostComponent(AnimatedActor actor) : base(actor)
         {
             entity = actor;
         }
@@ -61,7 +61,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="destination">O ator a ser associado.</param>
         /// <param name="source">O componente a ser copiado.</param>
-        public GhostComponent(AnimatedEntity destination, ActorComponent source) : base(destination, source)
+        public GhostComponent(AnimatedActor destination, ActorComponent source) : base(destination, source)
         {
             entity = destination;
         }
@@ -72,6 +72,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             delayTime += gameTime.ElapsedGameTime.Milliseconds;
 
@@ -112,7 +115,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            for(int i = 0; i < ghosts.Count; i++)
+            if (!Enable.IsVisible)
+                return;
+
+            for (int i = 0; i < ghosts.Count; i++)
             {
                 Ghost g = ghosts[i];
 

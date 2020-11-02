@@ -41,6 +41,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
             old = state;
             state = Mouse.GetState();
 

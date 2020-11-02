@@ -10,9 +10,7 @@ Conjunto de classes, estruturas e ferramentas para facilitar o desenvolvimento d
 **2.0 (Capuccino) 01/10/2020**
 
 * Implementação de atores (Actor);
-* As classes Sprite, Animation e Entity2D herdam da classe Actor;
-* Sprite e Animation tem suporte a transformações (implementam a propriedade TransformGroup);
-* Componentes e telas dão suporte a atores, não somente as Entidades;
+* As classes Sprite, Animation, TextActor (anterior TextEntity) e AnimatedActor (anterior AnimatedEntity) herdam da classe Actor;
 * Colisão por pixel;
 * Facilidade em receber um array Color[] da textura observando a propriedade SpriteEffects;
 * Camadas de telas dão suporte a atores, cada uma com sua variação;
@@ -20,9 +18,13 @@ Conjunto de classes, estruturas e ferramentas para facilitar o desenvolvimento d
 * Implementação da estrutura Triangle;
 * IsometricTile agora implementa um ator em vez de animação;
 * Implementação do GhostComponent que facilita exibir imagens repetidas de um ator;
+* MouseEventComponent implementa a propriedade de verificação de duplo clique em um ator;
 
+* Retirada das entidades (Entity2D);
 * Retirada da classe SubScreenManager;
 * Retirada do método SetViewPosition, o método SetPosition implementa a mesma função;
+
+* Entre outras funcionalidades.
 
 **1.0 (Conillon) 11/04/2020**
 

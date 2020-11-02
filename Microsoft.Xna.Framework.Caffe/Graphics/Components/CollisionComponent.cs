@@ -11,9 +11,9 @@ namespace Microsoft.Xna.Framework.Graphics
     public class CollisionComponent : ActorComponent
     {
         /// <summary>Obtém ou define as entidades a serem utilizadas caso a propriedade Screen seja nula.</summary>
-        public List<Actor> Actors { get; set; } = new List<Actor>();
+        List<Actor> Actors { get; set; } = new List<Actor>();
         /// <summary>Obtém ou define se o componente deve utilizar uma tela do tipo LayeredScreen para busca de atores para colisão.</summary>
-        public LayeredScreen Screen { get; set; }
+        LayeredScreen Screen { get; set; } = null;
 
         /// <summary>
         /// Encapsula um método a ser chamado no fim do método Update deste component.
@@ -24,7 +24,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <item>CollisionResult é o retorno da colisão.</item>
         /// </list>
         /// </summary>
-        public Action<Actor, Actor, GameTime, CollisionResult> OnCollision;
+        public event Action<Actor, Actor, GameTime, CollisionResult> OnCollision;
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -35,10 +35,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="actor">Define o ator o qual esse componente será associad.</param>
         /// <param name="screen">Define a tela para busca de entidades, pode ser null.</param>
-        public CollisionComponent(Actor actor, LayeredScreen screen) : base(actor)
+        public CollisionComponent(Actor actor) : base(actor)
         {
             Name = nameof(CollisionComponent);
-            Screen = screen;
         }        
 
         /// <summary>
@@ -56,10 +55,33 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         FUNÇÕES             -----//
         //---------------------------------------//        
 
+        /// <summary>
+        /// Define a tela a ser utilizada para buscar os atores para verificação de colisão.
+        /// </summary>        
+        public void SetScreen(LayeredScreen screen)
+        {
+            Screen = screen;
+            Actors.Clear();
+        }
+
+        /// <summary>
+        /// Define os atores a serem utilizados para a verificação de colisão ao invés de utilizar uma tela.
+        /// </summary>
+        public void SetActors(params Actor[] entities)
+        {
+            Actors.Clear();
+            Actors.AddRange(entities);
+
+            Screen = null;
+        }
+
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
             if (Screen != null)
             {
                 //Busca todas as entidades vísiveis da tela.

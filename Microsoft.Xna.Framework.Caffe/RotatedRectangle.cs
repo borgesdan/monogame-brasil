@@ -49,7 +49,7 @@ namespace Microsoft.Xna.Framework
         /// Cria um novo objeto de RotatedRectangle informando os argumentos para uma rotação de um Rectangle.
         /// </summary>
         /// <param name="rectangle">O retângulo a ser rotacionado.</param>
-        /// <param name="origin">A origem da rotação em relação ao mundo do ator.</param>
+        /// <param name="origin">A origem nas coordenadas da tela.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees)
         {

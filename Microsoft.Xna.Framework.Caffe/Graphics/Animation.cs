@@ -136,11 +136,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         EVENTOS             -----//
         //---------------------------------------//
-
-        /// <summary>Evento chamado no fim do método Update.</summary>
-        public event Action<Animation, GameTime> OnUpdate;        
-        /// <summary>Evento chamado no fim do método Draw.</summary>
-        public event Action<Animation, GameTime, SpriteBatch> OnDraw;
+        
         /// <summary>Evento chamado quando a animação chega ao fim.</summary>
         public event Action<Animation> OnEndAnimation;
         /// <summary>Evento chamado quando o valor do Index é mudado.</summary>
@@ -156,12 +152,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Inicializa uma nova instância da classe Animation.</summary>
         /// <param name="game">A instância atual da classe Game.</param>
+        /// <param name="name">O nome do ator.</param>
         /// <param name="time">O tempo de cada quadro da animação.</param>
-        /// <param name="name">O nome da animação.</param>
-        public Animation(Game game, int time, string name) : base(game)
+        public Animation(Game game, string name, int time) : base(game, name)
         {
             Time = time;
-            Name = name;
         }
 
         /// <summary>Inicializa uma nova instância da classe Animation.</summary>
@@ -170,10 +165,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="name">O nome da animação.</param>
         /// <param name="sprite">O sprite a ser utilizado.</param>
         /// <param name="frameGroupName">O nome do grupo de frames a serem utilizados na animação.</param>
-        public Animation(Game game, int time, string name, Sprite sprite, string frameGroupName) : base(game)
+        public Animation(Game game, int time, string name, Sprite sprite, string frameGroupName) : base(game, name)
         {
             Time = time;
-            Name = name;
 
             AddSprite(sprite, frameGroupName);
         }
@@ -223,11 +217,14 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
+            if (!UpdateOffView)
+                return;
+
             //Atualiza a animação.
             Animate(gameTime);                       
 
             //Atualiza o tamanho da animação.
-            UpdateBounds();
+            UpdateBounds();            
 
             //Atualiza o Transform
             Transform.Update();
@@ -249,9 +246,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 destinationBounds = new Rectangle(x, y, (int)w, (int)h);
             }
-
-            //Chama OnUpdate
-            OnUpdate?.Invoke(this, gameTime);
 
             base.Update(gameTime);
         }
@@ -289,7 +283,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recY = (int)(y - drawOrigin.Y);
 
             Bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateBoundsR(Transform, drawOrigin, Bounds);            
+            BoundsR = Util.CreateRotatedBounds(Transform, drawOrigin, Bounds);            
         }
 
         private void Animate(GameTime gameTime)
@@ -392,7 +386,6 @@ namespace Microsoft.Xna.Framework.Graphics
                    );
 
             //chama OnDraw
-            OnDraw?.Invoke(this, gameTime, spriteBatch);
             base._Draw(gameTime, spriteBatch);
         }
 
@@ -412,7 +405,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             foreach(string s in sources)
             {
-                Sprite temp = new Sprite(Game, Game.Content.Load<Texture2D>(s), true);
+                Sprite temp = new Sprite(Game, "", Game.Content.Load<Texture2D>(s), true);
                 tmpSprites.Add(temp);
             }
 
@@ -492,9 +485,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 OnChangeFrameIndex = null;
                 OnChangeIndex = null;
-                OnDraw = null;
                 OnEndAnimation = null;
-                OnUpdate = null;
             }
 
             disposed = true;

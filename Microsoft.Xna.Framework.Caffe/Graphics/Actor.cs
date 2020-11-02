@@ -1,13 +1,20 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+    /// <summary>
+    /// Representa uma entidade que expõe acesso a transformações e outras propriedades de jogo.
+    /// </summary>
     public abstract class Actor : IActor<Actor>
     {
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
-
+        
+        /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
+        public Screen Screen { get; set; } = null;
         /// <summary>
         /// Obtém ou define o nome do ator.
         /// </summary>
@@ -35,28 +42,45 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define os componentes do ator.
         /// </summary>
-        public ComponentGroup Components { get; set; } = null;        
+        public ComponentGroup Components { get; set; } = null;
+        /// <summary>
+        /// Obtém ou define se o ator está habilitado a ser atualizado fora do campo de visão da câmera ou do Viewport.
+        /// </summary>
+        public bool UpdateOffView { get; set; } = true;
+
+        //---------------------------------------//
+        //-----         EVENTOS             -----//
+        //---------------------------------------//
+
+        /// <summary>Encapsula métodos que serão invocados na função Update.</summary>        
+        public event Action<Actor, GameTime> OnUpdate;
+        /// <summary>Encapsula métodos que serão invocados na função Draw.</summary>
+        public event Action<Actor, GameTime, SpriteBatch> OnDraw;
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        public Actor(Game game)
+        protected Actor(Game game, string name)
         {
+            this.Name = name;
             this.Game = game;
             this.Components = new ComponentGroup(this);
             this.Transform = new TransformGroup<Actor>(this);            
         }
 
-        public Actor(Actor source)
+        protected Actor(Actor source)
         {
+            this.Screen = source.Screen;
             this.Name = source.Name;
             this.Game = source.Game;
             this.Bounds = source.Bounds;
             this.BoundsR = new Polygon(source.BoundsR);
             this.Components = new ComponentGroup(this, source.Components);
             this.Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
-            this.Transform = new TransformGroup<Actor>(this, source.Transform);            
+            this.Transform = new TransformGroup<Actor>(this, source.Transform);
+            this.OnUpdate = source.OnUpdate;
+            this.OnDraw = source.OnDraw;
         }
 
         //---------------------------------------//
@@ -74,13 +98,15 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
+            
             _Draw(gameTime, spriteBatch);
+            OnDraw?.Invoke(this, gameTime, spriteBatch);
+            
             Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
         }
 
         protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
         }
 
         /// <summary>
@@ -93,7 +119,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             Transform.Update();
+            OnUpdate?.Invoke(this, gameTime);
             Components.Update(gameTime);
+            UpdateBounds();
         }
 
         /// <summary>
@@ -221,11 +249,14 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (disposing)
             {
+                this.Screen = null;
                 this.Game = null;
                 this.Name = null;
                 this.BoundsR = null;
                 this.Enable = null;
                 this.Transform = null;
+                this.OnUpdate = null;
+                this.OnDraw = null;
             }
 
             disposed = true;

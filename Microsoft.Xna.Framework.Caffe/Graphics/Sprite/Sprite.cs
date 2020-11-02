@@ -26,21 +26,23 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="game">Instância corrente da classe Game.</param>
-        /// <param name="sourceName">O caminho do arquivo de textura na pasta Content.</param>
+        /// <param name="name">O nome do ator.</param>
+        /// <param name="texturePath">O caminho do arquivo de textura na pasta Content.</param>
         /// <param name="isSingleFrame">
         /// Defina True para informar que o Texture2D não é um spritesheet. Será adicionado um SpriteFrame do tamanho da textura.
         /// </param>
-        public Sprite(Game game, string sourceName, bool isSingleFrame = false) : this(game, game.Content.Load<Texture2D>(sourceName), isSingleFrame) { }
+        public Sprite(Game game, string name, string texturePath, bool isSingleFrame = false) : this(game, name, game.Content.Load<Texture2D>(texturePath), isSingleFrame) { }
 
         /// <summary>
         /// Inicia uma nova instância da classe Sprite.
         /// </summary>
         /// <param name="game">Instância corrente da classe Game.</param>
+        /// <param name="name">O nome do ator.</param>
         /// <param name="texture">Um objeto da classe Texture2D.</param>        
         /// <param name="isSingleFrame">
         /// Defina True para informar que o Texture2D não é um spritesheet. Será adicionado um SpriteFrame do tamanho da textura.
         /// </param>
-        public Sprite(Game game, Texture2D texture, bool isSingleFrame = false) : base(game)
+        public Sprite(Game game, string name, Texture2D texture, bool isSingleFrame = false) : base(game, name)
         {
             Texture = texture;
             Boxes = new BoxGroup(this);
@@ -90,7 +92,10 @@ namespace Microsoft.Xna.Framework.Graphics
             if (!Enable.IsEnabled)
                 return;
 
-            UpdateBounds();
+            if (!UpdateOffView)
+                return;
+
+            UpdateBounds();            
 
             base.Update(gameTime);
         }
@@ -131,7 +136,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recY = (int)(y - finalOrigin.Y);
 
             Bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateBoundsR(Transform, finalOrigin, Bounds);
+            BoundsR = Util.CreateRotatedBounds(Transform, finalOrigin, Bounds);
 
             base.UpdateBounds();
         }
@@ -140,9 +145,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Cria um nova instância da classe Sprite com uma textura retangular preenchida com a cor definida.
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
+        /// <param name="name">O nome do ator.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="color">A cor definida.</param>
-        public static Sprite GetRectangle(Game game, Point size, Color color)
+        public static Sprite GetRectangle(Game game, string name, Point size, Color color)
         {
             Color[] data;
             Texture2D texture;            
@@ -159,7 +165,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //Seta o array de cores a textura
             texture.SetData(data);
 
-            Sprite s = new Sprite(game, texture, true);
+            Sprite s = new Sprite(game, name, texture, true);
             s.UpdateBounds();
 
             return s;
@@ -169,10 +175,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Cria uma nova instância da classe Sprite com uma textura retangular transparente mas com bordas coloridas.
         /// </summary>
         /// <param name="game">A instância da classe Game.</param>
+        /// <param name="name">O nome do ator.</param>
         /// <param name="size">O tamanho do retângulo.</param>
         /// <param name="borderWidth">O tamanho da borda.</param>
         /// <param name="borderColor">A cor da borda.</param>
-        public static Sprite GetRectangle2(Game game, Point size, int borderWidth, Color borderColor)
+        public static Sprite GetRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
         {
             //https://stackoverflow.com/questions/13893959/how-to-draw-the-border-of-a-square/13894276            
 
@@ -204,7 +211,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             texture.SetData(data);
 
-            Sprite s = new Sprite(game,texture, true);
+            Sprite s = new Sprite(game, name, texture, true);
             s.UpdateBounds();
 
             return s;

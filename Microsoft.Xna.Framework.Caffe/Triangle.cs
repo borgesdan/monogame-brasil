@@ -103,12 +103,14 @@ namespace Microsoft.Xna.Framework
             // must be smaller than third side. 
             if (a < 0 || b < 0 || c < 0)
             {
-                throw new Exception("Os comprimentos dos lados do triângulo devem ser positivo.");
+                //throw new Exception("Os comprimentos dos lados do triângulo devem ser positivo.");
+                return 0;
             }
 
             if (a + b <= c || a + c <= b || b + c <= a)
             {
-                throw new Exception("A soma de dois lados não pode ser menor que o terceiro lado.");
+                //throw new Exception("A soma de dois lados não pode ser menor que o terceiro lado.");
+                return 0;
             }
 
             float s = (a + b + c) / 2.0f;

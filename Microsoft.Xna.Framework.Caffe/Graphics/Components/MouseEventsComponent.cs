@@ -11,21 +11,30 @@ namespace Microsoft.Xna.Framework.Graphics
     public class MouseEventsComponent : ActorComponent
     {
         private MouseState old;
+        private MouseState state;
         private bool mouseOn = false;
+
+        //Double Clicl;
+        private float dclickTime = 0;
+        private short clicks = 0;
 
         /// <summary>Obtém ou define a tela ativa.</summary>
         public Screen Screen { get; set; }
+        /// <summary>Obtém ou define o tempo para reconhecimento de um duplo clique em milisegundos.</summary>
+        public float DoubleClickDelay { get; set; } = 200;
 
         /// <summary>Ocorre quando um botão do mouse é pressionado.</summary>
-        public Action<Actor, MouseState> MouseDown;
+        public event Action<Actor, MouseState> Down;
         /// <summary>Ocorre quando um botão do mouse é liberado.</summary>
-        public Action<Actor, MouseState> MouseUp;
+        public event Action<Actor, MouseState> Up;
         /// <summary>Ocorre quando o ponteiro do mouse estava fora e entrou nos limites do ator.</summary>
-        public Action<Actor, MouseState> MouseEnter;
+        public event Action<Actor, MouseState> Enter;
         /// <summary>Ocorre quando o ponteiro do mouse estava dentro e saiu nos limites do ator.</summary>
-        public Action<Actor, MouseState> MouseLeave;
+        public event Action<Actor, MouseState> Leave;
         /// <summary>Ocorre quando o ponteiro do mouse se encontra dentro dos limites do ator.</summary>
-        public Action<Actor, MouseState> MouseOn;
+        public event Action<Actor, MouseState> On;
+        /// <summary>Ocorre quando ocorre um click duplo sore o ator.</summary>
+        public event Action<Actor, MouseState> DoubleClick;
 
         /// <summary>
         /// Inicializa uma nova instância de MouseEventsComponent.
@@ -43,26 +52,38 @@ namespace Microsoft.Xna.Framework.Graphics
         public MouseEventsComponent(Actor destination, MouseEventsComponent source) : base(destination, source)
         {
             mouseOn = source.mouseOn;
-            MouseDown = source.MouseDown;
-            MouseUp = source.MouseUp;
-            MouseEnter = source.MouseEnter;
-            MouseLeave = source.MouseLeave;
-            MouseOn = source.MouseOn;
+            Down = source.Down;
+            Up = source.Up;
+            Enter = source.Enter;
+            Leave = source.Leave;
+            On = source.On;
         }        
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         public override void Update(GameTime gameTime)
         {
+            if (!Enable.IsEnabled)
+                return;
+
+            dclickTime += gameTime.ElapsedGameTime.Milliseconds;
+
+            if(dclickTime > DoubleClickDelay)
+            {
+                dclickTime = 0;
+                clicks = 0;
+            }
+
             Rectangle bounds = Actor.Bounds;
             Screen screen = Screen;
-            var state = Mouse.GetState();
-            bool isVisible;
+            old = state;
+            state = Mouse.GetState();
+            bool isVisible = true;
 
-            if (screen != null)
-                isVisible = Util.CheckFieldOfView(screen, bounds);
-            else
-                isVisible = Util.CheckFieldOfView(Actor.Game, new Camera(Actor.Game), bounds);
+            //if (screen != null)
+            //    isVisible = Util.CheckFieldOfView(screen, bounds);
+            //else
+            //    isVisible = Util.CheckFieldOfView(Actor.Game, new Camera(Actor.Game), bounds);
 
             if (isVisible)
             {
@@ -71,7 +92,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     //mas verificando novamente ele consta fora
                     if (!bounds.Contains(state.Position))
-                        MouseLeave?.Invoke(Actor, state);
+                        Leave?.Invoke(Actor, state);
                 }
 
                 //se o ponteiro do mouse está dentro dos limites da entidade.
@@ -79,18 +100,18 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     //se o ponteiro do mouse se encontrava fora
                     if (!mouseOn)
-                        MouseEnter?.Invoke(Actor, state);
+                        Enter?.Invoke(Actor, state);
 
                     mouseOn = true;
-                    MouseOn?.Invoke(Actor, state);
+                    On?.Invoke(Actor, state);
 
                     //se um botão foi pressionado enquanto o controle está dentro
                     if (state.LeftButton == ButtonState.Pressed
                         || state.RightButton == ButtonState.Pressed
                         || state.MiddleButton == ButtonState.Pressed)
                     {
-                        old = state;
-                        MouseDown?.Invoke(Actor, state);
+                        //old = state;
+                        Down?.Invoke(Actor, state);  
                     }
 
                     //se um botão foi liberado
@@ -98,16 +119,28 @@ namespace Microsoft.Xna.Framework.Graphics
                         || old.RightButton == ButtonState.Pressed && state.RightButton == ButtonState.Released
                         || old.MiddleButton == ButtonState.Pressed && state.MiddleButton == ButtonState.Released)
                     {
-                        MouseUp?.Invoke(Actor, state);
-                    }
+                        Up?.Invoke(Actor, state);
+                    }  
+                    
+                    //Verifica se houve clique duplo
+                    if(old.LeftButton == ButtonState.Released && state.LeftButton == ButtonState.Pressed)
+                    {
+                        clicks++;
+                        dclickTime = 0;
 
-                    old = state;
+                        if(clicks >= 2 && dclickTime < DoubleClickDelay)
+                        {
+                            DoubleClick?.Invoke(Actor, state);
+                            clicks = 0;
+                            dclickTime = 0;
+                        }
+                    }
                 }
                 else
                 {
                     mouseOn = false;
-                    old = state;
-                }
+                    //old = state;
+                }                
             }
 
             base.Update(gameTime);

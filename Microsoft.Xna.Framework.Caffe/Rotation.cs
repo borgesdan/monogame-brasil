@@ -13,7 +13,7 @@ namespace Microsoft.Xna.Framework
         /// Obtém a posição de um ponto rotacionado ao informar a origem e o grau de rotação.        
         /// </summary>
         /// <param name="point">A posição do ponto na tela.</param>
-        /// <param name="origin">A origem da rotação em relação ao mundo do ator.</param>
+        /// <param name="origin">A origem nas coordenadas da tela.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public static Point Get(Point point, Vector2 origin, double degrees)
         {
@@ -37,7 +37,7 @@ namespace Microsoft.Xna.Framework
         /// Obtém a posição de um retângulo rotacionado ao informar a origem e o grau de rotação.
         /// </summary>
         /// <param name="rectangle">O retângulo.</param>
-        /// <param name="origin">A origem da rotação em relação ao mundo do ator.</param>
+        /// <param name="origin">A origem nas coordenadas da tela.</param>
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public static RotatedRectangle Get(Rectangle rectangle, Vector2 origin, double degrees)
         {
