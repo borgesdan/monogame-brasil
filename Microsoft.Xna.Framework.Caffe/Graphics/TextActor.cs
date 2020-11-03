@@ -100,30 +100,16 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             SetFont(Game.Content.Load<SpriteFont>(path));            
         } 
-
-        /// <summary>Atualiza o ator.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public override void Update(GameTime gameTime)
+        
+        protected override void _Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
-
-            if (!UpdateOffView && !CheckOffView())
-                return;
-
             UpdateBounds();
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
-
-        /// <summary>Desenha o ator.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
+        
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
             if (Text != null)
                 spriteBatch.DrawString(Font, Text, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 

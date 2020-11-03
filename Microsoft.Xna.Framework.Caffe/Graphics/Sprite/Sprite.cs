@@ -82,33 +82,16 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
-
-        /// <summary>
-        /// Atualiza o Sprite.
-        /// </summary>
-        /// <param name="gameTime">Obtém os tempos de jogo.</param>
-        public override void Update(GameTime gameTime)
+        
+        protected override void _Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
-
-            if (!UpdateOffView && !CheckOffView())
-                return;
-
             UpdateBounds();            
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
-
-        /// <summary>
-        /// Desenha o sprite.
-        /// </summary>
-        /// <param name="spriteBatch">A instância corrente do SpriteBatch.</param>
+        
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
             spriteBatch.Draw(Texture, Transform.Position, this[CurrentIndex].Bounds, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
 
             base._Draw(gameTime, spriteBatch);

@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Collision\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Entities\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />

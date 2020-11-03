@@ -32,8 +32,8 @@ namespace Microsoft.Xna.Framework.Graphics
     public static class Collision
     {
         /// <summary>
-        /// Verifica se os limites do ator 1 está intersectando os limites do ator 2.
-        /// E retorna um objeto CollisionResult para verificação do resultado.        
+        /// Verifica se os limites do ator 1 está intersectando os limites do ator 2,
+        /// e retorna um objeto CollisionResult para verificação do resultado.        
         /// </summary>
         public static CollisionResult ActorCollision(Actor actor1, Actor actor2)
         {
@@ -142,7 +142,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }        
 
         /// <summary>
-        /// Verifica se os pixels do objeto 1 intersecta outros pixels do objeto 2.
+        /// Verifica se os pixels do ator 1 intersecta outros pixels do ator 2.
         /// </summary>
         /// <param name="bounds1">Os limites atuais do objeto 1 (posição e tamanho).</param>
         /// <param name="data1">O array de cores recebido da textura 1.</param>
@@ -175,7 +175,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Retorna se os pixels do objeto A está intersectando os pixels do objeto b utilizando matrizes para cálculos.
+        /// Retorna se os pixels do ator A está intersectando os pixels do ator B utilizando matrizes para cálculos.
         /// </summary>
         /// <param name="transformA">A matrix de transformação do objeto A.</param>
         /// <param name="widthA">A largura do objeto A.</param>

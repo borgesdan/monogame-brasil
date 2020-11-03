@@ -92,17 +92,11 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         MÉTODOS             -----//
         //---------------------------------------//
-
-        /// <summary>Atualiza o ator.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public override void Update(GameTime gameTime)
-        {   
-            //Se a entidade não estiver disponível ou não existir uma animação ativa, então não se prossegue com a atualização.
-            if (!Enable.IsEnabled || CurrentAnimation == null)
-                return;
-
-            if (!UpdateOffView && !CheckOffView())
-                return;
+        
+        protected override void _Update(GameTime gameTime)
+        {               
+            if (CurrentAnimation == null)
+                return;            
 
             //Coloca OldPosition e Position com os mesmos valores.
             Transform.SetPosition(Transform.Position);
@@ -113,7 +107,7 @@ namespace Microsoft.Xna.Framework.Graphics
             //Update da animação ativa.
             CurrentAnimation?.Update(gameTime);            
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
 
         //Define as propridades da entidade para as propriedades da animação corrente.
@@ -121,15 +115,12 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             CurrentAnimation.Transform.Set(Transform);
         }
-
-        /// <summary>Desenha o ator.</summary>
-        /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        /// <param name="spriteBatch">Uma instância da classe SpriteBath para a entidade ser desenhada.</param>
+        
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Se a entidade não é visível
             //Se não existe uma animação ativa            
-            if (!Enable.IsVisible || CurrentAnimation == null)
+            if (CurrentAnimation == null)
                 return;            
 
             if(XRepeat == 0 && YRepeat == 0)

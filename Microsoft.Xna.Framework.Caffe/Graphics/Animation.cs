@@ -207,19 +207,9 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
         //---------------------------------------//        
-
-        /// <summary>
-        /// Atualiza a animação.
-        /// </summary>
-        /// <param name="gameTime">Recebe os valores de tempo do jogo.</param>
-        public override void Update(GameTime gameTime)
+        
+        protected override void _Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
-
-            if (!UpdateOffView && !CheckOffView())
-                return;
-
             //Atualiza a animação.
             Animate(gameTime);                       
 
@@ -247,7 +237,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 destinationBounds = new Rectangle(x, y, (int)w, (int)h);
             }
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
         
         private void SetBoxes()
@@ -360,12 +350,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
             UpdateBounds();
         }
-
-        /// <inheritdoc />
+        
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible ||        //Se a animação está em modo visível
-                CurrentSprite == null)    //Se existe um sprite ativo.
+            if (CurrentSprite == null)
                 return;
 
             Rectangle _bounds = CurrentFrame.Bounds;

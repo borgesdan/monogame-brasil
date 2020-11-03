@@ -9,6 +9,8 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public abstract class Actor : IActor<Actor>
     {
+        bool offView = false;
+
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
@@ -94,7 +96,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">A instância do SpriteBatch para desenho.</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
+            if (!Enable.IsVisible || offView)
                 return;
 
             Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
@@ -113,15 +115,32 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Atualiza o ator.
         /// </summary>
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
-        public virtual void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
+            //Não prossegue caso o ator não está disponível
             if (!Enable.IsEnabled)
                 return;
 
-            Transform.Update();
-            OnUpdate?.Invoke(this, gameTime);
-            Components.Update(gameTime);
+            //Atualiza os limites do ator e verifica se ele se encontra dentro do campo de visão da tela
             UpdateBounds();
+            CheckOffView();            
+
+            //Se não é para atualizar caso o ator não esteja dentro do campo de visão e 
+            //ele se encontra nesse estado então não prossegue.
+            if (!UpdateOffView && offView)
+                return;
+
+            _Update(gameTime);
+            OnUpdate?.Invoke(this, gameTime);
+
+            Transform.Update();            
+            Components.Update(gameTime);
+            
+            UpdateBounds();
+        }
+
+        protected virtual void _Update(GameTime gameTime)
+        {
         }
 
         /// <summary>
@@ -228,12 +247,12 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
-        protected bool CheckOffView()
+        protected void CheckOffView()
         {
             if (Screen != null && Screen.Camera != null)
-                return Util.CheckFieldOfView(Screen.Camera, this.Bounds);
+                offView = !Util.CheckFieldOfView(Screen.Camera, this.Bounds);
             else
-                return Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, this.Bounds);
+                offView = !Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, this.Bounds);
         }
 
         //---------------------------------------//
