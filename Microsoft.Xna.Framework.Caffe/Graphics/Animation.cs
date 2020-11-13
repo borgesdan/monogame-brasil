@@ -160,12 +160,12 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Inicializa uma nova instância da classe Animation.</summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        /// <param name="time">O tempo de cada quadro da animação.</param>
+        /// <param name="game">A instância atual da classe Game.</param>        
         /// <param name="name">O nome da animação.</param>
+        /// <param name="time">O tempo de cada quadro da animação.</param>
         /// <param name="sprite">O sprite a ser utilizado.</param>
         /// <param name="frameGroupName">O nome do grupo de frames a serem utilizados na animação.</param>
-        public Animation(Game game, int time, string name, Sprite sprite, string frameGroupName) : base(game, name)
+        public Animation(Game game, string name, int time, Sprite sprite, string frameGroupName) : base(game, name)
         {
             Time = time;
 

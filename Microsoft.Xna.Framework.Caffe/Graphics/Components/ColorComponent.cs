@@ -52,11 +52,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public override void Update(GameTime gameTime)
+        protected override void _Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
-
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
 
             if (elapsedTime > Delay)
@@ -97,7 +94,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 elapsedTime = 0;
             }
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
     }
 }

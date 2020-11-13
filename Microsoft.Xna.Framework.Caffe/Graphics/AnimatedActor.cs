@@ -114,6 +114,7 @@ namespace Microsoft.Xna.Framework.Graphics
         private void SetCurrentProperties()
         {
             CurrentAnimation.Transform.Set(Transform);
+            CurrentAnimation.Screen = Screen;            
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -181,7 +182,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if(Animations.Count == 1)
             {
                 string name = Animations[0].Name;
-                ChangeAnimation(name);                
+                ChangeAnimation(name, true);                
                 UpdateBounds();
             }
         }
@@ -197,12 +198,24 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>Troca a animação ativa.</summary>
-        /// <param name="name">Nome da próxima animação. A animação atual será resetada.</param>
-        public void ChangeAnimation(string name) => ChangeAnimation(name, true);
+        /// <param name="animation">A instância da animação desejada.</param>
+        /// <param name="resetAnimation">Defina True se deseja que a animação corrente será resetada.</param>
+        public void ChangeAnimation(Animation animation, bool resetAnimation)
+        {
+            ChangeAnimation(animation.Name, resetAnimation);
+        }
+
+        /// <summary>Troca a animação ativa.</summary>
+        /// <param name="index">O index da animação na lista de animações.</param>
+        /// <param name="resetAnimation">Defina True se deseja que a animação corrente será resetada.</param>
+        public void ChangeAnimation(int index, bool resetAnimation)
+        {            
+            ChangeAnimation(Animations[index].Name, resetAnimation);
+        }        
 
         /// <summary>Troca a animação ativa.</summary>
         /// <param name="name">Nome da próxima animação.</param>
-        /// <param name="resetAnimation">True se a animação atual será resetada.</param>
+        /// <param name="resetAnimation">Defina True se deseja que a animação corrente será resetada.</param>
         public void ChangeAnimation(string name, bool resetAnimation)
         {
             Animation tempAnimation = GetAnimation(name);

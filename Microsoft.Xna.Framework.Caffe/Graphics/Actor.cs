@@ -96,12 +96,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">A instância do SpriteBatch para desenho.</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible || offView)
+            if (!Enable.IsVisible)
                 return;
 
             Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
             
-            _Draw(gameTime, spriteBatch);
+            if(!offView)
+                _Draw(gameTime, spriteBatch);
+
             OnDraw?.Invoke(this, gameTime, spriteBatch);
             
             Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
@@ -153,10 +155,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém o conteúdo de cores do ator.
         /// </summary>
-        public virtual Color[] GetData() 
-        {
-            return null;
-        }
+        public abstract Color[] GetData();
         
         /// <summary>
         /// Obtém o conteúdo de cores passando o frame (com o tamanho do data) e o Color data.

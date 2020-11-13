@@ -52,13 +52,29 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">A instância atual de um SpriteBatch.</param>
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (!Enable.IsVisible)
+                return;
+
+            _Draw(gameTime, spriteBatch);
+        }
+
+        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
         }
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public virtual void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
+        {
+            if (!Enable.IsEnabled)
+                return;
+
+            _Update(gameTime);
+        }
+
+        protected virtual void _Update(GameTime gameTime)
         {
         }
 

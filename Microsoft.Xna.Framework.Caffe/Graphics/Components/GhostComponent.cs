@@ -5,22 +5,30 @@ using System.Text;
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
-    /// Componente que duplica a imagem com ator quantas vezes necessário e por um período de tempo específico.
+    /// Componente que duplica a imagem do ator por um período de tempo específico.
     /// </summary>
     public class GhostComponent : ActorComponent
     {
-        class Ghost
+        /// <summary>
+        /// Representa a imagem duplicada do ator.
+        /// </summary>
+        public class Ghost
         {
-            public Animation Animation { get; set; }
-            public Sprite Sprite { get; set; }
-            public SpriteFrame Frame { get; set; }    
-            public Vector2 Position { get; set; }
+            public Sprite Sprite { get; set; } = null;
+            public SpriteFrame Frame { get; set; } = new SpriteFrame();
+            public Vector2 Position { get; set; } = Vector2.Zero;
+            public float Rotation { get; set; } = 0;
+            public Vector2 Origin { get; set; } = Vector2.Zero;
+            public Vector2 Scale { get; set; } = Vector2.One;
+            public float LayerDepth { get; set; } = 0;
+            public SpriteEffects Effects { get; set; } = SpriteEffects.None;
+
+            public float ElapsedTime { get; set; } = 0;            
         }
 
         AnimatedActor entity = null;
         List<Ghost> ghosts = new List<Ghost>();
         int delayTime = 0;
-        int elapsedTime = 0;
 
         //----------------------------------------//
         //-----         PROPRIEDADES         -----//
@@ -33,20 +41,25 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define o tempo em milisegundos em que cada imagem do ator será recuperada.
         /// </summary>
-        public int Delay { get; set; } = 1000;
-        /// <summary>
-        /// Obtém ou define o número máximo de fantasmas.
-        /// </summary>
-        public int Max { get; set; } = 5;
+        public int Delay { get; set; } = 1000;        
         /// <summary>
         /// Obtém ou define a cor para desenho do componente.
         /// </summary>
         public Color Color { get; set; } = new Color(100, 100, 100, 100);
 
+        /// <summary>
+        /// Encapsula um método a ser chamado quando for criado um objeto Ghost.
+        /// </summary>
+        public event Action<AnimatedActor, Ghost> OnCreate;
+        /// <summary>
+        /// Encapsula um método a ser chamado quando for removido um objeto Ghost.
+        /// </summary>
+        public event Action<AnimatedActor, Ghost> OnRemove;
+
         //----------------------------------------//
         //-----         CONSTRUTOR           -----//
         //----------------------------------------//        
-        
+
         /// <summary>
         /// Inicializa uma nova instância de GhostComponent.
         /// </summary>
@@ -70,62 +83,52 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         FUNÇÕES              -----//
         //----------------------------------------//
 
-        public override void Update(GameTime gameTime)
-        {
-            if (!Enable.IsEnabled)
-                return;
+        protected override void _Update(GameTime gameTime)
+        {            
+            delayTime += gameTime.ElapsedGameTime.Milliseconds;             
 
-            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-            delayTime += gameTime.ElapsedGameTime.Milliseconds;
-
-            //Inicializamos a lista de fantasmas caso não haja nenhum
-            if(ghosts.Count == 0)
+            if (delayTime >= Delay)
             {
                 Ghost ghost = new Ghost();
-                ghost.Animation = entity.CurrentAnimation;
                 ghost.Sprite = entity.CurrentAnimation.CurrentSprite;
                 ghost.Frame = entity.CurrentAnimation.CurrentFrame;
                 ghost.Position = entity.Transform.Position;
-
+                ghost.Rotation = entity.Transform.Rotation;
+                ghost.Scale = entity.Transform.Scale;
+                ghost.LayerDepth = entity.Transform.LayerDepth;
+                ghost.Effects = entity.Transform.SpriteEffects;
+                ghost.Origin = entity.Transform.Origin;
+                
                 ghosts.Add(ghost);
-            } 
-            
-            if(delayTime >= Delay)
-            {
-                Ghost ghost = new Ghost();
-                ghost.Animation = entity.CurrentAnimation;
-                ghost.Sprite = entity.CurrentAnimation.CurrentSprite;
-                ghost.Frame = entity.CurrentAnimation.CurrentFrame;
-                ghost.Position = entity.Transform.Position;
-
-                ghosts.Add(ghost);
-
                 delayTime = 0;
-            }
 
-            if(elapsedTime >= Time)
+                OnCreate?.Invoke(entity, ghost);
+            }            
+
+            for(int i = 0; i < ghosts.Count; i++)
             {
-                ghosts.RemoveAt(0);
-                elapsedTime = 0;
-                elapsedTime += delayTime;
+                ghosts[i].ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+
+                if (ghosts[i].ElapsedTime >= Time)
+                {
+                    OnRemove?.Invoke(entity, ghosts[i]);
+                    ghosts.RemoveAt(i);
+                }                    
             }
 
-            base.Update(gameTime);
+            base._Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
             for (int i = 0; i < ghosts.Count; i++)
             {
                 Ghost g = ghosts[i];
 
-                spriteBatch.Draw(g.Animation.CurrentSprite.Texture, g.Position, g.Frame.Bounds, Color);
+                spriteBatch.Draw(g.Sprite.Texture, g.Position, g.Frame.Bounds, Color, g.Rotation, g.Origin, g.Scale, g.Effects, g.LayerDepth);
             }
 
-            base.Draw(gameTime, spriteBatch);
+            base._Draw(gameTime, spriteBatch);
         }
     }
 }
