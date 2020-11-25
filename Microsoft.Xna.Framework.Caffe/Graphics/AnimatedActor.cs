@@ -9,11 +9,6 @@ namespace Microsoft.Xna.Framework.Graphics
     public class AnimatedActor : Actor
     {
         //---------------------------------------//
-        //-----         VARIÁVEIS           -----//
-        //---------------------------------------//                
-        private Vector2 percentage = Vector2.One;        
-
-        //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
@@ -27,22 +22,6 @@ namespace Microsoft.Xna.Framework.Graphics
         public List<CollisionBox> CollisionBoxes { get; private set; } = new List<CollisionBox>();
         /// <summary>Obtém as caixas de ataque do atual frame da animação corrente.</summary>
         public List<AttackBox> AttackBoxes { get; private set; } = new List<AttackBox>();
-        /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
-        public Vector2 DrawPercentage
-        {
-            get => percentage;
-            set
-            {
-                float x = MathHelper.Clamp(value.X, 0f, 1f);
-                float y = MathHelper.Clamp(value.Y, 0f, 1f);
-
-                percentage = new Vector2(x, y);
-            }
-        }
-        /// <summary>Obtém ou define a porcentagem de largura do desenho. De 0f (0%) a 1f (100%).</summary>
-        public float XDraw { get => DrawPercentage.X; set => DrawPercentage = new Vector2(value, YDraw); }
-        /// <summary>Obtém ou define a porcentagem de altura do desenho. De 0f (0%) a 1f (100%).</summary>
-        public float YDraw { get => DrawPercentage.Y; set => DrawPercentage = new Vector2(XDraw, value); }
 
 
         //---------------------------------------//
@@ -57,8 +36,6 @@ namespace Microsoft.Xna.Framework.Graphics
             //Busca do index da animação ativa.
             int index = source.Animations.FindIndex(a => a.Equals(source.CurrentAnimation));
             CurrentAnimation = Animations[index];
-
-            DrawPercentage = source.DrawPercentage;
 
             source.CollisionBoxes.ForEach(cb => CollisionBoxes.Add(cb));
             source.AttackBoxes.ForEach(ab => AttackBoxes.Add(ab));
@@ -106,7 +83,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             CurrentAnimation.Transform.Set(Transform);
             CurrentAnimation.Screen = Screen;
-            CurrentAnimation.DrawPercentage = DrawPercentage;
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)

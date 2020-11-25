@@ -7,6 +7,13 @@ Conjunto de classes, estruturas e ferramentas para facilitar o desenvolvimento d
 
 ## Versão
 
+**2.0.1 (Capuccino) 25/11/2020
+
+* Limpeza de código;
+* Retirada de métodos e propriedades desnecessários;
+* Transformação de classes genéricas desnecessárias em classes comuns;
+* Implementação de recursos para agilizar o desenvolvimento.
+
 **2.0 (Capuccino) 01/10/2020**
 
 * Implementação de atores (Actor);
