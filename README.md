@@ -7,7 +7,7 @@ Conjunto de classes, estruturas e ferramentas para facilitar o desenvolvimento d
 
 ## Versão
 
-**2.0.1 (Capuccino) 25/11/2020
+**2.0.1 (Capuccino) 25/11/2020**
 
 * Limpeza de código;
 * Retirada de métodos e propriedades desnecessários;
