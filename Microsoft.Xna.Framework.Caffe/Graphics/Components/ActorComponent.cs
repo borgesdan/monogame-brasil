@@ -58,11 +58,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             _Draw(gameTime, spriteBatch);
-        }
-
-        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-        }
+        }        
 
         /// <summary>Atualiza o componente.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
@@ -74,9 +70,8 @@ namespace Microsoft.Xna.Framework.Graphics
             _Update(gameTime);
         }
 
-        protected virtual void _Update(GameTime gameTime)
-        {
-        }
+        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
+        protected virtual void _Update(GameTime gameTime) { }
 
         //---------------------------------------//
         //-----         DISPOSE             -----//

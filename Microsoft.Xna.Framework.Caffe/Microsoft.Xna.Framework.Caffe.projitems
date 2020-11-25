@@ -15,13 +15,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\GhostComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IActor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IBoundsR.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IRotatedBounds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IDraw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\ITransformable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Polygon3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\AlignType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\AttackBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision\Collision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\BoxCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\BoxGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\CollisionBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Collision\CollisionResult.cs" />
@@ -47,7 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Interfaces\ISpriteBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Triangle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\LayeredScreen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Sprite\SpriteFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Screens\ScreenManager.cs" />
@@ -61,7 +62,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Extension.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
@@ -89,7 +89,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Collision\" />
     <Folder Include="$(MSBuildThisFileDirectory)Graphics\Groups\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Sprite\Groups\" />
     <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />
     <Folder Include="$(MSBuildThisFileDirectory)Groups\" />
   </ItemGroup>

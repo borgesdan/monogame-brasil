@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Representa uma entidade com animações.</summary>
+    /// <summary>Representa um ator com um grupo de animações.</summary>
     public class AnimatedActor : Actor
     {
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//                
-        private Vector2 percentage = Vector2.One;
+        private Vector2 percentage = Vector2.One;        
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -23,13 +23,9 @@ namespace Microsoft.Xna.Framework.Graphics
         public Animation CurrentAnimation { get; private set; } = null;
         /// <summary>Obtém o nome da animação ativa.</summary>
         public string CurrentName { get => CurrentAnimation.Name; }
-        /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo X. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
-        public int XRepeat { get; set; } = 0;
-        /// <summary>Obtém ou define o número de vezes em que esta entidade será desenhada na tela no eixo Y. Esta propriedade afeta no cálculo do tamanho no método UpdateBounds().</summary>
-        public int YRepeat { get; set; } = 0;
-        /// <summary>Obtém as caixas de colisão do atual frame.</summary>
+        /// <summary>Obtém as caixas de colisão do atual frame da animação corrente.</summary>
         public List<CollisionBox> CollisionBoxes { get; private set; } = new List<CollisionBox>();
-        /// <summary>Obtém as caixas de ataque do atual frame.</summary>
+        /// <summary>Obtém as caixas de ataque do atual frame da animação corrente.</summary>
         public List<AttackBox> AttackBoxes { get; private set; } = new List<AttackBox>();
         /// <summary>Obtém ou define a porcentagem de largura e altura do desenho. De 0f (0%) a 1f (100%).</summary>
         public Vector2 DrawPercentage
@@ -53,30 +49,25 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância de AnimatedActor como cópia de outro AnimatedEntity.</summary>
+        /// <summary>Inicializa uma nova instância de AnimatedActor como cópia de outro AnimatedActor.</summary>
         /// <param name="source">o ator a ser copiado.</param>
         public AnimatedActor(AnimatedActor source) : base(source)
-        {
-            //Cópia das animações.
+        {            
             source.Animations.ForEach(a => this.Animations.Add(new Animation(a)));
             //Busca do index da animação ativa.
             int index = source.Animations.FindIndex(a => a.Equals(source.CurrentAnimation));
-
             CurrentAnimation = Animations[index];
 
-            XRepeat = source.XRepeat;
-            YRepeat = source.YRepeat;
+            DrawPercentage = source.DrawPercentage;
 
             source.CollisionBoxes.ForEach(cb => CollisionBoxes.Add(cb));
             source.AttackBoxes.ForEach(ab => AttackBoxes.Add(ab));
         }
 
         /// <summary>Inicializa uma nova instância de AnimatedActor.</summary>
-        /// <param name="game">A instância atual da classe Game.</param>
+        /// <param name="game">A instância corrente da classe Game.</param>
         /// <param name="name">O nome do ator.</param>
-        public AnimatedActor(Game game, string name) : base(game, name)
-        {
-        }              
+        public AnimatedActor(Game game, string name) : base(game, name) { }
 
         //---------------------------------------//
         //-----         INDEXADOR           -----//
@@ -95,17 +86,17 @@ namespace Microsoft.Xna.Framework.Graphics
         
         protected override void _Update(GameTime gameTime)
         {               
-            if (CurrentAnimation == null)
-                return;            
+            if (CurrentAnimation != null)
+            {
+                //Coloca OldPosition e Position com os mesmos valores.
+                //Transform.SetPosition(Transform.Position);
 
-            //Coloca OldPosition e Position com os mesmos valores.
-            Transform.SetPosition(Transform.Position);
+                //Seta as propriedades
+                SetCurrentProperties();
 
-            //Seta as propriedades
-            SetCurrentProperties();
-
-            //Update da animação ativa.
-            CurrentAnimation?.Update(gameTime);            
+                //Update da animação ativa.
+                CurrentAnimation.Update(gameTime);
+            }           
 
             base._Update(gameTime);
         }
@@ -114,60 +105,15 @@ namespace Microsoft.Xna.Framework.Graphics
         private void SetCurrentProperties()
         {
             CurrentAnimation.Transform.Set(Transform);
-            CurrentAnimation.Screen = Screen;            
+            CurrentAnimation.Screen = Screen;
+            CurrentAnimation.DrawPercentage = DrawPercentage;
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            //Se a entidade não é visível
-            //Se não existe uma animação ativa            
-            if (CurrentAnimation == null)
-                return;            
-
-            if(XRepeat == 0 && YRepeat == 0)
-                CurrentAnimation?.Draw(gameTime, spriteBatch);
-            else
+        {    
+            if (CurrentAnimation != null)
             {
-                Vector2 position = Transform.Position;
-
-                for (int i = 0; i <= XRepeat; i++)
-                {
-                    Camera camera = new Camera(Game);
-
-                    if (Screen != null)
-                        camera = Screen.Camera;
-
-                    var windowWidth = Game.Window.ClientBounds.Width;
-
-                    CurrentAnimation.Transform.Position = position;
-
-                    if (CurrentAnimation.Bounds.Right > camera.X)
-                    {
-                        if (CurrentAnimation.Bounds.X < camera.X + windowWidth)
-                            CurrentAnimation?.Draw(gameTime, spriteBatch);
-                        else
-                            break;
-                    }
-
-                    for (int j = 0; j < YRepeat; j++)
-                    {
-                        var windowHeight = Game.Window.ClientBounds.Height;
-
-                        position.Y += CurrentAnimation.Transform.ScaledSize.Y;
-                        CurrentAnimation.Transform.Position = position;
-
-                        if (CurrentAnimation.Bounds.Bottom > camera.Y)
-                        {
-                            if (CurrentAnimation.Bounds.Y < camera.Y + windowHeight)
-                                CurrentAnimation?.Draw(gameTime, spriteBatch);
-                            else
-                                break;
-                        }                        
-                    }
-
-                    position.X += CurrentAnimation.Transform.ScaledSize.X;
-                    position.Y = Transform.Y;
-                }                
+                CurrentAnimation.Draw(gameTime, spriteBatch);
             }
 
             base._Draw(gameTime, spriteBatch);                    
@@ -181,20 +127,22 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(Animations.Count == 1)
             {
-                string name = Animations[0].Name;
-                ChangeAnimation(name, true);                
+                ChangeAnimation(Animations[0], true);        
                 UpdateBounds();
             }
         }
 
         /// <summary>Adiciona uma lista de animações ao ator.</summary>
-        /// <param name="animations">Uma lista de animações.</param>
+        /// <param name="animations">A lista de animações.</param>
         public void AddAnimations(params Animation[] animations)
         {
-            foreach(var a in animations)
+            if(animations != null)
             {
-                AddAnimation(a);
-            }
+                foreach (var a in animations)
+                {
+                    AddAnimation(a);
+                }
+            }            
         }
 
         /// <summary>Troca a animação ativa.</summary>
@@ -202,7 +150,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="resetAnimation">Defina True se deseja que a animação corrente será resetada.</param>
         public void ChangeAnimation(Animation animation, bool resetAnimation)
         {
-            ChangeAnimation(animation.Name, resetAnimation);
+            if(Animations.Contains(animation))
+                ChangeAnimation(animation.Name, resetAnimation);
         }
 
         /// <summary>Troca a animação ativa.</summary>
@@ -243,48 +192,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             var anms = Animations.FindAll(x => x.Name.Contains(name));
             return anms;
-        }
-
-        /// <summary>Cria uma nova instância de AnimatedActor definida como um retângulo preenchido com uma cor definida.</summary>
-        /// <param name="game">A instância atual da classe Game.</param>
-        /// <param name="name">O nome da entidade.</param>
-        /// <param name="size">O tamanho do retângulo.</param>
-        /// <param name="color">A cor do retângulo</param>
-        public static AnimatedActor CreateRectangle(Game game, string name, Point size, Color color)
-        {
-            //Texture2D texture = Sprite.GetRectangle(game, name, new Point(size.X, size.Y), color).Texture;
-            //Sprite sprite = new Sprite(game, name, texture, true);
-            Sprite sprite = Sprite.GetRectangle(game, name, new Point(size.X, size.Y), color);
-            Animation animation = new Animation(game, "default", 0);
-            animation.AddSprites(sprite);
-
-            AnimatedActor animatedEntity = new AnimatedActor(game, name);            
-            animatedEntity.AddAnimation(animation);
-
-            return animatedEntity;
-        }
-
-        /// <summary>
-        /// Cria uma nova instância de AnimatedActor definida como um retângulo transparente mas com bordas visíveis.
-        /// </summary>
-        /// <param name="game">A instância da classe Game.</param>
-        /// <param name="name">O nome da entidade.</param>
-        /// <param name="size">O tamanho do retângulo</param>
-        /// <param name="borderWidth">O tamanho da borda.</param>
-        /// <param name="borderColor">A cor da borda.</param>
-        public static AnimatedActor CreateRectangle2(Game game, string name, Point size, int borderWidth, Color borderColor)
-        {
-            //Texture2D texture = Sprite.GetRectangle2(game, name, new Point(size.X, size.Y), borderWidth, borderColor).Texture;
-            //Sprite sprite = new Sprite(game, name, texture, true);
-            Sprite sprite = Sprite.GetRectangle2(game, name, new Point(size.X, size.Y), borderWidth, borderColor);
-            Animation animation = new Animation(game, "default", 0);
-            animation.AddSprites(sprite);
-
-            AnimatedActor animatedEntity = new AnimatedActor(game, name);            
-            animatedEntity.AddAnimation(animation);
-
-            return animatedEntity;
-        }
+        }                
 
         /// <summary>Atualiza os limites da entidade.</summary>
         public override void UpdateBounds()
@@ -297,16 +205,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(CurrentAnimation != null)
             {
-                //cbw = ActiveAnimation.Frame.Width * Transform.Scale.X;
-                //cbh = ActiveAnimation.Frame.Height * Transform.Scale.Y;
-
                 cbw = CurrentAnimation.CurrentFrame.Width;
-                cbh = CurrentAnimation.CurrentFrame.Height;
-
-                if (XRepeat > 0)
-                    cbw *= XRepeat + 1;
-                if (YRepeat > 0)
-                    cbh *= YRepeat + 1;
+                cbh = CurrentAnimation.CurrentFrame.Height;                
             }
 
             Transform.Size = new Point(cbw, cbh);
@@ -314,22 +214,14 @@ namespace Microsoft.Xna.Framework.Graphics
             //O tamanho da entidade e sua posição.
             int x = (int)Transform.X;
             int y = (int)Transform.Y;
-            //int w = Transform.Width;
-            //int h = Transform.Height;
             int w = (int)Transform.ScaledSize.X;
             int h = (int)Transform.ScaledSize.Y;
 
             //A origem do frame.
-            Vector2 s_f_oc;
+            Vector2 s_f_oc = Vector2.Zero;
 
             if (CurrentAnimation != null && CurrentAnimation.CurrentSprite != null)
-            {
-                s_f_oc = CurrentAnimation.CurrentSprite.Boxes[CurrentAnimation.FrameIndex].SpriteFrame.Align;
-            }
-            else
-            {
-                s_f_oc = Vector2.Zero;
-            }
+                s_f_oc = CurrentAnimation.CurrentSprite.Boxes[CurrentAnimation.CurrentFrameIndex].SpriteFrame.Align;
 
             //A soma de todas as origens.
             var totalOrigin = ((Transform.Origin + s_f_oc) * Transform.Scale);
@@ -337,7 +229,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
 
-            Bounds = new Rectangle(recX, recY, w, h);            
+            bounds = new Rectangle(recX, recY, w, h);            
             
             //Adição dos boxes de colisão e ataque
             CollisionBoxes.Clear();
@@ -355,7 +247,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 AttackBoxes.Add(relative);
             }
 
-            //Criação do polígono (BoundsR).
+            //Criação dos limites rotacionados.
             BoundsR = Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);
 
             base.UpdateBounds();

@@ -61,12 +61,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Atualiza a camada.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public abstract void Update(GameTime gameTime);
+        public void Update(GameTime gameTime)
+        {
+            if (Enable.IsEnabled)
+                _Update(gameTime);
+        }
 
         /// <summary>Desenha a camada.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
-        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);         
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (Enable.IsVisible)
+                _Draw(gameTime, spriteBatch);
+        }
+        
+        public virtual void _Update(GameTime gameTime) { }
+        public virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         //---------------------------------------//
         //-----         DISPOSE             -----//

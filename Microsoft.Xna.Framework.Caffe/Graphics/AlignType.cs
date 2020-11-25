@@ -2,7 +2,7 @@
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    /// <summary>Enumeração que representa o tipo de alinhamento na tela de um objeto.</summary>
+    /// <summary>Enumeração que representa o tipo de alinhamento na tela de um ator.</summary>
     public enum AlignType : byte
     {
         Top                 = 0,

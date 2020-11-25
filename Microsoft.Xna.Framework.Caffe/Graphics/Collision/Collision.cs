@@ -37,9 +37,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public static CollisionResult ActorCollision(Actor actor1, Actor actor2)
         {
-            actor1.UpdateBounds();
-            actor2.UpdateBounds();
-
             CollisionResult result = new CollisionResult
             {
                 Type = CollisionType.None,

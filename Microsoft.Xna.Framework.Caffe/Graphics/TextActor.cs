@@ -12,8 +12,6 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
 
-        StringBuilder builder = new StringBuilder();
-
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
@@ -22,16 +20,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public SpriteFont Font { get; set; } = null;
         
         /// <summary>Obtém ou define o texto a ser exibido atráves de uma instância da classe StringBuilder.</summary>
-        public StringBuilder Text
-        {
-            get => builder;
-            set
-            {
-                builder = value;                
-                UpdateBounds();
-            }
-                
-        }
+        public StringBuilder Text { get; set; }
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -103,8 +92,6 @@ namespace Microsoft.Xna.Framework.Graphics
         
         protected override void _Update(GameTime gameTime)
         {
-            UpdateBounds();
-
             base._Update(gameTime);
         }
         
@@ -148,7 +135,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x - totalOrigin.X);
             int recY = (int)(y - totalOrigin.Y);
 
-            Bounds = new Rectangle(recX, recY, w, h);
+            bounds = new Rectangle(recX, recY, w, h);
 
             //Calcula o BoundsR. 
             Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);

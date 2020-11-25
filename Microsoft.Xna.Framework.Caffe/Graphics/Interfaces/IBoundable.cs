@@ -7,7 +7,5 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         /// <summary>Obtém o retângulo que representa os limites da objeto.</summary>
         Rectangle Bounds { get; }
-        /// <summary>Atualiza os limites da objeto.</summary>
-        void UpdateBounds();
     }
 }

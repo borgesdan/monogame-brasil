@@ -78,13 +78,8 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         FUNÇÕES             -----//
         //---------------------------------------//
 
-        public override void Update(GameTime gameTime)
+        public override void _Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
-
-            //base.SetDefaultView();
-
             if (InfinityX)
             {
                 //Só recebe o valor da posição da câmera no eixo X.
@@ -142,6 +137,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             Actor.Update(gameTime);
+            base._Update(gameTime);
         }
 
         private Camera CalcCamera()
@@ -284,11 +280,8 @@ namespace Microsoft.Xna.Framework.Graphics
             return c;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
             Viewport view = Screen.Game.GraphicsDevice.Viewport;
 
             //Desenhamos na tela.
@@ -338,6 +331,8 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             spriteBatch.End();
+
+            base._Draw(gameTime, spriteBatch);
         }
     }
 }

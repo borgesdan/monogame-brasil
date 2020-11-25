@@ -7,9 +7,10 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Representa uma entidade que expõe acesso a transformações e outras propriedades de jogo.
     /// </summary>
-    public abstract class Actor : IActor<Actor>
+    public abstract class Actor : IActor
     {
-        bool offView = false;
+        private bool offView = false;
+        protected Rectangle bounds = Rectangle.Empty;
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -17,38 +18,33 @@ namespace Microsoft.Xna.Framework.Graphics
         
         /// <summary>Obtém ou define a tela a qual a entidade está associada.</summary>
         public Screen Screen { get; set; } = null;
-        /// <summary>
-        /// Obtém ou define o nome do ator.
-        /// </summary>
+        /// <summary>Obtém ou define o nome do ator.</summary>
         public string Name { get; set; } = string.Empty;
-        /// <summary>
-        /// Obtém a instância corrente da classe Game.
-        /// </summary>
+        /// <summary>Obtém a instância corrente da classe Game.</summary>
         public Game Game { get; protected set; } = null;
-        /// <summary>
-        /// Obtém ou define a disponibilidade do ator.
-        /// </summary>
+        /// <summary>Obtém ou define a disponibilidade do ator.</summary>
         public EnableGroup Enable { get; set; } = new EnableGroup();
-        /// <summary>
-        /// Obtém os limites do ator.
-        /// </summary>
-        public Rectangle Bounds { get; set; }
-        /// <summary>
-        /// Obtém ou define as transformações do ator.
-        /// </summary>
-        public TransformGroup<Actor> Transform { get; set; } = null;
-        /// <summary>
-        /// Obtém ou define os limites rotacionados do ator.
-        /// </summary>
+        /// <summary>Obtém os limites do ator.</summary>
+        public Rectangle Bounds 
+        { 
+            get 
+            {
+                UpdateBounds();
+                return bounds;
+            }
+        }
+        /// <summary>Obtém ou define as transformações do ator.</summary>
+        public TransformGroup Transform { get; set; } = new TransformGroup();
+        /// <summary>Obtém ou define os limites rotacionados do ator.</summary>
         public Polygon BoundsR { get; protected set; } = new Polygon();
-        /// <summary>
-        /// Obtém ou define os componentes do ator.
-        /// </summary>
+        /// <summary>Obtém ou define os componentes do ator.</summary>
         public ComponentGroup Components { get; set; } = null;
-        /// <summary>
-        /// Obtém ou define se o ator está habilitado a ser atualizado fora do campo de visão da câmera ou do Viewport.
-        /// </summary>
+        /// <summary>Obtém ou define se o método Update será chamado mesmo se o ator estiver fora do campo de visão.</summary>
         public bool UpdateOffView { get; set; } = true;
+        /// <summary>Obtém ou define se o método Draw será chamado mesmo se o ator estiver fora do campo de visão.</summary>
+        public bool DrawOffView { get; set; } = true;
+        /// <summary>Obtém se o ator está fora dos limites da tela.</summary>
+        public bool OffView { get => offView; }
 
         //---------------------------------------//
         //-----         EVENTOS             -----//
@@ -67,22 +63,23 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             this.Name = name;
             this.Game = game;
-            this.Components = new ComponentGroup(this);
-            this.Transform = new TransformGroup<Actor>(this);            
+            this.Components = new ComponentGroup();            
         }
 
         protected Actor(Actor source)
         {
             this.Screen = source.Screen;
             this.Name = source.Name;
-            this.Game = source.Game;
-            this.Bounds = source.Bounds;
+            this.Game = source.Game;            
+            this.bounds = source.bounds;
             this.BoundsR = new Polygon(source.BoundsR);
-            this.Components = new ComponentGroup(this, source.Components);
+            this.Components = new ComponentGroup(source.Components);
             this.Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
-            this.Transform = new TransformGroup<Actor>(this, source.Transform);
+            this.Transform = new TransformGroup(source.Transform);
             this.OnUpdate = source.OnUpdate;
             this.OnDraw = source.OnDraw;
+            this.UpdateOffView = source.UpdateOffView;
+            this.DrawOffView = source.DrawOffView;
         }
 
         //---------------------------------------//
@@ -96,21 +93,18 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="spriteBatch">A instância do SpriteBatch para desenho.</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
-
-            Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
-            
-            if(!offView)
-                _Draw(gameTime, spriteBatch);
-
-            OnDraw?.Invoke(this, gameTime, spriteBatch);
-            
-            Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
-        }
-
-        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
+            if (Enable.IsVisible)
+            {
+                //Se o ator está dentro da dela, prossegue
+                //se não, se é passível de desenho mesmo assim, prossegue
+                if (!offView || DrawOffView)
+                {
+                    Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
+                    _Draw(gameTime, spriteBatch);
+                    OnDraw?.Invoke(this, gameTime, spriteBatch);
+                    Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
+                }                
+            }
         }
 
         /// <summary>
@@ -118,39 +112,30 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <param name="gameTime">Obtém acesso aos tempos de jogo.</param>
         public void Update(GameTime gameTime)
-        {
-            //Não prossegue caso o ator não está disponível
-            if (!Enable.IsEnabled)
-                return;
-
-            //Atualiza os limites do ator e verifica se ele se encontra dentro do campo de visão da tela
-            UpdateBounds();
-            CheckOffView();            
-
-            //Se não é para atualizar caso o ator não esteja dentro do campo de visão e 
-            //ele se encontra nesse estado então não prossegue.
-            if (!UpdateOffView && offView)
-                return;
-
-            _Update(gameTime);
-            OnUpdate?.Invoke(this, gameTime);
-
-            Transform.Update();            
-            Components.Update(gameTime);
-            
-            UpdateBounds();
+        {            
+            if (Enable.IsEnabled)
+            {        
+                CheckOffView();                
+                
+                //Se o ator está dentro da dela, prossegue
+                //se não, se é passível de atualização mesmo assim, prossegue
+                if(!offView || UpdateOffView)
+                {
+                    _Update(gameTime);
+                    OnUpdate?.Invoke(this, gameTime);
+                    Transform.Update();
+                    Components.Update(gameTime);
+                }
+            }
         }
 
-        protected virtual void _Update(GameTime gameTime)
-        {
-        }
+        protected virtual void _Update(GameTime gameTime) { }
+        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         /// <summary>
         /// Atualiza os limites do ator.
         /// </summary>
-        public virtual void UpdateBounds()
-        {            
-        }
+        public virtual void UpdateBounds() { }
 
         /// <summary>
         /// Obtém o conteúdo de cores do ator.
@@ -163,7 +148,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="frame">O recorte da textura.</param>
         /// <param name="data">O array de cores recebido da textura.</param>
         /// <param name="effects">Os efeitos a serem observados.</param>
-        public static Color[] GetData(Rectangle frame, Color[] data, SpriteEffects effects)
+        protected static Color[] GetData(Rectangle frame, Color[] data, SpriteEffects effects)
         {
             if (effects == SpriteEffects.None)
             {
@@ -249,9 +234,9 @@ namespace Microsoft.Xna.Framework.Graphics
         protected void CheckOffView()
         {
             if (Screen != null && Screen.Camera != null)
-                offView = !Util.CheckFieldOfView(Screen.Camera, this.Bounds);
+                offView = !Util.CheckFieldOfView(Screen.Camera, Bounds);
             else
-                offView = !Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, this.Bounds);
+                offView = !Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, Bounds);
         }
 
         //---------------------------------------//

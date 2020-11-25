@@ -26,14 +26,20 @@ namespace Microsoft.Xna.Framework.Graphics
         public StaticLayer(Screen screen, params Actor[] actors) : base(screen)
         {
             if (actors != null)
-                Actors.AddRange(actors);
+            {
+                foreach (var a in actors)
+                {
+                    a.UpdateBounds();
+                    Actors.Add(a);
+                }
+            }
         }
 
-        /// <summary>
-        /// Inicializa uma nova instância da classe StaticLayer como cópia de outro StaticLayer.
-        /// </summary>
-        /// <param name="source">A instância a ser copiada.</param>
-        public StaticLayer(StaticLayer source) : base(source)
+            /// <summary>
+            /// Inicializa uma nova instância da classe StaticLayer como cópia de outro StaticLayer.
+            /// </summary>
+            /// <param name="source">A instância a ser copiada.</param>
+            public StaticLayer(StaticLayer source) : base(source)
         {
             source.Actors.ForEach(a => this.Actors.Add(a));
         }
@@ -43,7 +49,7 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//        
 
         ///<inheritdoc/>
-        public override void Update(GameTime gameTime)
+        public override void _Update(GameTime gameTime)
         {
             if (!Enable.IsEnabled)
                 return;
@@ -52,11 +58,13 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if(Actors[i].Enable.IsEnabled)
                     Actors[i].Update(gameTime);
-            }                
+            }
+
+            base._Update(gameTime);
         }
 
         ///<inheritdoc/>
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!Enable.IsVisible)
                 return;            
@@ -71,6 +79,8 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             spriteBatch.End();
+
+            base._Draw(gameTime, spriteBatch);
         }
     }
 }

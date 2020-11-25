@@ -9,29 +9,20 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public class ComponentGroup : IUpdateDrawable
     {
-        /// <summary>Obtém o ator o qual esse componente está associado.</summary>
-        public Actor Actor { get; private set; } = default;
         /// <summary>Obtém ou define a lista de componentes.</summary>
         public List<ActorComponent> List { get; } = new List<ActorComponent>();
 
         /// <summary>
         /// Inicializa uma nova instância do ComponentGroup.
         /// </summary>
-        /// <param name="actor">O ator o qual esse componente está associado.</param>
-        public ComponentGroup(Actor actor)
-        {
-            Actor = actor;
-        }
+        public ComponentGroup() { }
 
         /// <summary>
         /// Inicializa uma nova instância como cópia de outro ComponentGroup.
         /// </summary>
-        /// <param name="destination">O ator a ser associada a esse componente.</param>
         /// <param name="source">O ComponentGroup a ser copiado.</param>
-        public ComponentGroup(Actor destination, ComponentGroup source)
-        {
-            this.Actor = destination;
-            
+        public ComponentGroup(ComponentGroup source)
+        {            
             foreach(ActorComponent c in source.List)
             {
                 var clone = Util.Clone(c, c);
@@ -120,12 +111,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             //Atualiza os componentes.
             foreach (var component in List)
-            {
-                if(component.Enable.IsEnabled)
-                {
-                    component.Update(gameTime);
-                }                
-            }
+                component.Update(gameTime);
         }
 
         /// <summary>Desenha o componente.</summary>
@@ -134,12 +120,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             foreach (var component in List)
-            {
-                if (component.Enable.IsVisible)
-                {
-                    component.Draw(gameTime, spriteBatch);
-                }
-            }
+                component.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Desenha o componente.</summary>
@@ -150,11 +131,8 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             foreach (var component in List)
             {
-                if (component.Enable.IsVisible)
-                {
-                    if(component.Priority == priority)
-                        component.Draw(gameTime, spriteBatch);
-                }
+                if (component.Priority == priority)
+                    component.Draw(gameTime, spriteBatch);
             }
         }
     }

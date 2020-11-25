@@ -7,8 +7,9 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>
     /// Expõe acesso as transformações de um objeto, como posição, velocidade, rotação, entre outros.
     /// </summary>
-    public sealed class TransformGroup<T> where T : IBoundsable
+    public sealed class TransformGroup
     {
+        //Essa estrutura recebe os valores calculados das origens disponíveis em cada canto do limite do ator
         struct OriginValues
         {
             public Vector2 LeftTop;
@@ -23,7 +24,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public Vector2 Center;
             public Vector2 Bottom;
 
-            public OriginValues(TransformGroup<T> transform)
+            public OriginValues(TransformGroup transform)
             {
                 LeftTop = Vector2.Zero;
                 Left = new Vector2(0, transform.Height / 2);
@@ -48,10 +49,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
-        //---------------------------------------//
-
-        /// <summary>Obtém o define o objeto a qual este grupo está atrelado.</summary>
-        public T Owner { get; set; } = default;
+        //---------------------------------------//        
 
         /// <summary>Obtém a posição anterior a atualização da posição atual.</summary>
         public Vector2 OldPosition { get => _oldPosition; }
@@ -125,20 +123,6 @@ namespace Microsoft.Xna.Framework.Graphics
         public float ScaledWidth { get { return ScaledSize.X; } }
         /// <summary>Obtém a altura escalada da entidade.</summary>
         public float ScaledHeight { get { return ScaledSize.Y; } }
-        /// <summary>Obtém a direção da entidade.</summary>
-        public Vector2 Direction
-        {
-            get
-            {
-                Vector2 diference = Position - OldPosition;
-
-                if (diference != Vector2.Zero)
-                    diference.Normalize();
-
-                return diference;
-            }
-        }
-
         /// <summary>Obtém ou define a origem para desenho de cada sprite.</summary>
         public Vector2 Origin { get; set; } = Vector2.Zero;
         /// <summary>Obtém ou define a origem no eixo X.</summary>
@@ -152,30 +136,16 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância de TransformGroup.</summary>
-        /// <param name="owner">O objeto a ser associada a este grupo.</param>
-        public TransformGroup(T owner)
-        {
-            Owner = owner ?? throw new System.ArgumentNullException(nameof(owner));
-        }
+        /// <summary>Inicializa uma nova instância de TransformGroup.</summary>        
+        public TransformGroup() { }
 
         /// <summary>
         /// Inicializa uma nova instância como cópia de outra instância de TransformGroup.
         /// </summary>
-        /// <param name="destination">A entidade a ser associada a este grupo.</param>
         /// <param name="source">O TransformGroup a ser copiado.</param>
-        public TransformGroup(T destination, TransformGroup<T> source)
+        public TransformGroup(TransformGroup source)
         {
-            this.Owner = destination;
-            this.Size = source.Size;
-            this.Color = source.Color;
-            this.Rotation = source.Rotation;
-            this.Scale = source.Scale;
-            this.SpriteEffects = source.SpriteEffects;
-            this.Velocity = source.Velocity;
-            this.Position = source.Position;
-            this.Origin = source.Origin;
-            this.LayerDepth = source.LayerDepth;            
+            Set(source);
         }
 
         //---------------------------------------//
@@ -192,18 +162,22 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         public Matrix GetMatrix()
         {
+            //return Matrix.CreateTranslation(new Vector3(-Origin.X, -Origin.Y, 0))
+            //    * Matrix.CreateRotationZ(Rotation)
+            //    * Matrix.CreateScale(new Vector3(Scale, 1))                 
+            //    * Matrix.CreateTranslation(new Vector3(Position, 0));
+
             return Matrix.CreateTranslation(new Vector3(-Origin.X, -Origin.Y, 0))
-                * Matrix.CreateRotationZ(Rotation)
-                * Matrix.CreateScale(new Vector3(Scale, 1))                 
+                * Matrix.CreateScale(new Vector3(Scale, 1))
+                * Matrix.CreateRotationZ(Rotation)                
                 * Matrix.CreateTranslation(new Vector3(Position, 0));
-        }        
+        }
 
         /// <summary>
         /// Define as propriedades deste grupo como cópia de outro TransformGroup.
-        /// </summary>
-        /// <typeparam name="T2">T2 é um classe que implementa a interface IBoundsable.</typeparam>
+        /// </summary>        
         /// <param name="source">A instância para cópia das propriedades.</param>
-        public void Set<T2>(TransformGroup<T2> source) where T2 : IBoundsable
+        public void Set(TransformGroup source)
         {
             this.Size = source.Size;
             this.Color = source.Color;
@@ -217,7 +191,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Atualiza os cálculos necessários do TransformGroup e invoca o método UpdateBounds do objeto associado.
+        /// Atualiza os cálculos de velocidade do TransformGroup.
         /// </summary>
         public void Update()
         {
@@ -226,14 +200,12 @@ namespace Microsoft.Xna.Framework.Graphics
             if (Xv != 0)
                 X += Velocity.X;
             if (Yv != 0)
-                Y += Velocity.Y;            
-
-            Owner.UpdateBounds();
+                Y += Velocity.Y;
         }
 
         //Velocidade
 
-        /// <summary>Inverte a velocidade nos eixos X e Y e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Inverte a velocidade nos eixos X e Y.</summary>
         public Vector2 InvertVelocity()
         {
             InvertVelocityX();
@@ -241,31 +213,27 @@ namespace Microsoft.Xna.Framework.Graphics
 
             return Velocity;
         }
-        /// <summary>Inverte a velocidade no eixo X e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Inverte a velocidade no eixo X.</summary>
         public Vector2 InvertVelocityX()
         {
             Xv *= -1;
-            Owner.UpdateBounds();
-
             return Velocity;
         }
-        /// <summary>Inverte a velocidade no eixo Y e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Inverte a velocidade no eixo Y.</summary>
         public Vector2 InvertVelocityY()
         {
             Yv *= -1;
-            Owner.UpdateBounds();
-
             return Velocity;
         }
 
-        /// <summary>Define a velocidade e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a velocidade.</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>
         public void SetVelocity(float velocity)
         {
             SetVelocity(new Vector2(velocity));
         }
 
-        /// <summary>Define a velocidade e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a velocidade.</summary>
         /// <param name="x">A velocidade no eixo X.</param>
         /// <param name="y">A velocidade no eixo Y.</param>
         public void SetVelocity(float x, float y)
@@ -273,16 +241,15 @@ namespace Microsoft.Xna.Framework.Graphics
             SetVelocity(new Vector2(x, y));
         }
 
-        /// <summary>Define a velocidade e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a velocidade.</summary>
         /// <param name="velocity">A velocidade no eixo X e Y.</param>
         public void SetVelocity(Vector2 velocity)
         {
             Velocity = velocity;
-            Owner.UpdateBounds();
         }
 
         /// <summary>
-        /// Define a resistência à velocidade e invoca o método UpdateBounds do objeto associado.
+        /// Define a resistência à velocidade.
         /// </summary>
         /// <param name="x">Resistência no eixo X.</param>
         /// <param name="y">Resistência no eixo Y.</param>
@@ -292,17 +259,16 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Define a resistência à velocidade e invoca o método UpdateBounds do objeto associado.
+        /// Define a resistência à velocidade.
         /// </summary>
         /// <param name="resistance">O vetor com os valores da resistência.</param>
         public void SetVResistance(Vector2 resistance)
         {
             VResistance = resistance;
-            Owner.UpdateBounds();
         }
 
         /// <summary>
-        /// Define a resistência à velocidade e invoca o método UpdateBounds do objeto associado.
+        /// Define a resistência à velocidade.
         /// </summary>
         /// <param name="resistance">O vetor com os valores da resistência.</param>
         /// <param name="velocity">O valor da velocidade caso precise redefiní-la.</param>
@@ -310,14 +276,12 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             VResistance = resistance;
             SetVelocity(velocity);
-
-            Owner.UpdateBounds();
         }        
 
         /// <summary>
         /// Define a velocidade informando uma direção e a força da velocidade.
         /// </summary>
-        /// <param name="direction">a direção desejada (pode ser acumulada com o operador |)</param>
+        /// <param name="direction">A direção desejada (pode ser acumulada com o operador |)</param>
         /// <param name="force">A força aplicada à velocidade (valor padrão 1)</param>
         public void SetVelocityDirection(Direction2D direction, float force)
         {
@@ -343,14 +307,14 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //Posição
 
-        /// <summary>Define a posição e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a posição.</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
         public void SetPosition(Point position)
         {
             SetPosition(position.X, position.Y);
         }
 
-        /// <summary>Define a posição e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a posição.</summary>
         /// <param name="position">A posição no eixo X e Y.</param>
         public void SetPosition(Vector2 position) => SetPosition(position.X, position.Y);
 
@@ -361,16 +325,12 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             X = x;
             Y = y;
-
-            Owner.UpdateBounds();
         }
 
-        /// <summary>Define a posição do objeto relativa a um Viewport e invoca o método UpdateBounds do objeto associado.</summary>   
+        /// <summary>Define a posição do objeto relativa a um Viewport.</summary>   
         /// <param name="align">O tipo de alinhamento da tela.</param>
         public void SetPosition(AlignType align, Viewport viewport)
         {
-            Owner.UpdateBounds();
-
             var view = viewport;
             SetPosition(view.X, view.Y);
 
@@ -381,25 +341,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
             _oldPosition = tempPosition;
             _position = tempPosition;
-
-            Owner.UpdateBounds();
         }
 
         /// <summary>
-        /// Incrementa a posição do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Incrementa a posição do objeto.
         /// </summary>
         /// <param name="x">Incremento no eixo X.</param>
         /// <param name="y">Incremento no eixo Y.</param>
         public void Move(float x, float y) => Move(new Vector2(x, y));
 
         /// <summary>
-        /// Incrementa a posição do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Incrementa a posição do objeto.
         /// </summary>
         /// <param name="amount">A quantidade de posições a ser incrementada.</param>
         public void Move(Point amount) => Move(amount.ToVector2());
 
         /// <summary>
-        /// Incrementa a posição do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Incrementa a posição do objeto.
         /// </summary>
         /// <param name="amount">A quantidade de posições a ser incrementada.</param>
         public void Move(Vector2 amount)
@@ -408,76 +366,70 @@ namespace Microsoft.Xna.Framework.Graphics
                 X += amount.X;
             if (amount.Y != 0)
                 Y += amount.Y;
-
-            Owner.UpdateBounds();
         }
 
         //Escala
 
-        /// <summary>Define a escala e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a escala.</summary>
         /// <param name="scale">A escala no eixo X e Y simultaneamente.</param>
         public void SetScale(float scale) => Scale = new Vector2(scale);
 
-        /// <summary>Define a escala e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a escala.</summary>
         /// <param name="x">A escala no eixo X.</param>
         /// <param name="y">A escala no eixo Y.</param>
         public void SetScale(float x, float y) => Scale = new Vector2(x, y);
 
-        /// <summary>Define a escala e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a escala.</summary>
         /// <param name="velocity">A escala no eixo X e Y.</param>
         public void SetScale(Vector2 scale)
         {
             Scale = scale;
-            Owner.UpdateBounds();
         }
 
         //Rotação
 
-        /// <summary>Define a rotação em graus e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a rotação em graus.</summary>
         /// <param name="degrees">O grau da rotação</param>
         public void SetRotationD(float degrees) => SetRotationR(MathHelper.ToRadians(degrees));
 
-        /// <summary>Define a rotação em radianos e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Define a rotação em radianos.</summary>
         /// <param name="degrees">O grau da rotação</param>
         public void SetRotationR(float radians) 
         { 
             Rotation = radians;
-            Owner.UpdateBounds();
         }
 
-        /// <summary>Incrementa a rotação em graus e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Incrementa a rotação em graus.</summary>
         /// <param name="degrees">O grau da rotação</param>
         public void RotateD(float degrees) => RotateR(MathHelper.ToRadians(degrees));
 
-        /// <summary>Incremente a rotação em radianos e invoca o método UpdateBounds do objeto associado.</summary>
+        /// <summary>Incremente a rotação em radianos.</summary>
         /// <param name="degrees">O grau da rotação</param>
         public void RotateR(float radians) 
         { 
             Rotation += radians;
-            Owner.UpdateBounds();
         }
 
         //Origem
 
         /// <summary>
-        /// Define a origem do desenho e da rotação do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Define a origem do desenho e da rotação do objeto.
         /// </summary>
         /// <param name="x">O valor no eixo X.</param>
         /// <param name="y">O valor no eixo Y</param>
         public void SetOrigin(float x, float y) => SetOrigin(new Vector2(x, y));
 
         /// <summary>
-        /// Define a origem do desenho e da rotação do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Define a origem do desenho e da rotação do objeto.
         /// </summary>
         /// <param name="origin">Os valores nos eixos X e Y.</param>
         public void SetOrigin(Vector2 origin)
         {
             Origin = origin;
-            Owner.UpdateBounds();
         }
 
         /// <summary>
-        /// Define a origem do desenho e da rotação do objeto e invoca o método UpdateBounds do objeto associado.
+        /// Define a origem do desenho e da rotação do objeto.
         /// </summary>
         /// <param name="align">A posição da origem informando o alinhamento.</param>
         public void SetOrigin(AlignType align)
@@ -512,13 +464,10 @@ namespace Microsoft.Xna.Framework.Graphics
                     Origin = GetOrigins().Bottom;
                     break;
             }
-
-            Owner.UpdateBounds();
         }
         
         private OriginValues GetOrigins()
         {
-            Owner.UpdateBounds();
             return new OriginValues(this);
         }
     }

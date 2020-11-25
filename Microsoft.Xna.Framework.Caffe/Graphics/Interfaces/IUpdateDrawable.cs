@@ -3,7 +3,5 @@
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>Representa um objeto desenhável e atualizável.</summary>
-    public interface IUpdateDrawable : IDraw, IUpdate
-    {               
-    }
+    public interface IUpdateDrawable : IDraw, IUpdate { }
 }

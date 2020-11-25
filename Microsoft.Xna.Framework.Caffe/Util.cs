@@ -14,42 +14,6 @@ namespace Microsoft.Xna.Framework
             Vector2 sSize = new Vector2(size.X * scale.X, size.Y * scale.Y);
             return sSize;
         } 
-        
-        ///// <summary>
-        ///// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
-        ///// </summary>
-        ///// <param name="game">A instância atual classe Game.</param>
-        ///// <param name="camera">O objeto câmera a ser usado para os devidos cálculos.</param>
-        ///// <param name="bounds">Os limites do objeto.</param>
-        //public static bool CheckFieldOfView(Game game, Camera camera, Rectangle bounds)
-        //{
-        //    var x = camera.X;
-        //    var y = camera.Y;
-        //    var w = game.GraphicsDevice.Viewport.Width;
-        //    var h = game.GraphicsDevice.Viewport.Height;
-
-        //    if (camera.Zoom != 1)
-        //    {
-        //        if (camera.Zoom < 1)
-        //        {
-        //            w = (int)(w * (camera.Zoom * 100));
-        //            h = (int)(h * (camera.Zoom * 100));
-        //        }                 
-
-        //        if (camera.Zoom > 1)
-        //        {
-        //            w = (int)(w * (camera.Zoom / 100));
-        //            h = (int)(h * (camera.Zoom / 100));
-        //        }                     
-        //    }                
-
-        //    Viewport visible_view = new Viewport((int)x, (int)y, w, h);
-
-        //    if (visible_view.Bounds.Intersects(bounds))
-        //        return true;
-        //    else
-        //        return false;
-        //}
 
         /// <summary>
         /// Verifica se os limites de um ator se encontram dentro do Viewport.
@@ -83,7 +47,7 @@ namespace Microsoft.Xna.Framework
                 total.X += (int)camera.X;
                 total.Y += (int)camera.Y;
 
-                Rectangle cbounds = camera.GetBounds();
+                Rectangle cbounds = camera.Bounds;
 
                 total.Width += cbounds.Width;
                 total.Height += cbounds.Height;
@@ -92,17 +56,7 @@ namespace Microsoft.Xna.Framework
             }
             else
                 return false;
-        }
-
-        ///// <summary>
-        ///// Calcula se os limites de um objeto se encontram no espaço de desenho da janela de jogo.
-        ///// </summary>
-        ///// <param name="screen">A tela a ser verificada.</param>
-        ///// <param name="bounds">Os limites do objeto.</param>
-        //public static bool CheckFieldOfView(Screen screen, Rectangle bounds)
-        //{
-        //    return CheckFieldOfView(screen.Game, screen.Camera, bounds);
-        //}
+        }        
 
         /// <summary>
         /// Calcula o BoundsR (os limites de um retângulo rotacionado) de um objeto.
@@ -110,7 +64,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="transform">O objeto Transform a ser usado para cálculo</param>
         /// <param name="totalOrigin">A origem para efeitos de cálculos.</param>
         /// <param name="bounds">Os limites do objeto.</param>
-        public static Polygon CreateRotatedBounds<T>(TransformGroup<T> transform, Vector2 totalOrigin, Rectangle bounds) where T : IBoundsable
+        public static Polygon CreateRotatedBounds(TransformGroup transform, Vector2 totalOrigin, Rectangle bounds)
         {
             Polygon boundsR = new Polygon();
             

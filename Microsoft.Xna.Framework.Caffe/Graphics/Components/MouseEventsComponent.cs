@@ -14,7 +14,7 @@ namespace Microsoft.Xna.Framework.Graphics
         private MouseState state;
         private bool mouseOn = false;
 
-        //Double Clicl;
+        //Double Click;
         private float dclickTime = 0;
         private short clicks = 0;
 
@@ -75,12 +75,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Screen screen = Screen;
             old = state;
             state = Mouse.GetState();
-            bool isVisible = true;
-
-            //if (screen != null)
-            //    isVisible = Util.CheckFieldOfView(screen, bounds);
-            //else
-            //    isVisible = Util.CheckFieldOfView(Actor.Game, new Camera(Actor.Game), bounds);
+            bool isVisible = !Actor.OffView;
 
             if (isVisible)
             {

@@ -195,11 +195,36 @@ namespace Microsoft.Xna.Framework
         /// <summary>
         /// Define os pontos do polígono.
         /// </summary>
+        /// <param name="points">Define os pontos através de uma lista de pontos.</param>
+        public void Set(params Point[] points)
+        {
+            Points.Clear();
+
+            foreach (var p in points)
+            {
+                Points.Add(p.ToVector2());
+            }
+
+            BuildEdges();
+        }
+
+        /// <summary>
+        /// Define os pontos do polígono.
+        /// </summary>
         /// <param name="polygon">Define os pontos atráves de uma cópia de um polígono.</param>
         public void Set(Polygon polygon)
         {
-            Points = polygon.Points;
+            polygon.Points.ForEach(p => Points.Add(p));
             Edges = polygon.Edges;
+        }
+
+        /// <summary>
+        /// Define os pontos do polígono.
+        /// </summary>
+        /// <param name="rectangle">Define os pontos através de um retângulo rotacionado.</param>
+        public void Set(RotatedRectangle rotatedRectangle)
+        {            
+            Set(rotatedRectangle.P1, rotatedRectangle.P2, rotatedRectangle.P3, rotatedRectangle.P4);
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿// Danilo Borges Santos, 2020.
 
-using System;
-
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
     /// Estrutura que representa uma projeção de câmera no desenho 2D.
     /// </summary>
-    public class Camera
+    public class Camera : IBoundsable
     {
         private Game game = null;
 
@@ -26,6 +24,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Obtém ou define a posição da câmera.</summary>
         public Vector2 Position { get => new Vector2(X, Y); set { X = value.X; Y = value.Y; } }
+        /// <summary>Obtém o tamanho total do campo de exibição da câmera.</summary> 
+        public Rectangle Bounds { get => new Rectangle(Position.ToPoint(), game.GraphicsDevice.Viewport.Bounds.Size); }        
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -49,12 +49,12 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         /// <summary>
-        /// Inicializas uma nova instância da classe Câmera.
+        /// Inicializa uma nova instância da classe Camera.
         /// </summary>
         public Camera(Game game) : this(game, 0, 0, 1f) { }
 
         /// <summary>
-        /// Inicializa uma noa instância da classe Camera como cópia de outra instância.
+        /// Inicializa uma nova instância da classe Camera como cópia de outra instância.
         /// </summary>
         /// <param name="camera">Instância a ser copiada.</param>
         public Camera(Camera camera)
@@ -67,16 +67,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         //---------------------------------------//
         //-----         FUNÇÕES             -----//
-        //---------------------------------------//        
+        //---------------------------------------//                
         
-        /// <summary>
-        /// Obtém o tamanho total do campo de exibição da câmera.
-        /// </summary>        
-        public Rectangle GetBounds()
-        {
-            return new Rectangle(Position.ToPoint(), game.GraphicsDevice.Viewport.Bounds.Size);
-        }
-
         /// <summary>Movimenta a câmera no sentido especificado.</summary>
         /// <param name="amount">O valor a ser movida a câmera.</param>
         public void Move(Vector2 amount)
@@ -121,8 +113,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="bounds">Os limites do objeto.</param>
         public void Focus(Rectangle bounds)
         {
-            X = bounds.Center.X - game.Window.ClientBounds.GetHalfW();
-            Y = bounds.Center.Y - game.Window.ClientBounds.GetHalfH();
+            X = bounds.Center.X - game.GraphicsDevice.Viewport.Width / 2;
+            Y = bounds.Center.Y - game.GraphicsDevice.Viewport.Height / 2;
         }
 
         /// <summary>Obtém a Matrix a ser usada no método SpriteBatch.Begin(transformMatrix).</summary>

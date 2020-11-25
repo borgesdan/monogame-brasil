@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
 
 namespace Microsoft.Xna.Framework
 {

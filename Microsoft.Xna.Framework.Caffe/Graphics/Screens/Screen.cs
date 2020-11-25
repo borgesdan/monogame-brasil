@@ -53,7 +53,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 if(input == null)
                 {
                     if (Manager != null && Manager.Input != null)
+                    {
                         input = Manager.Input;
+                        needInputUpdate = false;
+                    }                        
                     else
                     {
                         input = new InputManager();
@@ -109,6 +112,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Screen(Screen source)
         {
             source.Actors.ForEach(a => this.Actors.Add(a));
+            this.input = source.input;
             this.camera = source.Camera;
             this.Enable = source.Enable;
             this.Game = source.Game;
@@ -135,53 +139,54 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Sobrecarregue e chame esse método caso deseje descarregar sua tela sem chamar o método Dispose.
         /// </summary>
-        public virtual void Unload()
-        {
-
-        }
+        public virtual void Unload() { }
 
         /// <summary>
         /// Sobrecarregue e chame esse método para definir sua tela em um estado padrão.
         /// </summary>
-        public virtual void Reset()
-        {
-
-        }
+        public virtual void Reset() { }
 
         /// <summary>Atualiza a tela.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
-        public virtual void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-            if (!Enable.IsEnabled)
-                return;
+            if (Enable.IsEnabled)
+            {
+                if (needInputUpdate)
+                    Input.Update(gameTime);
 
-            if (needInputUpdate)
-                Input.Update(gameTime);
+                _Update(gameTime);
 
-            for (int i = 0; i < Actors.Count; i++)
-                Actors[i].Update(gameTime);
+                for (int i = 0; i < Actors.Count; i++)
+                    Actors[i].Update(gameTime);
 
-            //Chama OnUpdate
-            OnUpdate?.Invoke(this, gameTime);
+                //Chama OnUpdate
+                OnUpdate?.Invoke(this, gameTime);
+            }
         }
 
         /// <summary>Desenha a tela.</summary>
         /// <param name="gameTime">Fornece acesso aos valores de tempo do jogo.</param>
         /// <param name="spriteBatch">Um objeto SpriteBatch para desenho.</param>
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Enable.IsVisible)
-                return;
+            if (Enable.IsVisible)
+            {
+                spriteBatch.Begin(DrawableConfig.SortMode, DrawableConfig.BlendState, DrawableConfig.Sampler, DrawableConfig.DepthStencil, DrawableConfig.Rasterizer, DrawableConfig.Effect, Camera.GetTransform());
 
-            spriteBatch.Begin(DrawableConfig.SortMode, DrawableConfig.BlendState, DrawableConfig.Sampler, DrawableConfig.DepthStencil, DrawableConfig.Rasterizer, DrawableConfig.Effect, Camera.GetTransform());
+                _Draw(gameTime, spriteBatch);
 
-            for (int i = 0; i < Actors.Count; i++)
-                Actors[i].Draw(gameTime, spriteBatch);
+                for (int i = 0; i < Actors.Count; i++)
+                    Actors[i].Draw(gameTime, spriteBatch);
 
-            spriteBatch.End();
+                OnDraw?.Invoke(this, gameTime, spriteBatch);
 
-            OnDraw?.Invoke(this, gameTime, spriteBatch);            
+                spriteBatch.End();                
+            }   
         }
+
+        public virtual void _Update(GameTime gameTime) { }
+        public virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
 
         internal void CallLoad(ScreenManager manager)
         {

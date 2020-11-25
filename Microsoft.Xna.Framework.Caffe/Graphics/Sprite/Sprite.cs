@@ -16,7 +16,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define os SpriteFrames e suas listas de boxes.</summary>
         public BoxGroup Boxes { get; set; } = null;
         /// <summary>Obtém ou define o index atual da lista de Boxes.</summary>
-        public int CurrentIndex { get; set; } = 0;
+        public int CurrentIndex { get; set; } = 0;        
 
         //-----------------------------------------//
         //-----         CONSTRUTOR            -----//
@@ -118,7 +118,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recX = (int)(x - finalOrigin.X);
             int recY = (int)(y - finalOrigin.Y);
 
-            Bounds = new Rectangle(recX, recY, w, h);
+            bounds = new Rectangle(recX, recY, w, h);
             BoundsR = Util.CreateRotatedBounds(Transform, finalOrigin, Bounds);
 
             base.UpdateBounds();

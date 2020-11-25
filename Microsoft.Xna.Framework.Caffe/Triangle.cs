@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Danilo Borges Santos, 2020.
+
+using System;
 
 namespace Microsoft.Xna.Framework
 {
@@ -36,7 +38,7 @@ namespace Microsoft.Xna.Framework
         public float AC => Math.Abs(Vector2.Distance(A, C));
 
         /// <summary>
-        /// Cria uma novo objeto de Triangle.
+        /// Cria uma novo objeto Triangle.
         /// </summary>
         /// <param name="a">Coordenadas A.</param>
         /// <param name="b">Coordenadas B.</param>
@@ -49,7 +51,7 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>
-        /// Cria uma novo objeto de Triangle.
+        /// Cria uma novo objeto Triangle.
         /// </summary>
         /// <param name="a">Coordenadas A.</param>
         /// <param name="b">Coordenadas B.</param>
@@ -66,7 +68,7 @@ namespace Microsoft.Xna.Framework
         /// </summary>
         public float GetArea()
         {
-            return FindArea(A, B, C);
+            return Triangle.FindArea(A, B, C);
         }
 
         /// <summary>
@@ -85,16 +87,14 @@ namespace Microsoft.Xna.Framework
             float ab = Vector2.Distance(a, b);
             float bc = Vector2.Distance(b, c);
             float ac = Vector2.Distance(c, a);
-
-            //return Triangle.FindArea(Math.Abs(ab), Math.Abs(bc), Math.Abs(ac));
+            
             return FindArea((int)ab, (int)bc, (int)ac);
         }
 
         /// <summary>
         /// Obtém a área de um triângulo onde a, b e c são os comprimentos dos lados.
         /// </summary>
-        public static float FindArea(float a, float b,
-                        float c)
+        public static float FindArea(float a, float b, float c)
         {
             //https://www.geeksforgeeks.org/c-program-find-area-triangle/
 
@@ -114,8 +114,7 @@ namespace Microsoft.Xna.Framework
             }
 
             float s = (a + b + c) / 2.0f;
-            return (float)Math.Sqrt(s * (s - a) *
-                                (s - b) * (s - c));
+            return (float)Math.Sqrt(s * (s - a) * (s - b) * (s - c));
         }
     }
 }
