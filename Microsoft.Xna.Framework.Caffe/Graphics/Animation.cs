@@ -183,10 +183,7 @@ namespace Microsoft.Xna.Framework.Graphics
         protected override void _Update(GameTime gameTime)
         {
             //Atualiza a animação.
-            Animate(gameTime);                       
-
-            //Atualiza o tamanho da animação.
-            UpdateBounds();            
+            Animate(gameTime);                    
 
             //Atualiza o Transform
             Transform.Update();
@@ -294,7 +291,6 @@ namespace Microsoft.Xna.Framework.Graphics
                 CurrentSpriteIndex = 0;
 
             CurrentSprite = Sprites[CurrentSpriteIndex];
-            UpdateBounds();
         }
 
         /// <summary>Avança um Frame do atual sprite da animação.</summary>
@@ -304,8 +300,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (CurrentFrameIndex >= Sprites[CurrentSpriteIndex].Boxes.Count - 1)
                 CurrentFrameIndex = 0;
-
-            UpdateBounds();
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)

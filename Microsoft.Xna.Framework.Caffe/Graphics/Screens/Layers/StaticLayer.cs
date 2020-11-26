@@ -28,8 +28,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (actors != null)
             {
                 foreach (var a in actors)
-                {
-                    a.UpdateBounds();
+                {                   
                     Actors.Add(a);
                 }
             }

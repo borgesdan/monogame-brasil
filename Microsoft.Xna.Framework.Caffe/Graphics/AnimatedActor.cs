@@ -103,8 +103,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(Animations.Count == 1)
             {
-                ChangeAnimation(Animations[0], true);        
-                UpdateBounds();
+                ChangeAnimation(Animations[0], true); 
             }
         }
 
@@ -150,8 +149,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             CurrentAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
             SetCurrentProperties();
-
-            UpdateBounds();
         }
 
         /// <summary>Encontra uma animação pelo seu nome.</summary>

@@ -85,8 +85,6 @@ namespace Microsoft.Xna.Framework.Graphics
         
         protected override void _Update(GameTime gameTime)
         {
-            UpdateBounds();            
-
             base._Update(gameTime);
         }
         
@@ -149,7 +147,6 @@ namespace Microsoft.Xna.Framework.Graphics
             texture.SetData(data);
 
             Sprite s = new Sprite(game, name, texture, true);
-            s.UpdateBounds();
 
             return s;
         }
@@ -195,7 +192,6 @@ namespace Microsoft.Xna.Framework.Graphics
             texture.SetData(data);
 
             Sprite s = new Sprite(game, name, texture, true);
-            s.UpdateBounds();
 
             return s;
         }
