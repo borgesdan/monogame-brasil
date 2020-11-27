@@ -9,9 +9,9 @@ namespace Microsoft.Xna.Framework.Graphics
     /// <summary>Enumera o estado de carregamento da tela.</summary>
     public enum ScreenLoadState : byte
     {
-        UnLoaded = 0,
-        Loaded = 1,
-        Loading = 2
+        UnLoaded        = 0,
+        Loaded          = 1,
+        Loading         = 2
     }
 
     /// <summary>Classe que representa uma tela de jogo com suas entidades.</summary>
@@ -30,6 +30,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>Obtém ou define a lista de atores da tela.</summary>
         public List<Actor> Actors { get; set; } = new List<Actor>();
+        /// <summary>Obtém a lista de atores que estão visíveis na tela.</summary>
+        public List<Actor> VisibleActors { get; private set; } = new List<Actor>();
         /// <summary>Obtém a instância ativa da classe Game.</summary>
         public Game Game { get; private set; } = null;
         /// <summary>Obtém ou define o nome ds tela.</summary>
@@ -67,8 +69,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 return input;
             }
         }
-        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores que serão desenhadas normalmente.</summary>
-        public SpriteBatchBeginConfig DrawableConfig { get; set; } = new SpriteBatchBeginConfig();
+        /// <summary>Obtém ou define as configurações do SpriteBatch.Begin para os atores que serão desenhados.</summary>
+        public SpriteBatchBeginConfig DrawConfig { get; set; } = new SpriteBatchBeginConfig();
 
         //-----------------------------------------//
         //-----         EVENTOS               -----//
@@ -131,10 +133,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Sobrecarregue e chame esse método para carregar sua tela manualmente.
         /// </summary>
-        public virtual void Load()
+        public void Load()
         {
+            LoadState = ScreenLoadState.Loading;
+            _Load();
             LoadState = ScreenLoadState.Loaded;
         }
+
+        public virtual void _Load() { }
 
         /// <summary>
         /// Sobrecarregue e chame esse método caso deseje descarregar sua tela sem chamar o método Dispose.
@@ -153,14 +159,18 @@ namespace Microsoft.Xna.Framework.Graphics
             if (Enable.IsEnabled)
             {
                 if (needInputUpdate)
-                    Input.Update(gameTime);
+                    Input.Update(gameTime);                
 
                 _Update(gameTime);
 
-                for (int i = 0; i < Actors.Count; i++)
-                    Actors[i].Update(gameTime);
+                VisibleActors.Clear();
+                foreach (var a in Actors)
+                {
+                    //Se a entidade é visível em tela.
+                    if (Util.CheckFieldOfView(Camera, a.Bounds))
+                        VisibleActors.Add(a);
+                }
 
-                //Chama OnUpdate
                 OnUpdate?.Invoke(this, gameTime);
             }
         }
@@ -172,30 +182,32 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (Enable.IsVisible)
             {
-                spriteBatch.Begin(DrawableConfig.SortMode, DrawableConfig.BlendState, DrawableConfig.Sampler, DrawableConfig.DepthStencil, DrawableConfig.Rasterizer, DrawableConfig.Effect, Camera.GetTransform());
-
                 _Draw(gameTime, spriteBatch);
-
-                for (int i = 0; i < Actors.Count; i++)
-                    Actors[i].Draw(gameTime, spriteBatch);
-
                 OnDraw?.Invoke(this, gameTime, spriteBatch);
-
-                spriteBatch.End();                
             }   
         }
 
-        public virtual void _Update(GameTime gameTime) { }
-        public virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-
-        internal void CallLoad(ScreenManager manager)
+        /// <summary>
+        /// Os atores serão atualizados ao chamar este método (base._Update()).
+        /// </summary>
+        public virtual void _Update(GameTime gameTime) 
         {
-            if (manager != null)
-            {
-                this.LoadState = ScreenLoadState.Loaded;
-                Load();
-            }
+            for (int i = 0; i < Actors.Count; i++)
+                Actors[i].Update(gameTime);
         }
+
+        /// <summary>
+        /// Os atores serão desenhados ao chamar este método (base._Draw()).
+        /// </summary>
+        public virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) 
+        {
+            spriteBatch.Begin(DrawConfig.SortMode, DrawConfig.BlendState, DrawConfig.Sampler, DrawConfig.DepthStencil, DrawConfig.Rasterizer, DrawConfig.Effect, Camera.GetTransform());
+
+            for (int i = 0; i < Actors.Count; i++)
+                Actors[i].Draw(gameTime, spriteBatch);            
+
+            spriteBatch.End();
+        }        
 
         //---------------------------------------//
         //-----         DISPOSE             -----//
@@ -220,6 +232,8 @@ namespace Microsoft.Xna.Framework.Graphics
                 Name = null;
                 Actors.Clear();
                 Actors = null;
+                VisibleActors.Clear();
+                VisibleActors = null;
             }
 
             disposed = true;

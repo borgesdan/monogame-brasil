@@ -9,7 +9,6 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public abstract class Actor : IActor
     {
-        private bool offView = false;
         protected Rectangle bounds = Rectangle.Empty;
 
         //---------------------------------------//
@@ -38,13 +37,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define os limites rotacionados do ator.</summary>
         public Polygon BoundsR { get; protected set; } = new Polygon();
         /// <summary>Obtém ou define os componentes do ator.</summary>
-        public ComponentGroup Components { get; set; } = null;
-        /// <summary>Obtém ou define se o método Update será chamado mesmo se o ator estiver fora do campo de visão.</summary>
-        public bool UpdateOffView { get; set; } = true;
-        /// <summary>Obtém ou define se o método Draw será chamado mesmo se o ator estiver fora do campo de visão.</summary>
-        public bool DrawOffView { get; set; } = true;
-        /// <summary>Obtém se o ator está fora dos limites da tela.</summary>
-        public bool OffView { get => offView; }
+        public ComponentGroup Components { get; set; } = null;       
 
         //---------------------------------------//
         //-----         EVENTOS             -----//
@@ -78,8 +71,6 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Transform = new TransformGroup(source.Transform);
             this.OnUpdate = source.OnUpdate;
             this.OnDraw = source.OnDraw;
-            this.UpdateOffView = source.UpdateOffView;
-            this.DrawOffView = source.DrawOffView;
         }
 
         //---------------------------------------//
@@ -95,15 +86,10 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (Enable.IsVisible)
             {
-                //Se o ator está dentro da dela, prossegue
-                //se não, se é passível de desenho mesmo assim, prossegue
-                if (!offView || DrawOffView)
-                {
-                    Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
-                    _Draw(gameTime, spriteBatch);
-                    OnDraw?.Invoke(this, gameTime, spriteBatch);
-                    Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
-                }                
+                Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Back);
+                _Draw(gameTime, spriteBatch);
+                OnDraw?.Invoke(this, gameTime, spriteBatch);
+                Components.Draw(gameTime, spriteBatch, ActorComponent.DrawPriority.Forward);
             }
         }
 
@@ -114,18 +100,11 @@ namespace Microsoft.Xna.Framework.Graphics
         public void Update(GameTime gameTime)
         {            
             if (Enable.IsEnabled)
-            {        
-                CheckOffView();                
-                
-                //Se o ator está dentro da dela, prossegue
-                //se não, se é passível de atualização mesmo assim, prossegue
-                if(!offView || UpdateOffView)
-                {
-                    _Update(gameTime);
-                    OnUpdate?.Invoke(this, gameTime);
-                    Transform.Update();
-                    Components.Update(gameTime);
-                }
+            {   
+                _Update(gameTime);
+                OnUpdate?.Invoke(this, gameTime);
+                Transform.Update();
+                Components.Update(gameTime);
             }
         }
 
@@ -229,15 +208,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 return final;
             }
-        }
-
-        protected void CheckOffView()
-        {
-            if (Screen != null && Screen.Camera != null)
-                offView = !Util.CheckFieldOfView(Screen.Camera, Bounds);
-            else
-                offView = !Util.CheckFieldOfView(Game.GraphicsDevice.Viewport, Bounds);
-        }
+        }        
 
         //---------------------------------------//
         //-----         DISPOSE             -----//

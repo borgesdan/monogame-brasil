@@ -138,7 +138,7 @@ namespace Microsoft.Xna.Framework.Graphics
             bounds = new Rectangle(recX, recY, w, h);
 
             //Calcula o BoundsR. 
-            Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);
+            Util.CreateRotatedBounds(Transform, totalOrigin, bounds);
 
             base.UpdateBounds();
         }

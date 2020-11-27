@@ -227,7 +227,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recY = (int)(y - drawOrigin.Y);
 
             bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateRotatedBounds(Transform, drawOrigin, Bounds);            
+            BoundsR = Util.CreateRotatedBounds(Transform, drawOrigin, bounds);            
         }
 
         private void Animate(GameTime gameTime)
@@ -304,7 +304,7 @@ namespace Microsoft.Xna.Framework.Graphics
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (CurrentSprite == null)
+            if (CurrentSprite != null)
             {
                 spriteBatch.Draw(
                    texture: CurrentSprite.Texture,
@@ -356,6 +356,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 CurrentSprite = Sprites[0];
                 CurrentFrame = CurrentSprite[CurrentFrameIndex];
+                UpdateBounds();
             }
         }
 

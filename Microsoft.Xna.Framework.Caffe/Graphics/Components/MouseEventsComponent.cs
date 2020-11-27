@@ -75,64 +75,60 @@ namespace Microsoft.Xna.Framework.Graphics
             Screen screen = Screen;
             old = state;
             state = Mouse.GetState();
-            bool isVisible = !Actor.OffView;
 
-            if (isVisible)
+            //Se o ponteiro do mouse consta como dentro dos limites
+            if (mouseOn)
             {
-                //Se o ponteiro do mouse consta como dentro dos limites
-                if (mouseOn)
+                //mas verificando novamente ele consta fora
+                if (!bounds.Contains(state.Position))
+                    Leave?.Invoke(Actor, state);
+            }
+
+            //se o ponteiro do mouse está dentro dos limites da entidade.
+            if (bounds.Contains(state.Position))
+            {
+                //se o ponteiro do mouse se encontrava fora
+                if (!mouseOn)
+                    Enter?.Invoke(Actor, state);
+
+                mouseOn = true;
+                On?.Invoke(Actor, state);
+
+                //se um botão foi pressionado enquanto o controle está dentro
+                if (state.LeftButton == ButtonState.Pressed
+                    || state.RightButton == ButtonState.Pressed
+                    || state.MiddleButton == ButtonState.Pressed)
                 {
-                    //mas verificando novamente ele consta fora
-                    if (!bounds.Contains(state.Position))
-                        Leave?.Invoke(Actor, state);
-                }
-
-                //se o ponteiro do mouse está dentro dos limites da entidade.
-                if (bounds.Contains(state.Position))
-                {
-                    //se o ponteiro do mouse se encontrava fora
-                    if (!mouseOn)
-                        Enter?.Invoke(Actor, state);
-
-                    mouseOn = true;
-                    On?.Invoke(Actor, state);
-
-                    //se um botão foi pressionado enquanto o controle está dentro
-                    if (state.LeftButton == ButtonState.Pressed
-                        || state.RightButton == ButtonState.Pressed
-                        || state.MiddleButton == ButtonState.Pressed)
-                    {
-                        //old = state;
-                        Down?.Invoke(Actor, state);  
-                    }
-
-                    //se um botão foi liberado
-                    if (old.LeftButton == ButtonState.Pressed && state.LeftButton == ButtonState.Released
-                        || old.RightButton == ButtonState.Pressed && state.RightButton == ButtonState.Released
-                        || old.MiddleButton == ButtonState.Pressed && state.MiddleButton == ButtonState.Released)
-                    {
-                        Up?.Invoke(Actor, state);
-                    }  
-                    
-                    //Verifica se houve clique duplo
-                    if(old.LeftButton == ButtonState.Released && state.LeftButton == ButtonState.Pressed)
-                    {
-                        clicks++;
-                        dclickTime = 0;
-
-                        if(clicks >= 2 && dclickTime < DoubleClickDelay)
-                        {
-                            DoubleClick?.Invoke(Actor, state);
-                            clicks = 0;
-                            dclickTime = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    mouseOn = false;
                     //old = state;
-                }                
+                    Down?.Invoke(Actor, state);
+                }
+
+                //se um botão foi liberado
+                if (old.LeftButton == ButtonState.Pressed && state.LeftButton == ButtonState.Released
+                    || old.RightButton == ButtonState.Pressed && state.RightButton == ButtonState.Released
+                    || old.MiddleButton == ButtonState.Pressed && state.MiddleButton == ButtonState.Released)
+                {
+                    Up?.Invoke(Actor, state);
+                }
+
+                //Verifica se houve clique duplo
+                if (old.LeftButton == ButtonState.Released && state.LeftButton == ButtonState.Pressed)
+                {
+                    clicks++;
+                    dclickTime = 0;
+
+                    if (clicks >= 2 && dclickTime < DoubleClickDelay)
+                    {
+                        DoubleClick?.Invoke(Actor, state);
+                        clicks = 0;
+                        dclickTime = 0;
+                    }
+                }
+            }
+            else
+            {
+                mouseOn = false;
+                //old = state;
             }
 
             base._Update(gameTime);

@@ -221,7 +221,7 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
             //Criação dos limites rotacionados.
-            BoundsR = Util.CreateRotatedBounds(Transform, totalOrigin, Bounds);
+            BoundsR = Util.CreateRotatedBounds(Transform, totalOrigin, bounds);
 
             base.UpdateBounds();
         }

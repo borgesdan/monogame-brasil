@@ -149,7 +149,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (Screen != null)
             {
                 //Busca todas as entidades vísiveis da tela.
-                foreach (var other in Screen.DrawableActors)
+                foreach (var other in Screen.VisibleActors)
                 {
                     // Prossegue se a entidade atual é diferente da entidade da lista.
                     if (!entity.Equals(other))

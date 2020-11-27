@@ -36,26 +36,21 @@ namespace Microsoft.Xna.Framework
         /// <param name="actorBounds">Os limites do ator.</param>
         public static bool CheckFieldOfView(Camera camera, Rectangle actorBounds)
         {
-            if (camera != null)
-            {
-                Rectangle total = Rectangle.Empty;
-                total.X = (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
-                total.Y = (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
-                total.Width -= (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
-                total.Height -= (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
+            Rectangle total = Rectangle.Empty;
+            total.X = (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
+            total.Y = (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
+            total.Width -= (int)camera.ZoomOffset.X - (int)(camera.ZoomOffset.X / camera.Zoom);
+            total.Height -= (int)camera.ZoomOffset.Y - (int)(camera.ZoomOffset.Y / camera.Zoom);
 
-                total.X += (int)camera.X;
-                total.Y += (int)camera.Y;
+            total.X += (int)camera.X;
+            total.Y += (int)camera.Y;
 
-                Rectangle cbounds = camera.Bounds;
+            Rectangle cbounds = camera.Bounds;
 
-                total.Width += cbounds.Width;
-                total.Height += cbounds.Height;
+            total.Width += cbounds.Width;
+            total.Height += cbounds.Height;
 
-                return CheckFieldOfView(new Viewport(total), actorBounds);
-            }
-            else
-                return false;
+            return CheckFieldOfView(new Viewport(total), actorBounds);
         }        
 
         /// <summary>

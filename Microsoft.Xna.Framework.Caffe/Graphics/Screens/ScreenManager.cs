@@ -70,23 +70,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new InvalidOperationException("Já existe uma tarefa de carregamento de tela em andamento.");
 
             var s = this[name];
+            var t = Task.Run(s.Load);
+            LoadingScreen = s;
+            IsLoadingAsync = true;
+            callLoadScreen = call;
+            taskLoading = t;
 
-            if (s.LoadState == ScreenLoadState.UnLoaded)
-            {
-                var t = Task.Run(s.Load);
-                LoadingScreen = s;                
-                IsLoadingAsync = true;
-                callLoadScreen = call;
-
-                s.CallLoad(this);
-
-                taskLoading = t;
-                return t;
-            }
-            else
-            {
-                throw new InvalidOperationException("A tela informada " + nameof(name) + " já está carregada ou está carregando.");
-            }                
+            return t;
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (isSingleFrame)
             {
                 SpriteFrame defaultFrame = SpriteFrame.Create(texture.Bounds, Vector2.Zero);
-                Boxes.Add("", defaultFrame, null, null);
+                Boxes.Add("", defaultFrame);                
             }            
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.Xna.Framework.Graphics
             int recY = (int)(y - finalOrigin.Y);
 
             bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateRotatedBounds(Transform, finalOrigin, Bounds);
+            BoundsR = Util.CreateRotatedBounds(Transform, finalOrigin, bounds);
 
             base.UpdateBounds();
         }
