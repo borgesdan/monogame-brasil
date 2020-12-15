@@ -9,18 +9,14 @@ namespace Microsoft.Xna.Framework.Graphics
     public class TextActor : Actor
     {
         //---------------------------------------//
-        //-----         VARIÁVEIS           -----//
-        //---------------------------------------//
-
-        //---------------------------------------//
         //-----         PROPRIEDADES        -----//
         //---------------------------------------//
 
         /// <summary>Obtém ou define a instância de SpriteFont a ser utilizada.</summary>
         public SpriteFont Font { get; set; } = null;
-        
+
         /// <summary>Obtém ou define o texto a ser exibido atráves de uma instância da classe StringBuilder.</summary>
-        public StringBuilder Text { get; set; }
+        public StringBuilder Text { get; set; } = new StringBuilder();
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//
@@ -92,61 +88,29 @@ namespace Microsoft.Xna.Framework.Graphics
         
         protected override void _Update(GameTime gameTime)
         {
-            base._Update(gameTime);
+            UpdateBounds();
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Text != null)
                 spriteBatch.DrawString(Font, Text, Transform.Position, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
+        }        
 
-            base._Draw(gameTime, spriteBatch);
-        }
-
-        /// <summary>Atualiza os limites do ator.</summary>
         public override void UpdateBounds()
         {
-            Vector2 measure;
+            Vector2 measure = Vector2.Zero;
 
-            if (Text == null || Text.Length == 0)
-                measure = Vector2.Zero;
-            else
+            if (Text != null && Text.Length > 0)
                 measure = Font.MeasureString(Text);
 
-            //Atualiza o tamanho da entidade.
-            //float cbw = measure.X * Transform.Scale.X;
-            //float cbh = measure.Y * Transform.Scale.Y;
-
-            float cbw = measure.X;
-            float cbh = measure.Y;
-
-            Transform.Size = new Point((int)cbw, (int)cbh);
-
-            //O tamanho da da entidade e sua posição.
-            int x = (int)Transform.X;
-            int y = (int)Transform.Y;
-            //int w = Transform.Width;
-            //int h = Transform.Height;
-            int w = (int)Transform.ScaledSize.X;
-            int h = (int)Transform.ScaledSize.Y;
-
-            var totalOrigin = Transform.Origin * Transform.Scale;
-
-            int recX = (int)(x - totalOrigin.X);
-            int recY = (int)(y - totalOrigin.Y);
-
-            bounds = new Rectangle(recX, recY, w, h);
-
-            //Calcula o BoundsR. 
-            Util.CreateRotatedBounds(Transform, totalOrigin, bounds);
-
-            base.UpdateBounds();
+            Transform.Size = new Point((int)measure.X, (int)measure.Y);
+            CalcBounds();
         }
 
-        /// <summary>GetData em TextActor retornará um array vazio.</summary>
         public override Color[] GetData()
         {
-            return new Color[0];
+            return null;
         }
 
         //---------------------------------------//

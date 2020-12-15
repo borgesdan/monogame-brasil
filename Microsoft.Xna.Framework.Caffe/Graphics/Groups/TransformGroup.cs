@@ -9,41 +9,10 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>
     public sealed class TransformGroup
     {
-        //Essa estrutura recebe os valores calculados das origens disponíveis em cada canto do limite do ator
-        struct OriginValues
-        {
-            public Vector2 LeftTop;
-            public Vector2 Left;
-            public Vector2 LeftBottom;
-
-            public Vector2 RightTop;
-            public Vector2 Right;
-            public Vector2 RightBottom;
-
-            public Vector2 Top;
-            public Vector2 Center;
-            public Vector2 Bottom;
-
-            public OriginValues(TransformGroup transform)
-            {
-                LeftTop = Vector2.Zero;
-                Left = new Vector2(0, transform.Height / 2);
-                LeftBottom = new Vector2(0, transform.Height);
-
-                RightTop = new Vector2(transform.Width, 0);
-                Right = new Vector2(transform.Width, transform.Height / 2);
-                RightBottom = new Vector2(transform.Width, transform.Height);
-
-                Top = new Vector2(transform.Width / 2, 0);
-                Center = new Vector2(transform.Width / 2, transform.Height / 2);
-                Bottom = new Vector2(transform.Width / 2, transform.Height);
-            }
-        }
-
         //---------------------------------------//
         //-----         VARIÁVEIS           -----//
         //---------------------------------------//
-
+                
         Vector2 _oldPosition = Vector2.Zero;
         Vector2 _position = Vector2.Zero;        
 
@@ -136,15 +105,19 @@ namespace Microsoft.Xna.Framework.Graphics
         //-----         CONSTRUTOR          -----//
         //---------------------------------------//
 
-        /// <summary>Inicializa uma nova instância de TransformGroup.</summary>        
-        public TransformGroup() { }
+        /// <summary>
+        /// Inicializa uma nova instância de TransformGroup.
+        /// </summary>
+        public TransformGroup() 
+        {            
+        }
 
         /// <summary>
         /// Inicializa uma nova instância como cópia de outra instância de TransformGroup.
-        /// </summary>
+        /// </summary>        
         /// <param name="source">O TransformGroup a ser copiado.</param>
         public TransformGroup(TransformGroup source)
-        {
+        {            
             Set(source);
         }
 
@@ -327,22 +300,6 @@ namespace Microsoft.Xna.Framework.Graphics
             Y = y;
         }
 
-        /// <summary>Define a posição do objeto relativa a um Viewport.</summary>   
-        /// <param name="align">O tipo de alinhamento da tela.</param>
-        public void SetPosition(AlignType align, Viewport viewport)
-        {
-            var view = viewport;
-            SetPosition(view.X, view.Y);
-
-            Vector2 tempPosition = Util.AlignObject(view.Bounds, ScaledSize, align);
-
-            tempPosition.X += Origin.X;
-            tempPosition.Y += Origin.Y;
-
-            _oldPosition = tempPosition;
-            _position = tempPosition;
-        }
-
         /// <summary>
         /// Incrementa a posição do objeto.
         /// </summary>
@@ -408,67 +365,6 @@ namespace Microsoft.Xna.Framework.Graphics
         public void RotateR(float radians) 
         { 
             Rotation += radians;
-        }
-
-        //Origem
-
-        /// <summary>
-        /// Define a origem do desenho e da rotação do objeto.
-        /// </summary>
-        /// <param name="x">O valor no eixo X.</param>
-        /// <param name="y">O valor no eixo Y</param>
-        public void SetOrigin(float x, float y) => SetOrigin(new Vector2(x, y));
-
-        /// <summary>
-        /// Define a origem do desenho e da rotação do objeto.
-        /// </summary>
-        /// <param name="origin">Os valores nos eixos X e Y.</param>
-        public void SetOrigin(Vector2 origin)
-        {
-            Origin = origin;
-        }
-
-        /// <summary>
-        /// Define a origem do desenho e da rotação do objeto.
-        /// </summary>
-        /// <param name="align">A posição da origem informando o alinhamento.</param>
-        public void SetOrigin(AlignType align)
-        {
-            switch(align)
-            {
-                case AlignType.LeftTop:
-                    Origin = GetOrigins().LeftTop;
-                    break;
-                case AlignType.Left:
-                    Origin = GetOrigins().Left;
-                    break;
-                case AlignType.LeftBottom:
-                    Origin = GetOrigins().LeftBottom;
-                    break;
-                case AlignType.RightTop:
-                    Origin = GetOrigins().RightTop;
-                    break;
-                case AlignType.Right:
-                    Origin = GetOrigins().Right;
-                    break;
-                case AlignType.RightBottom:
-                    Origin = GetOrigins().RightBottom;
-                    break;
-                case AlignType.Top:
-                    Origin = GetOrigins().Top;
-                    break;
-                case AlignType.Center:
-                    Origin = GetOrigins().Center;
-                    break;
-                case AlignType.Bottom:
-                    Origin = GetOrigins().Bottom;
-                    break;
-            }
-        }
-        
-        private OriginValues GetOrigins()
-        {
-            return new OriginValues(this);
-        }
+        }        
     }
 }

@@ -52,18 +52,17 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             get
             {
-                if(input == null)
+                if (Manager != null && Manager.Input != null)
                 {
-                    if (Manager != null && Manager.Input != null)
-                    {
-                        input = Manager.Input;
-                        needInputUpdate = false;
-                    }                        
-                    else
-                    {
+                    input = Manager.Input;
+                    needInputUpdate = false;
+                }
+                else
+                {
+                    if(input == null)
                         input = new InputManager();
-                        needInputUpdate = true;
-                    }                        
+                    
+                    needInputUpdate = true;
                 }
 
                 return input;
@@ -159,7 +158,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (Enable.IsEnabled)
             {
                 if (needInputUpdate)
-                    Input.Update(gameTime);                
+                    input.Update(gameTime);                
 
                 _Update(gameTime);
 
@@ -167,7 +166,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 foreach (var a in Actors)
                 {
                     //Se a entidade é visível em tela.
-                    if (Util.CheckFieldOfView(Camera, a.Bounds))
+                    if (ViewHelper.CheckFieldOfView(Camera, a.Bounds))
                         VisibleActors.Add(a);
                 }
 

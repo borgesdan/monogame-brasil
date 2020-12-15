@@ -45,7 +45,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public Sprite(Game game, string name, Texture2D texture, bool isSingleFrame = false) : base(game, name)
         {
             Texture = texture;
-            Boxes = new BoxGroup(this);
+            Boxes = new BoxGroup();
 
             if (isSingleFrame)
             {
@@ -84,42 +84,19 @@ namespace Microsoft.Xna.Framework.Graphics
         //---------------------------------------//
         
         protected override void _Update(GameTime gameTime)
-        {
-            base._Update(gameTime);
+        {            
         }
         
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Transform.Position, this[CurrentIndex].Bounds, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);
+            spriteBatch.Draw(Texture, Transform.Position, this[CurrentIndex].Bounds, Transform.Color, Transform.Rotation, Transform.Origin, Transform.Scale, Transform.SpriteEffects, Transform.LayerDepth);            
+        }        
 
-            base._Draw(gameTime, spriteBatch);
-        }
-
-        /// <summary>
-        /// Atualiza os limites do Sprite.
-        /// </summary>
-        public override void UpdateBounds() 
+        public override void UpdateBounds()
         {
-            Point size = this[CurrentIndex].Bounds.Size;
-            Transform.Size = size;
-
-            //O tamanho da entidade e sua posição.
-            int x = (int)Transform.X;
-            int y = (int)Transform.Y;
-            int w = (int)Transform.ScaledSize.X;
-            int h = (int)Transform.ScaledSize.Y;
-
-            //A origem do frame.
-            Vector2 sa = this[CurrentIndex].Align;
-            Vector2 finalOrigin = ((Transform.Origin + sa) * Transform.Scale);
-
-            int recX = (int)(x - finalOrigin.X);
-            int recY = (int)(y - finalOrigin.Y);
-
-            bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateRotatedBounds(Transform, finalOrigin, bounds);
-
-            base.UpdateBounds();
+            //O tamanho do sprite é igual o tamanho do frame atual.
+            Transform.Size = this[CurrentIndex].Bounds.Size;
+            CalcBounds();            
         }
 
         /// <summary>
@@ -147,6 +124,7 @@ namespace Microsoft.Xna.Framework.Graphics
             texture.SetData(data);
 
             Sprite s = new Sprite(game, name, texture, true);
+            s.UpdateBounds();
 
             return s;
         }
@@ -192,6 +170,7 @@ namespace Microsoft.Xna.Framework.Graphics
             texture.SetData(data);
 
             Sprite s = new Sprite(game, name, texture, true);
+            s.UpdateBounds();
 
             return s;
         }

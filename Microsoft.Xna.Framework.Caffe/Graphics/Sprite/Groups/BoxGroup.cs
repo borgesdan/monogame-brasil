@@ -10,10 +10,6 @@ namespace Microsoft.Xna.Framework.Graphics
     public class BoxGroup
     {
         /// <summary>
-        /// Obtém o Sprite associado a esse BoxGroup.
-        /// </summary>
-        public Sprite Sprite { get; private set; } = null;
-        /// <summary>
         /// Obtém ou define a lista com os objetos adicionados.
         /// </summary>
         public List<BoxCollection> Values { get; set; } = new List<BoxCollection>();
@@ -21,14 +17,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// Obtém a quantidade de itens na lista.
         /// </summary>
         public int Count { get => Values.Count; }
-        
+
         /// <summary>
         /// Inicializa uma nova instância de BoxGroup.
-        /// </summary>
-        /// <param name="sprite">O Sprite a ser associado a este grupo.</param>
-        public BoxGroup(Sprite sprite) 
-        {
-            Sprite = sprite;
+        /// </summary>        
+        public BoxGroup()
+        { 
         }
 
         /// <summary>
@@ -37,8 +31,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="source">O objeto BoxGroup a ser copiado.</param>
         public BoxGroup(BoxGroup source)
         {
-            Sprite = source.Sprite;
-
             for(int i = 0; i < source.Values.Count; i++)
                 Values.Add(new BoxCollection(source.Values[i]));
         }

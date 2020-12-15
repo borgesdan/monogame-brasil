@@ -2,6 +2,9 @@
 
 namespace Microsoft.Xna.Framework
 {
+    /// <summary>
+    /// Representa um objeto atualizável.
+    /// </summary>
     public interface IUpdate
     {
         /// <summary>Atualiza o objeto.</summary>

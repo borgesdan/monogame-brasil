@@ -115,8 +115,6 @@ namespace Microsoft.Xna.Framework.Graphics
                     ghosts.RemoveAt(i);
                 }                    
             }
-
-            base._Update(gameTime);
         }
 
         protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -127,8 +125,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 spriteBatch.Draw(g.Sprite.Texture, g.Position, g.Frame.Bounds, Color, g.Rotation, g.Origin, g.Scale, g.Effects, g.LayerDepth);
             }
-
-            base._Draw(gameTime, spriteBatch);
         }
     }
 }

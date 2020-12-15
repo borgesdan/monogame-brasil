@@ -16,11 +16,11 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém ou define a lista de CollisionBox de um SpriteFrame.
         /// </summary>
-        public List<CollisionBox> CollisionBoxes { get; set; }
+        public List<CollisionBox> CollisionBoxes { get; set; } = new List<CollisionBox>();
         /// <summary>
         /// Obtém ou define a lista de AttackBox de um SpriteFrame.
         /// </summary>
-        public List<AttackBox> AttackBoxes { get; set; }
+        public List<AttackBox> AttackBoxes { get; set; } = new List<AttackBox>();
         /// <summary>
         /// Obtém ou define o nome do grupo ao qual pertence essa coleção. 
         /// </summary>
@@ -32,7 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="group">Define o nome do grupo ao qual pertence essa coleção. </param>
         /// <param name="frame">Define o SpriteFrame da coleção.</param>
         public BoxCollection(string group, SpriteFrame frame) : this(group, frame, null, null)
-        {
+        {            
         }
 
         /// <summary>
@@ -45,9 +45,13 @@ namespace Microsoft.Xna.Framework.Graphics
         public BoxCollection(string group, SpriteFrame frame, CollisionBox[] cboxes, AttackBox[] atkBoxes)
         {
             SpriteFrame = frame;
-            CollisionBoxes = cboxes != null ? new List<CollisionBox>(cboxes) : new List<CollisionBox>();
-            AttackBoxes = atkBoxes != null ? new List<AttackBox>(atkBoxes) : new List<AttackBox>();
             Group = group;
+
+            if (cboxes != null)
+                CollisionBoxes.AddRange(cboxes);
+
+            if (atkBoxes != null)
+                AttackBoxes.AddRange(atkBoxes);
         }
 
         /// <summary>

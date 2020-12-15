@@ -52,7 +52,16 @@ namespace Microsoft.Xna.Framework.Graphics
         }
         
         /// <summary>Obtém o frame atual da animação.</summary>
-        public SpriteFrame CurrentFrame { get; protected set; }
+        public SpriteFrame CurrentFrame
+        { 
+            get 
+            {
+                if (CurrentSprite != null)
+                    return CurrentSprite[CurrentFrameIndex];
+                else
+                    return SpriteFrame.Empty;
+            }
+        }
         /// <summary>Obtém o Sprite corrente.</summary>
         public Sprite CurrentSprite { get; protected set; } = null;
         /// <summary>Obtém as caixas de colisão do frame corrente.</summary>
@@ -158,7 +167,7 @@ namespace Microsoft.Xna.Framework.Graphics
             CurrentSprite = Sprites[cs_index];
 
             Time = source.Time;
-            CurrentFrame = source.CurrentFrame;
+            //CurrentFrame = source.CurrentFrame;
 
             source.CollisionBoxesList.ForEach(cb => CollisionBoxesList.Add(cb));
             source.AttackBoxesList.ForEach(ab => AttackBoxesList.Add(ab));
@@ -190,8 +199,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
             //Atualiza as caixas de colisão.
             SetBoxes();            
-
-            base._Update(gameTime);
         }
         
         private void SetBoxes()
@@ -199,35 +206,17 @@ namespace Microsoft.Xna.Framework.Graphics
             CollisionBoxesList.Clear();
             AttackBoxesList.Clear();
 
-            CollisionBoxesList = CurrentSprite.Boxes[CurrentFrameIndex].CollisionBoxes;
-            AttackBoxesList = CurrentSprite.Boxes[CurrentFrameIndex].AttackBoxes;
-        }
+            if(CurrentSprite.Boxes[CurrentFrameIndex].CollisionBoxes != null)
+                CollisionBoxesList = CurrentSprite.Boxes[CurrentFrameIndex].CollisionBoxes;
 
-        /// <summary>
-        /// Atualiza os limites da animação.
-        /// </summary>
+            if(CurrentSprite.Boxes[CurrentFrameIndex].AttackBoxes != null)
+                AttackBoxesList = CurrentSprite.Boxes[CurrentFrameIndex].AttackBoxes;
+        }        
+
         public override void UpdateBounds()
         {
-            CurrentFrame = CurrentSprite != null ? CurrentSprite[CurrentFrameIndex] : SpriteFrame.Create(Rectangle.Empty, Vector2.Zero);
-
-            Point size = CurrentFrame.Bounds.Size;
-            Transform.Size = size;
-
-            //O tamanho da entidade e sua posição.
-            int x = (int)Transform.X;
-            int y = (int)Transform.Y;
-            int w = (int)Transform.ScaledSize.X;
-            int h = (int)Transform.ScaledSize.Y;
-
-            //A origem do frame.
-            Vector2 sa = CurrentSprite[CurrentFrameIndex].Align;
-            drawOrigin = ((Transform.Origin + sa) * Transform.Scale);
-
-            int recX = (int)(x - drawOrigin.X);
-            int recY = (int)(y - drawOrigin.Y);
-
-            bounds = new Rectangle(recX, recY, w, h);
-            BoundsR = Util.CreateRotatedBounds(Transform, drawOrigin, bounds);            
+            Transform.Size = CurrentFrame.Bounds.Size;
+            CalcBounds();
         }
 
         private void Animate(GameTime gameTime)
@@ -272,8 +261,10 @@ namespace Microsoft.Xna.Framework.Graphics
                     //Reseta o tempo.
                     elapsedGameTime = 0;
                     //Atualiza o sprite atual.
-                    CurrentSprite = Sprites[CurrentSpriteIndex];
+                    CurrentSprite = Sprites[CurrentSpriteIndex];                    
                 }
+
+                //CurrentFrame = CurrentSprite[CurrentFrameIndex];
             }
 
             if(IsFinished)
@@ -317,9 +308,8 @@ namespace Microsoft.Xna.Framework.Graphics
                    effects: Transform.SpriteEffects,
                    layerDepth: Transform.LayerDepth
                    );
-            }
+            }           
             
-            base._Draw(gameTime, spriteBatch);
         }
 
         /// <summary>Define as propriedades Index e FrameIndex com o valor 0.</summary>
@@ -355,7 +345,7 @@ namespace Microsoft.Xna.Framework.Graphics
             if (CurrentSprite == null)
             {
                 CurrentSprite = Sprites[0];
-                CurrentFrame = CurrentSprite[CurrentFrameIndex];
+                //CurrentFrame = CurrentSprite[CurrentFrameIndex];
                 UpdateBounds();
             }
         }

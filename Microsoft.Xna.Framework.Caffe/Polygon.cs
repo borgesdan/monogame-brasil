@@ -214,8 +214,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="polygon">Define os pontos atráves de uma cópia de um polígono.</param>
         public void Set(Polygon polygon)
         {
+            Points.Clear();
             polygon.Points.ForEach(p => Points.Add(p));
-            Edges = polygon.Edges;
+            BuildEdges();
         }
 
         /// <summary>

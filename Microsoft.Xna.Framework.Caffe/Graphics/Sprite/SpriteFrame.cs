@@ -19,15 +19,17 @@ namespace Microsoft.Xna.Framework.Graphics
         public int Width;
         /// <summary>A altura do frame.</summary>
         public int Height;
-        /// <summary>Valor de correção para alinhamento deste recorte em uma série de recortes de uma animação no eixo X, caso necessário.</summary>
+        /// <summary>Valor de correção para alinhamento da imagem deste recorte no eixo X, caso necessário.</summary>
         public float AlignX;
-        /// <summary>Valor de correção para alinhamento deste recorte em uma série de recortes de uma animação no eixo Y, caso necessário.</summary>
+        /// <summary>Valor de correção para alinhamento da imagem deste recorte no eixo Y, caso necessário.</summary>
         public float AlignY;
 
         /// <summary>Obtém um retângulo com a posição e tamanho do frame dentro do SpriteSheet.</summary>
         public Rectangle Bounds { get => new Rectangle(X, Y, Width, Height); }
         /// <summary>Obtém um vetor com os valores do alinhamento.</summary>
         public Vector2 Align { get => new Vector2(AlignX, AlignY); }
+        /// <summary>Obtém um SpriteFrame vazio.</summary>
+        public static SpriteFrame Empty { get => SpriteFrame.Create(Rectangle.Empty, Vector2.Zero); }
 
         //---------------------------------------//
         //-----         CONSTRUTOR          -----//

@@ -47,9 +47,11 @@ namespace Microsoft.Xna.Framework.Graphics
             var pos = state.Position - old.Position;
 
             if (Follow)
-                Actor.Transform.Move(pos);
+                Actor.Transform.Move(pos);            
+        }
 
-            base._Update(gameTime);
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {            
         }
     }
 }

@@ -129,9 +129,11 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 mouseOn = false;
                 //old = state;
-            }
+            }            
+        }
 
-            base._Update(gameTime);
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {            
         }
     }
 }

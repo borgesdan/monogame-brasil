@@ -10,6 +10,7 @@ namespace Microsoft.Xna.Framework.Graphics
     public abstract class Actor : IActor
     {
         protected Rectangle bounds = Rectangle.Empty;
+        protected Polygon boundsR = new Polygon();
 
         //---------------------------------------//
         //-----         PROPRIEDADES        -----//
@@ -35,7 +36,14 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>Obtém ou define as transformações do ator.</summary>
         public TransformGroup Transform { get; set; } = new TransformGroup();
         /// <summary>Obtém ou define os limites rotacionados do ator.</summary>
-        public Polygon BoundsR { get; protected set; } = new Polygon();
+        public Polygon BoundsR
+        {
+            get
+            {
+                UpdateBounds();
+                return boundsR;
+            }
+        }
         /// <summary>Obtém ou define os componentes do ator.</summary>
         public ComponentGroup Components { get; set; } = null;       
 
@@ -64,8 +72,8 @@ namespace Microsoft.Xna.Framework.Graphics
             this.Screen = source.Screen;
             this.Name = source.Name;
             this.Game = source.Game;            
-            this.bounds = source.bounds;
-            this.BoundsR = new Polygon(source.BoundsR);
+            this.bounds = source.bounds;            
+            this.boundsR = new Polygon(source.boundsR);
             this.Components = new ComponentGroup(source.Components);
             this.Enable = new EnableGroup(source.Enable.IsEnabled, source.Enable.IsVisible);
             this.Transform = new TransformGroup(source.Transform);
@@ -100,26 +108,61 @@ namespace Microsoft.Xna.Framework.Graphics
         public void Update(GameTime gameTime)
         {            
             if (Enable.IsEnabled)
-            {   
+            {
+                UpdateBounds();
                 _Update(gameTime);
-                OnUpdate?.Invoke(this, gameTime);
+                UpdateBounds();
+                OnUpdate?.Invoke(this, gameTime);                
                 Transform.Update();
-                Components.Update(gameTime);
+                Components.Update(gameTime);                
             }
         }
 
-        protected virtual void _Update(GameTime gameTime) { }
-        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
+        protected abstract void _Update(GameTime gameTime);
+        protected abstract void _Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
         /// <summary>
         /// Atualiza os limites do ator.
         /// </summary>
-        public virtual void UpdateBounds() { }
+        public abstract void UpdateBounds();
 
         /// <summary>
-        /// Obtém o conteúdo de cores do ator.
+        /// Obtém o conteúdo de cores do ator se for disponível ou retorna null.
         /// </summary>
         public abstract Color[] GetData();
+
+        /// <summary>
+        /// Método de auxílio que calcula e define os limites do ator através de sua posição, escala e origem na propriedade Transform, como também 
+        /// os limites rotacionados através de sua rotação e origem. O tamanho do ator (propriedade Transform.Size) deve ser definido antes deste método.
+        /// </summary>
+        protected void CalcBounds()
+        {
+            //Posição
+            int x = (int)Transform.X;
+            int y = (int)Transform.Y;
+            //Escala
+            float sx = Transform.Xs;
+            float sy = Transform.Ys;
+            //Origem
+            float ox = Transform.Xo;
+            float oy = Transform.Yo;
+
+            //Obtém uma matrix com a posição e escala através de sua origem
+            Matrix m = Matrix.CreateTranslation(-ox, -oy, 0)
+                * Matrix.CreateScale(sx, sy, 1)
+                * Matrix.CreateTranslation(x, y, 0);
+
+            //Os limites finais
+            Rectangle rec = new Rectangle((int)m.Translation.X, (int)m.Translation.Y, (int)Transform.ScaledWidth, (int)Transform.ScaledHeight);
+            bounds = rec;
+
+            //Os limites rotacionados            
+            RotatedRectangle rotated = Rotation.GetRectangle(bounds, new Vector2(bounds.X + ox, bounds.Y + oy), Transform.Rotation);
+            Polygon poly = new Polygon();
+            poly.Set(rotated);
+
+            boundsR = poly;
+        }
         
         /// <summary>
         /// Obtém o conteúdo de cores passando o frame (com o tamanho do data) e o Color data.
@@ -233,8 +276,8 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 this.Screen = null;
                 this.Game = null;
-                this.Name = null;
-                this.BoundsR = null;
+                this.Name = null;                
+                this.boundsR = null;
                 this.Enable = null;
                 this.Transform = null;
                 this.OnUpdate = null;

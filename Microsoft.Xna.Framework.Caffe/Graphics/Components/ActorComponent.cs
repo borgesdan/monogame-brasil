@@ -68,10 +68,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 return;
 
             _Update(gameTime);
-        }
+        }        
 
-        protected virtual void _Draw(GameTime gameTime, SpriteBatch spriteBatch) { }
-        protected virtual void _Update(GameTime gameTime) { }
+        protected abstract void _Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        protected abstract void _Update(GameTime gameTime);
 
         //---------------------------------------//
         //-----         DISPOSE             -----//

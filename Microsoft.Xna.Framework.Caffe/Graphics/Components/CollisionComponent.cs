@@ -101,9 +101,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         Check(other, gameTime);
                     }
                 }
-            }
-
-            base._Update(gameTime);
+            }            
         }
 
         private void Check(Actor other, GameTime gameTime)
@@ -116,6 +114,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 //O que fazer sobre a colisão será definido pelo usuário.
                 OnCollision?.Invoke(Actor, other, gameTime, result);
             }
+        }
+
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {            
         }
 
         //---------------------------------------//

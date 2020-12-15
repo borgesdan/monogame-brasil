@@ -53,7 +53,7 @@ namespace Microsoft.Xna.Framework
         /// <param name="degrees">O grau da rotação em radianos.</param>
         public RotatedRectangle(Rectangle rectangle, Vector2 origin, double degrees)
         {
-            RotatedRectangle r = Rotation.Get(rectangle, origin, degrees);
+            RotatedRectangle r = Rotation.GetRectangle(rectangle, origin, degrees);
 
             P1 = r.P1;
             P2 = r.P2;

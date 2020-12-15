@@ -170,8 +170,6 @@ namespace Microsoft.Xna.Framework.Graphics
                     }
                 }
             }
-
-            base._Update(gameTime);
         }
 
         private void Check(AnimatedActor e, AnimatedActor o, GameTime gameTime)
@@ -293,6 +291,11 @@ namespace Microsoft.Xna.Framework.Graphics
                     AxBCollision?.Invoke(abResult);
                 }
             }
+        }
+
+        protected override void _Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            
         }
 
         //---------------------------------------//

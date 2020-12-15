@@ -25,7 +25,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {            
             foreach(ActorComponent c in source.List)
             {
-                var clone = Util.Clone(c, c);
+                var clone = Clone.Get(c, c);
                 this.List.Add(clone);
             }
         }

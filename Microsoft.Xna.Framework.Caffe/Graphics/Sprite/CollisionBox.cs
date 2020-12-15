@@ -133,12 +133,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if(flip == SpriteEffects.FlipHorizontally)
             {
-                Point rotated = Rotation.Get(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
+                Point rotated = Rotation.GetPoint(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
                 rectangle.X = rotated.X - rectangle.Width;
             }
             if (flip == SpriteEffects.FlipVertically)
             {
-                Point rotated = Rotation.Get(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
+                Point rotated = Rotation.GetPoint(rectangle.Location, target.Center.ToVector2(), MathHelper.ToRadians(180));
                 rectangle.Y = rotated.Y - rectangle.Height;
             }
 

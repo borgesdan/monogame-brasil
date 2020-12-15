@@ -73,9 +73,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 //Update da animação ativa.
                 CurrentAnimation.Update(gameTime);
-            }           
-
-            base._Update(gameTime);
+            }            
         }
 
         //Define as propridades da entidade para as propriedades da animação corrente.
@@ -91,8 +89,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 CurrentAnimation.Draw(gameTime, spriteBatch);
             }
-
-            base._Draw(gameTime, spriteBatch);                    
         }        
 
         /// <summary>Adiciona uma nova animação ao ator.</summary>
@@ -149,6 +145,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             CurrentAnimation = tempAnimation ?? throw new ArgumentException("Animação não encontrada com esse parâmetro", nameof(name));
             SetCurrentProperties();
+
+            UpdateBounds();
         }
 
         /// <summary>Encontra uma animação pelo seu nome.</summary>
@@ -165,65 +163,16 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             var anms = Animations.FindAll(x => x.Name.Contains(name));
             return anms;
-        }                
+        }        
 
-        /// <summary>Atualiza os limites da entidade.</summary>
         public override void UpdateBounds()
-        {
-            //Atualiza o tamanho da entidade.
+        {   
+            if (CurrentAnimation != null)
+                Transform.Size = new Point(CurrentAnimation.CurrentFrame.Width, CurrentAnimation.CurrentFrame.Height);
+            else
+                Transform.Size = Point.Zero;
 
-            //o tamanho do frame.
-            int cbw = 0;
-            int cbh = 0;
-
-            if(CurrentAnimation != null)
-            {
-                cbw = CurrentAnimation.CurrentFrame.Width;
-                cbh = CurrentAnimation.CurrentFrame.Height;                
-            }
-
-            Transform.Size = new Point(cbw, cbh);
-
-            //O tamanho da entidade e sua posição.
-            int x = (int)Transform.X;
-            int y = (int)Transform.Y;
-            int w = (int)Transform.ScaledSize.X;
-            int h = (int)Transform.ScaledSize.Y;
-
-            //A origem do frame.
-            Vector2 s_f_oc = Vector2.Zero;
-
-            if (CurrentAnimation != null && CurrentAnimation.CurrentSprite != null)
-                s_f_oc = CurrentAnimation.CurrentSprite.Boxes[CurrentAnimation.CurrentFrameIndex].SpriteFrame.Align;
-
-            //A soma de todas as origens.
-            var totalOrigin = ((Transform.Origin + s_f_oc) * Transform.Scale);
-
-            int recX = (int)(x - totalOrigin.X);
-            int recY = (int)(y - totalOrigin.Y);
-
-            bounds = new Rectangle(recX, recY, w, h);            
-            
-            //Adição dos boxes de colisão e ataque
-            CollisionBoxes.Clear();
-            AttackBoxes.Clear();
-
-            foreach(CollisionBox cb in CurrentAnimation.CollisionBoxesList)
-            {
-                CollisionBox relative = cb.GetRelativePosition(CurrentAnimation.CurrentFrame.Bounds, Bounds, Transform.Scale, Transform.SpriteEffects); ;
-                CollisionBoxes.Add(relative);
-            }
-
-            foreach (AttackBox ab in CurrentAnimation.AttackBoxesList)
-            {
-                AttackBox relative = ab.GetRelativePosition(CurrentAnimation.CurrentFrame.Bounds, Bounds, Transform.Scale, Transform.SpriteEffects);
-                AttackBoxes.Add(relative);
-            }
-
-            //Criação dos limites rotacionados.
-            BoundsR = Util.CreateRotatedBounds(Transform, totalOrigin, bounds);
-
-            base.UpdateBounds();
+            CalcBounds();
         }
 
         /// <summary>

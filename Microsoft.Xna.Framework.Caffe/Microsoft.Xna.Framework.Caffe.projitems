@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\ActorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\BoxCollisionComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\DebugComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Components\GhostComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IActor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Graphics\Interfaces\IRotatedBounds.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Polygon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotatedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

@@ -4,7 +4,10 @@ using System;
 
 namespace Microsoft.Xna.Framework
 {
-    [Flags]
+    /// <summary>
+    /// Estrura que enumera as direções de um jogo 2D.
+    /// </summary>
+    [Flags]    
     public enum Direction2D : byte
     {
         Up          = 2,
