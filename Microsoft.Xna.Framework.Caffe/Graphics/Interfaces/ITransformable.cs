@@ -5,6 +5,6 @@
     /// </summary>
     public interface ITransformable
     {
-        public TransformGroup Transform { get; }
+        TransformGroup Transform { get; }
     }
 }

@@ -10,6 +10,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Obtém os limites rotacionado de um objeto na forma de um polígono.
         /// </summary>
-        public Polygon BoundsR { get; }
+        Polygon BoundsR { get; }
     }
 }

@@ -166,13 +166,17 @@ namespace Microsoft.Xna.Framework.Graphics
         }        
 
         public override void UpdateBounds()
-        {   
-            if (CurrentAnimation != null)
-                Transform.Size = new Point(CurrentAnimation.CurrentFrame.Width, CurrentAnimation.CurrentFrame.Height);
-            else
-                Transform.Size = Point.Zero;
+        {
+            Point size = Point.Zero;
+            SpriteFrame frame = SpriteFrame.Empty;
 
-            CalcBounds();
+            if (CurrentAnimation != null)
+            {
+                size = new Point(CurrentAnimation.CurrentFrame.Width, CurrentAnimation.CurrentFrame.Height);
+                frame = CurrentAnimation.CurrentFrame;
+            }
+
+            CalcBounds(size.X, size.Y, frame.AlignX, frame.AlignY);
         }
 
         /// <summary>

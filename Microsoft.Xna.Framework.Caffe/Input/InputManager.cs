@@ -40,15 +40,20 @@ namespace Microsoft.Xna.Framework.Input
         public GamePadHelper this[PlayerIndex index]
         {
             get
-            {
-                return index switch                 //switch(index)
+            {     
+                switch(index)
                 {
-                    PlayerIndex.One => One,         //case PlayerIndex.One: return One; break;
-                    PlayerIndex.Two => Two,
-                    PlayerIndex.Three => Three,
-                    PlayerIndex.Four => Four,
-                    _ => null,                      //case default: return null; break;
-                };
+                    case PlayerIndex.One:
+                        return One;
+                    case PlayerIndex.Two:
+                        return Two;
+                    case PlayerIndex.Three:
+                        return Three;
+                    case PlayerIndex.Four:
+                        return Four;
+                    default:
+                        return One;
+                }
             }
         }
         

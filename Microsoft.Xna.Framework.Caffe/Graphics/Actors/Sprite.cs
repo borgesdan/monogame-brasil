@@ -95,8 +95,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public override void UpdateBounds()
         {
             //O tamanho do sprite é igual o tamanho do frame atual.
-            Transform.Size = this[CurrentIndex].Bounds.Size;
-            CalcBounds();            
+            SpriteFrame f = this[CurrentIndex];
+            CalcBounds(f.Bounds.Size.X, f.Bounds.Size.Y, f.AlignX, f.AlignY);
         }
 
         /// <summary>

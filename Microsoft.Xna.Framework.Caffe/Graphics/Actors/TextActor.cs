@@ -103,9 +103,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (Text != null && Text.Length > 0)
                 measure = Font.MeasureString(Text);
-
-            Transform.Size = new Point((int)measure.X, (int)measure.Y);
-            CalcBounds();
+                        
+            CalcBounds((int)measure.X, (int)measure.Y, 0, 0);
         }
 
         public override Color[] GetData()

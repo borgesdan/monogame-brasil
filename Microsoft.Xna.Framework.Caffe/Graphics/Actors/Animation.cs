@@ -215,8 +215,16 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public override void UpdateBounds()
         {
-            Transform.Size = CurrentFrame.Bounds.Size;
-            CalcBounds();
+            SpriteFrame frame = SpriteFrame.Empty;
+            Point size = Point.Zero;
+
+            if(CurrentFrame != null)
+            {
+                size = CurrentFrame.Bounds.Size;
+                frame = CurrentFrame;
+            }           
+
+            CalcBounds(size.X, size.Y, frame.AlignX, frame.AlignY);
         }
 
         private void Animate(GameTime gameTime)

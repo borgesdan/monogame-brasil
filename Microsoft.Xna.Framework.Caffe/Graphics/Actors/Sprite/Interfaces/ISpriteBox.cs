@@ -9,7 +9,7 @@ namespace Microsoft.Xna.Framework.Graphics
     public interface ISpriteBox<T> where T : struct
     {
         /// <summary>Obtém um retângulo com a posição e tamanho do box dentro do Sprite.</summary>
-        public Rectangle Bounds { get; }
+        Rectangle Bounds { get; }
 
         /// <summary>
         /// Obtém a posição relativa da caixa no SpriteFrame independente da escala deste.
@@ -18,6 +18,6 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="target">O frame do mesmo index mas com o tamanho final para o calculo.</param>
         /// <param name="scale">O tamanho da escala do target (default Vector.One).</param>
         /// <param name="flip">O SpriteEffect pertencente ao estado atual da entidade (default SpriteEffects.None).</param>
-        public T GetRelativePosition(Rectangle frame, Rectangle target, Vector2 scale, SpriteEffects flip);
+        T GetRelativePosition(Rectangle frame, Rectangle target, Vector2 scale, SpriteEffects flip);
     }
 }

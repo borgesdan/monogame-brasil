@@ -7,6 +7,6 @@ namespace Microsoft.Xna.Framework.Graphics
     /// </summary>    
     public interface IActor : IBoundsable, ITransformable, IUpdateDrawable, IRotatedBounds, IDisposable
     {
-        public EnableGroup Enable { get; set; }
+        EnableGroup Enable { get; set; }
     }
 }

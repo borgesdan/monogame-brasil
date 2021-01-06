@@ -54,6 +54,6 @@ namespace Microsoft.Xna.Framework
             Point p5 = GetPoint(new Point(rectangle.Center.X, rectangle.Center.Y), origin, degrees);
 
             return new RotatedRectangle(p1, p2, p3, p4, p5);
-        }        
+        } 
     }
 }

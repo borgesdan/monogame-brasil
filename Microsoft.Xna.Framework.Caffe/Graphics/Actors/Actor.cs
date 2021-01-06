@@ -133,10 +133,16 @@ namespace Microsoft.Xna.Framework.Graphics
 
         /// <summary>
         /// Método de auxílio que calcula e define os limites do ator através de sua posição, escala e origem na propriedade Transform, como também 
-        /// os limites rotacionados através de sua rotação e origem. O tamanho do ator (propriedade Transform.Size) deve ser definido antes deste método.
+        /// os limites rotacionados através de sua rotação e origem.
         /// </summary>
-        protected void CalcBounds()
+        /// <param name="width">Informa e define o valor da largura do ator.</param>
+        /// <param name="height">Informa e define o valor da altura do ator.</param>
+        /// <param name="amountOriginX">Define o valor que deve ser incrementado a propriedade Transform.Origin no eixo X, se necessário.</param>
+        /// <param name="amountOriginY">Define o valor que deve ser incrementado a propriedade Transform.Origin no eixo Y, se necessário.</param>
+        protected void CalcBounds(int width, int height, float amountOriginX, float amountOriginY)
         {
+            Transform.Size = new Point(width, height);
+
             //Posição
             int x = (int)Transform.X;
             int y = (int)Transform.Y;
@@ -148,7 +154,7 @@ namespace Microsoft.Xna.Framework.Graphics
             float oy = Transform.Yo;
 
             //Obtém uma matrix com a posição e escala através de sua origem
-            Matrix m = Matrix.CreateTranslation(-ox, -oy, 0)
+            Matrix m = Matrix.CreateTranslation(-ox + -amountOriginX, -oy + -amountOriginY, 0)
                 * Matrix.CreateScale(sx, sy, 1)
                 * Matrix.CreateTranslation(x, y, 0);
 
